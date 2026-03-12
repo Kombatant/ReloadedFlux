@@ -1,5 +1,8 @@
 # A few words about this fork
 
+> [!IMPORTANT]  
+> Used various LLMs as a playground for code generation and assistance in forking/structuring/coding the project.
+
 This fork was created to add some stuff that I was sorely missing from the original excellent work the ReactFlux dev have done, such as:
 
 - Resizable panes
@@ -17,8 +20,7 @@ This fork was created to add some stuff that I was sorely missing from the origi
 
 - Some other stuff as well (Greek localization support, clicking on feeds/categories always refreshes the feed, etc.)
 
-This fork is not thoroughly tested (even though I use it every day) and I bet some stuff are broken because of these additions. Using LLMs just for fun to make these additions probably didn't help either. So, the usual; use at your own peril etc.
-
+This fork is not thoroughly tested (even though I use it every day) so, bugs I guess? The usual apply; use at your own peril etc.
 What follows is the original README contents from electh/ReactFlux:main.
 
 # ReactFlux
