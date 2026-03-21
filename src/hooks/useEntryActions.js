@@ -105,7 +105,7 @@ const useEntryActions = () => {
     }
 
     const updatedEntry = { ...entry, starred: newStarred }
-    if (activeContent) {
+    if (activeContent?.id === entry.id) {
       setActiveContent(updatedEntry)
     }
     setEntries((prev) => updateEntries(prev, [updatedEntry]))
@@ -138,48 +138,64 @@ const useEntryActions = () => {
     })
   }
 
-  const handleFetchContent = async () => {
+  const updateEntryContent = (entry, updates) => {
+    const updatedEntry = { ...entry, ...updates }
+
+    if (activeContent?.id === entry.id) {
+      setActiveContent(updatedEntry)
+    }
+
+    setEntries((prev) => updateEntries(prev, [updatedEntry]))
+    return updatedEntry
+  }
+
+  const handleFetchContent = async (entry = activeContent) => {
+    if (!entry) {
+      return null
+    }
+
     try {
-      const response = await getOriginalContent(activeContent.id)
+      const response = await getOriginalContent(entry.id)
       Message.success(polyglot.t("actions.fetched_content_success"))
       const newContent = response.content
-      const newReadingTime = response.reading_time ?? activeContent.reading_time
-      setActiveContent({ ...activeContent, content: newContent, readingTime: newReadingTime })
+      const newReadingTime = response.reading_time ?? entry.reading_time
+      return updateEntryContent(entry, { content: newContent, reading_time: newReadingTime })
     } catch (error) {
       console.error("Failed to fetch content:", error)
       Message.error(polyglot.t("actions.fetched_content_error"))
+      return null
     }
   }
 
-  const handleSummarizeContent = async () => {
+  const handleSummarizeContent = async (entry = activeContent) => {
     const aiProvider = getSettings("aiProvider")
     const aiApiKeys = getSettings("aiApiKeys") || {}
     const aiApiKey = aiApiKeys?.[aiProvider] || ""
     const aiModel = getSettings("aiModel")
 
-    if (!activeContent) {
-      return
+    if (!entry) {
+      return null
     }
 
     if (aiProvider === AI_PROVIDERS.NONE) {
       Message.warning(polyglot.t("actions.ai_summary_provider_missing"))
-      return
+      return null
     }
 
     if (!aiApiKey) {
       Message.warning(polyglot.t("actions.ai_summary_api_key_missing"))
-      return
+      return null
     }
 
     if (!aiModel) {
       Message.warning(polyglot.t("actions.ai_summary_model_missing"))
-      return
+      return null
     }
 
-    const textContent = extractTextFromHtml(activeContent.content)
+    const textContent = extractTextFromHtml(entry.content)
     if (!textContent) {
       Message.error(polyglot.t("actions.ai_summary_error"))
-      return
+      return null
     }
 
     const trimmedContent = textContent.slice(0, 12_000)
@@ -189,7 +205,7 @@ const useEntryActions = () => {
         provider: aiProvider,
         apiKey: aiApiKey,
         model: aiModel,
-        title: activeContent.title,
+        title: entry.title,
         content: trimmedContent,
       })
 
@@ -197,14 +213,16 @@ const useEntryActions = () => {
 
       if (!summaryHtml) {
         Message.error(polyglot.t("actions.ai_summary_error"))
-        return
+        return null
       }
 
-      setActiveContent({ ...activeContent, content: summaryHtml })
+      updateEntryContent(entry, { content: summaryHtml })
       Message.success(polyglot.t("actions.ai_summary_success"))
+      return summaryHtml
     } catch (error) {
       console.error("Failed to summarize content:", error)
       Message.error(polyglot.t("actions.ai_summary_error"))
+      return null
     }
   }
 

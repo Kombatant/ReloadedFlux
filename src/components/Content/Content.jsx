@@ -7,6 +7,7 @@ import { useLocation, useParams } from "react-router"
 import { useSwipeable } from "react-swipeable"
 
 import FooterPanel from "./FooterPanel"
+import StoryStream from "./StoryStream"
 
 import { getEntry } from "@/apis"
 import ActionButtons from "@/components/Article/ActionButtons"
@@ -43,6 +44,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
   const {
     enableSwipeGesture,
     entryListWidth: storedEntryListWidth,
+    layoutMode,
     orderBy,
     orderDirection,
     showStatus,
@@ -290,6 +292,24 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
     globalThis.addEventListener("pointerup", handlePointerUp)
   }
 
+  const shouldUseStoryStream = layoutMode === "stream" && !isBelowMedium
+
+  if (shouldUseStoryStream) {
+    return (
+      <div ref={contentSplitRef} className="content-split">
+        <StoryStream
+          cardsRef={cardsRef}
+          entryListRef={entryListRef}
+          getEntries={getEntries}
+          handleEntryClick={handleEntryClick}
+          info={info}
+          markAllAsRead={markAllAsRead}
+          refreshArticleList={fetchArticleListWithRelatedData}
+        />
+      </div>
+    )
+  }
+
   return (
     <div ref={contentSplitRef} className="content-split">
       <div
@@ -299,7 +319,12 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
           width: isBelowMedium ? undefined : entryListWidth,
         }}
       >
-        <SearchAndSortBar />
+        <SearchAndSortBar
+          info={info}
+          markAllAsRead={markAllAsRead}
+          refreshArticleList={fetchArticleListWithRelatedData}
+          variant="classic"
+        />
         <ArticleList
           ref={entryListRef}
           cardsRef={cardsRef}

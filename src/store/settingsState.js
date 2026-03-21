@@ -33,6 +33,7 @@ const defaultValue = {
   homePage: "all",
   language: getBrowserLanguage(),
   lightboxSlideAnimation: true,
+  layoutMode: "classic",
   markReadBy: "view",
   markReadOnScroll: false,
   orderBy: "created_at",
@@ -82,6 +83,10 @@ export const settingsState = persistentAtom("settings", defaultValue, {
 
     if (typeof storedValue.entryListWidth === "number") {
       storedValue.entryListWidth = Math.min(900, Math.max(280, storedValue.entryListWidth))
+    }
+
+    if (storedValue.layoutMode && !["classic", "stream"].includes(storedValue.layoutMode)) {
+      storedValue.layoutMode = "classic"
     }
 
     if (

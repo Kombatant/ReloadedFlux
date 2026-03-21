@@ -1,11 +1,5 @@
 import { Button, Dropdown, Menu, Popconfirm, Radio } from "@arco-design/web-react"
-import {
-  IconAlignLeft,
-  IconClockCircle,
-  IconRecord,
-  IconRefresh,
-  IconStarFill,
-} from "@arco-design/web-react/icon"
+import { IconAlignLeft, IconRecord, IconRefresh, IconStarFill } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useEffect, useMemo, useState } from "react"
 
@@ -213,39 +207,6 @@ const FooterPanel = ({ info, refreshArticleList, markAllAsRead }) => {
     }
   }
 
-  const baseFilterOptions = [
-    {
-      label: polyglot.t("article_list.filter_status_unread"),
-      value: "unread",
-      icon: <IconRecord />,
-    },
-    {
-      label: polyglot.t("article_list.filter_status_all"),
-      value: "all",
-      icon: <IconAlignLeft />,
-    },
-  ]
-
-  const starredOption = {
-    label: polyglot.t("article_list.filter_status_starred"),
-    value: "starred",
-    icon: <IconStarFill />,
-  }
-
-  const filterOptions = ["category", "feed"].includes(info.from)
-    ? [starredOption, ...baseFilterOptions]
-    : baseFilterOptions
-
-  const renderRadioButton = (option) => {
-    const isSelected = showStatus === option.value
-    return (
-      <Radio value={option.value}>
-        {option.icon}
-        {isSelected && <span style={{ marginLeft: "4px" }}>{option.label}</span>}
-      </Radio>
-    )
-  }
-
   useEffect(() => {
     if (info.from === "starred" && showStatus !== "unread") {
       updateSettings({ showStatus: "all" })
@@ -297,6 +258,39 @@ const FooterPanel = ({ info, refreshArticleList, markAllAsRead }) => {
       setConfirmVisible(false)
       setPendingAction(null)
     }
+  }
+
+  const baseFilterOptions = [
+    {
+      label: polyglot.t("article_list.filter_status_unread"),
+      value: "unread",
+      icon: <IconRecord />,
+    },
+    {
+      label: polyglot.t("article_list.filter_status_all"),
+      value: "all",
+      icon: <IconAlignLeft />,
+    },
+  ]
+
+  const starredOption = {
+    label: polyglot.t("article_list.filter_status_starred"),
+    value: "starred",
+    icon: <IconStarFill />,
+  }
+
+  const filterOptions = ["category", "feed"].includes(info.from)
+    ? [starredOption, ...baseFilterOptions]
+    : baseFilterOptions
+
+  const renderRadioButton = (option) => {
+    const isSelected = showStatus === option.value
+    return (
+      <Radio value={option.value}>
+        {option.icon}
+        {isSelected ? <span style={{ marginLeft: "4px" }}>{option.label}</span> : null}
+      </Radio>
+    )
   }
 
   return (

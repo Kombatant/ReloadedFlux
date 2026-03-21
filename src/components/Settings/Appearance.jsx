@@ -3,6 +3,7 @@ import { useStore } from "@nanostores/react"
 
 import SettingItem from "./SettingItem"
 
+import { LayoutColumnIcon, LayoutExpandedIcon } from "@/components/icons/LayoutModeIcons"
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { applyColor, colors, getDisplayColorValue } from "@/utils/colors"
@@ -20,6 +21,7 @@ const Appearance = () => {
   const {
     coverDisplayMode,
     fontFamily,
+    layoutMode,
     lightboxSlideAnimation,
     showDetailedRelativeTime,
     showEstimatedReadingTime,
@@ -47,6 +49,19 @@ const Appearance = () => {
     {
       label: polyglot.t("appearance.font_family_lxgw_wenkai"),
       value: "'LXGW WenKai Screen', sans-serif",
+    },
+  ]
+
+  const layoutOptions = [
+    {
+      icon: <LayoutColumnIcon />,
+      label: polyglot.t("appearance.layout_mode_classic"),
+      value: "classic",
+    },
+    {
+      icon: <LayoutExpandedIcon />,
+      label: polyglot.t("appearance.layout_mode_stream"),
+      value: "stream",
     },
   ]
 
@@ -108,6 +123,28 @@ const Appearance = () => {
           {fontFamilyOptions.map(({ label, value }) => (
             <Select.Option key={value} value={value}>
               {label}
+            </Select.Option>
+          ))}
+        </Select>
+      </SettingItem>
+
+      <Divider />
+
+      <SettingItem
+        description={polyglot.t("appearance.layout_mode_description")}
+        title={polyglot.t("appearance.layout_mode_label")}
+      >
+        <Select
+          className="input-select"
+          value={layoutMode}
+          onChange={(value) => handleConfigChange({ layoutMode: value })}
+        >
+          {layoutOptions.map((option) => (
+            <Select.Option key={option.value} value={option.value}>
+              <span className="layout-mode-option">
+                {option.icon}
+                <span>{option.label}</span>
+              </span>
             </Select.Option>
           ))}
         </Select>

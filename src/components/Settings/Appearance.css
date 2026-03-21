@@ -1,3 +1,14 @@
 .arco-radio {
   padding-left: 0;
 }
+
+.layout-mode-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.layout-mode-option svg {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+}

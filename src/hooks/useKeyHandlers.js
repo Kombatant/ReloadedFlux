@@ -12,6 +12,7 @@ import {
   nextContentState,
   prevContentState,
 } from "@/store/contentState"
+import { settingsState } from "@/store/settingsState"
 import { ANIMATION_DURATION_MS } from "@/utils/constants"
 import { Message } from "@/utils/feedback"
 import { extractImageSources } from "@/utils/images"
@@ -32,13 +33,37 @@ const useKeyHandlers = () => {
   const filteredEntries = useStore(filteredEntriesState)
   const prevContent = useStore(prevContentState)
   const nextContent = useStore(nextContentState)
+  const { layoutMode } = useStore(settingsState)
 
   const { entryListRef, handleEntryClick, closeActiveContent } = useContentContext()
+
+  const getEntryListScrollElement = () => {
+    if (!entryListRef.current) {
+      return null
+    }
+
+    return entryListRef.current.getScrollElement?.() || entryListRef.current.contentWrapperEl
+  }
 
   const scrollSelectedCardIntoView = () => {
     if (entryListRef.current) {
       const selectedCard = entryListRef.current.el.querySelector(".card-wrapper.selected")
       if (selectedCard) {
+        if (layoutMode === "stream") {
+          const scrollElement = getEntryListScrollElement()
+          if (scrollElement) {
+            const containerRect = scrollElement.getBoundingClientRect()
+            const selectedRect = selectedCard.getBoundingClientRect()
+            const nextTop = selectedRect.top - containerRect.top + scrollElement.scrollTop - 8
+
+            scrollElement.scrollTo({
+              behavior: "smooth",
+              top: Math.max(0, nextTop),
+            })
+            return
+          }
+        }
+
         selectedCard.scrollIntoView({
           behavior: "smooth",
           block: "center",

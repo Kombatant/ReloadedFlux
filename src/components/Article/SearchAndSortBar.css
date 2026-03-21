@@ -4,17 +4,50 @@
   top: 0;
   align-items: center;
   z-index: 2;
+}
+
+.search-and-sort-bar.classic-toolbar {
+  --classic-layout-selector-width: 156px;
+  justify-content: space-between;
   background-color: rgb(var(--color-bg-1));
   padding: 8px 0;
+}
+
+.search-and-sort-bar.stream-toolbar {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0) 100%),
+    rgb(var(--color-bg-1));
+  gap: 8px 16px;
+  padding: 6px 0;
+}
+
+.search-and-sort-bar .toolbar-main {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 260px;
+  align-items: center;
 }
 
 .search-and-sort-bar .page-info {
   display: flex;
   align-items: center;
-  margin-left: 12px;
   color: var(--color-text-2);
   white-space: nowrap;
+}
+
+.search-and-sort-bar.classic-toolbar .page-info {
+  margin-left: 12px;
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  padding-right: calc(var(--classic-layout-selector-width) + 20px);
+}
+
+.search-and-sort-bar.stream-toolbar .page-info {
+  margin-left: 8px;
+  min-width: 0;
   flex: 1;
 }
 
@@ -22,26 +55,167 @@
   overflow: hidden;
 }
 
-.search-and-sort-bar .page-info .title-container .arco-typography {
+.search-and-sort-bar.stream-toolbar .page-info .title-container {
+  min-width: 0;
+  flex: 1;
+}
+
+.search-and-sort-bar .page-info .title-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-and-sort-bar.classic-toolbar .page-info .title-container .arco-typography {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.search-and-sort-bar .page-info .count-label {
-  color: var(--color-text-4);
-  margin-left: 6px;
-  flex: 0 0 auto;
-  font-weight: 500;
-  display: inline-block;
+.search-and-sort-bar .toolbar-title {
+  display: block;
+  min-width: 0;
+  flex: 0 1 auto;
+  color: var(--color-text-1);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .search-and-sort-bar .button-group {
   display: flex;
+  align-items: center;
+}
+
+.search-and-sort-bar.classic-toolbar .button-group {
   flex: 0 0 auto;
   gap: 8px;
   margin: 0 8px;
+}
+
+.search-and-sort-bar.stream-toolbar .button-group {
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 6px;
+}
+
+.search-and-sort-bar .count-label {
+  color: var(--color-text-4);
+  flex: 0 0 auto;
+  display: inline-block;
+}
+
+.search-and-sort-bar.classic-toolbar .count-label {
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+.search-and-sort-bar.stream-toolbar .count-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.search-and-sort-bar .layout-selector-slot {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  margin-left: 16px;
+}
+
+.search-and-sort-bar.classic-toolbar .layout-selector-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: var(--classic-layout-selector-width);
+  max-width: var(--classic-layout-selector-width);
+  margin-left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.layout-mode-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.layout-mode-option svg {
+  flex: 0 0 auto;
+  font-size: 1rem;
+}
+
+.search-and-sort-bar .layout-mode-select {
+  width: 100%;
+}
+
+.search-and-sort-bar.stream-toolbar .layout-mode-select {
+  width: 156px;
+  flex: 0 0 156px;
+}
+
+.search-and-sort-bar .layout-mode-select .arco-select-view {
+  min-height: 34px;
+  border-radius: 14px;
+  padding: 0 12px;
+  background-color: rgb(var(--color-fill-2));
+}
+
+.search-and-sort-bar.classic-toolbar .layout-mode-select .arco-select-view {
+  border-color: transparent;
+}
+
+.search-and-sort-bar.stream-toolbar .layout-mode-select .arco-select-view {
+  border-color: transparent;
+}
+
+.search-and-sort-bar .layout-mode-select .arco-select-view-value {
+  display: inline-flex;
+  align-items: center;
+}
+
+.search-and-sort-bar .layout-mode-select .arco-select-view-suffix {
+  padding-left: 8px;
+}
+
+.search-and-sort-bar .toolbar-menu-button {
+  max-width: 180px;
+  padding: 2px 8px !important;
+  color: var(--color-text-2);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.search-and-sort-bar .toolbar-button-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-and-sort-bar .toolbar-menu-item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-and-sort-bar .toolbar-menu-item-label svg,
+.search-and-sort-bar .toolbar-button-label svg {
+  flex: 0 0 auto;
+  font-size: 1rem;
+}
+
+.search-and-sort-bar .toolbar-menu-item {
+  min-height: 38px;
+  padding: 8px 12px !important;
 }
 
 .search-and-sort-bar .button-group button {
@@ -53,7 +227,36 @@
 .search-and-sort-bar .button-group button:not(.arco-btn-disabled):focus,
 .search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):hover,
 .search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):focus {
+  background-color: rgb(var(--color-fill-2)) !important;
+  color: var(--color-text-1);
+}
+
+.search-and-sort-bar.classic-toolbar .button-group button:not(.arco-btn-disabled):hover,
+.search-and-sort-bar.classic-toolbar .button-group button:not(.arco-btn-disabled):focus,
+.search-and-sort-bar.classic-toolbar .button-group .arco-btn:not(.arco-btn-disabled):hover,
+.search-and-sort-bar.classic-toolbar .button-group .arco-btn:not(.arco-btn-disabled):focus {
   background-color: var(--color-bg-1) !important;
+}
+
+.search-and-sort-bar .toolbar-menu-button:not(.arco-btn-disabled):hover,
+.search-and-sort-bar .toolbar-menu-button:not(.arco-btn-disabled):focus {
+  border-radius: 999px;
+}
+
+.search-and-sort-bar .button-group .arco-btn-size-small.arco-btn-shape-circle {
+  color: var(--color-text-3);
+}
+
+.search-and-sort-bar
+  .button-group
+  .arco-btn-size-small.arco-btn-shape-circle:not(.arco-btn-disabled) {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+}
+
+.search-and-sort-bar .button-group .arco-btn-size-small.arco-btn-shape-circle .arco-icon {
+  font-size: 14px;
 }
 
 .calendar-actions {
@@ -72,6 +275,48 @@
 }
 
 @media screen and (max-width: 768px) {
+  .search-and-sort-bar.stream-toolbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .search-and-sort-bar.stream-toolbar .toolbar-main,
+  .search-and-sort-bar.stream-toolbar .button-group {
+    width: 100%;
+  }
+
+  .search-and-sort-bar.stream-toolbar .button-group {
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .search-and-sort-bar.classic-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .search-and-sort-bar.classic-toolbar .page-info {
+    min-width: 0;
+  }
+
+  .search-and-sort-bar.classic-toolbar .layout-selector-slot {
+    position: static;
+    order: 3;
+    width: 100%;
+    max-width: none;
+    margin: 0 8px;
+    transform: none;
+    justify-content: flex-start;
+  }
+
+  .search-and-sort-bar .toolbar-menu-button {
+    max-width: none;
+  }
+
   .search-modal {
     width: 95%;
   }
