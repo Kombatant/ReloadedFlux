@@ -6,6 +6,7 @@
 This fork was created to add some stuff that I was sorely missing from the original excellent work the ReactFlux dev have done, such as:
 
 - New layout option with a left sidebar for feeds and categories, and a right sidebar for article content. The original layout is still available as an option.
+  ![](images/reactflux_expandedlayout.png)
 - Resizable panes
 - Mark as read functionality based on days
   ![image](image.png)
@@ -14,7 +15,6 @@ This fork was created to add some stuff that I was sorely missing from the origi
 - New Content section contains old feed + article three dot menu options, plus new colour and global font setting for the whole app.
   ![](images/reactflux_content.png)
   ![](images/reactflux_settings.png)
-  ![](images/reactflux_expandedlayout.png)
 
 - Some theme changes I was applying with Tampermonkey up until now.
 
