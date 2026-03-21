@@ -1,17 +1,12 @@
 import { useStore } from "@nanostores/react"
+import { useEffect, useRef } from "react"
 
 import { polyglotState } from "./useLanguage"
 import useModalToggle from "./useModalToggle"
 import usePhotoSlider from "./usePhotoSlider"
 
 import useContentContext from "@/hooks/useContentContext"
-import {
-  activeEntryIndexState,
-  contentState,
-  filteredEntriesState,
-  nextContentState,
-  prevContentState,
-} from "@/store/contentState"
+import { contentState, filteredEntriesState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
 import { ANIMATION_DURATION_MS } from "@/utils/constants"
 import { Message } from "@/utils/feedback"
@@ -19,7 +14,9 @@ import { extractImageSources } from "@/utils/images"
 
 const STREAM_CARD_TOP_OFFSET = 8
 const STREAM_SCROLL_ALIGNMENT_TOLERANCE = 4
-const STREAM_SCROLL_RETRY_DELAY_MS = 120
+const STREAM_SCROLL_INITIAL_ALIGNMENT_DELAY_MS = 140
+const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 1800
+const STREAM_SCROLL_STABLE_FRAME_TARGET = 6
 
 const getStreamCardScrollTop = (selectedCard, scrollElement) => {
   const containerRect = scrollElement.getBoundingClientRect()
@@ -38,7 +35,27 @@ const scrollStreamCardIntoView = (selectedCard, scrollElement, behavior = "smoot
   })
 }
 
-const findAdjacentUnreadEntry = (currentIndex, direction, entries) => {
+const getStreamCardTopDelta = (selectedCard, scrollElement) => {
+  const containerRect = scrollElement.getBoundingClientRect()
+  const selectedRect = selectedCard.getBoundingClientRect()
+
+  return Math.abs(selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET)
+}
+
+const focusStreamCard = (selectedCard) => {
+  if (document.activeElement === selectedCard) {
+    return
+  }
+
+  selectedCard.focus({ preventScroll: true })
+}
+
+const findAdjacentUnreadEntry = (currentEntryId, direction, entries) => {
+  const currentIndex = entries.findIndex((entry) => entry.id === currentEntryId)
+  if (currentIndex === -1) {
+    return null
+  }
+
   const isSearchingBackward = direction === "prev"
   const searchRange = isSearchingBackward
     ? entries.slice(0, currentIndex).toReversed()
@@ -50,13 +67,41 @@ const findAdjacentUnreadEntry = (currentIndex, direction, entries) => {
 const useKeyHandlers = () => {
   const { activeContent } = useStore(contentState)
   const { polyglot } = useStore(polyglotState)
-  const activeEntryIndex = useStore(activeEntryIndexState)
-  const filteredEntries = useStore(filteredEntriesState)
-  const prevContent = useStore(prevContentState)
-  const nextContent = useStore(nextContentState)
-  const { layoutMode } = useStore(settingsState)
 
   const { entryListRef, handleEntryClick, closeActiveContent } = useContentContext()
+  const streamAlignmentTaskRef = useRef({
+    delayTimeoutId: null,
+    frameId: null,
+    maxTimeoutId: null,
+    resizeObserver: null,
+    sessionId: 0,
+  })
+
+  const clearPendingStreamAlignment = () => {
+    const task = streamAlignmentTaskRef.current
+
+    if (task.frameId !== null) {
+      globalThis.cancelAnimationFrame(task.frameId)
+      task.frameId = null
+    }
+
+    if (task.delayTimeoutId !== null) {
+      globalThis.clearTimeout(task.delayTimeoutId)
+      task.delayTimeoutId = null
+    }
+
+    if (task.maxTimeoutId !== null) {
+      globalThis.clearTimeout(task.maxTimeoutId)
+      task.maxTimeoutId = null
+    }
+
+    if (task.resizeObserver) {
+      task.resizeObserver.disconnect()
+      task.resizeObserver = null
+    }
+  }
+
+  useEffect(() => clearPendingStreamAlignment, [])
 
   const getEntryListScrollElement = () => {
     if (!entryListRef.current) {
@@ -70,34 +115,122 @@ const useKeyHandlers = () => {
     return entryListRef.current?.el?.querySelector(".card-wrapper.selected") || null
   }
 
+  const getAdjacentEntry = (direction) => {
+    const { activeContent: latestActiveContent } = contentState.get()
+    if (!latestActiveContent) {
+      return null
+    }
+
+    const entries = filteredEntriesState.get()
+    const currentIndex = entries.findIndex((entry) => entry.id === latestActiveContent.id)
+    if (currentIndex === -1) {
+      return null
+    }
+
+    const step = direction === "prev" ? -1 : 1
+    return entries[currentIndex + step] ?? null
+  }
+
+  const alignSelectedStreamCard = () => {
+    clearPendingStreamAlignment()
+
+    const task = streamAlignmentTaskRef.current
+    const sessionId = task.sessionId + 1
+    let hasAppliedInitialScroll = false
+    let stableFrameCount = 0
+
+    task.sessionId = sessionId
+
+    const isCurrentSession = () => streamAlignmentTaskRef.current.sessionId === sessionId
+
+    task.maxTimeoutId = globalThis.setTimeout(() => {
+      if (!isCurrentSession()) {
+        return
+      }
+
+      clearPendingStreamAlignment()
+    }, STREAM_SCROLL_MAX_SETTLE_TIME_MS)
+
+    const ensureResizeObserver = (selectedCard) => {
+      if (streamAlignmentTaskRef.current.resizeObserver || typeof ResizeObserver !== "function") {
+        return
+      }
+
+      const observer = new ResizeObserver(() => {
+        if (!isCurrentSession()) {
+          return
+        }
+
+        stableFrameCount = 0
+
+        if (streamAlignmentTaskRef.current.frameId !== null) {
+          globalThis.cancelAnimationFrame(streamAlignmentTaskRef.current.frameId)
+        }
+
+        streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
+      })
+
+      observer.observe(selectedCard)
+      streamAlignmentTaskRef.current.resizeObserver = observer
+    }
+
+    function settleAlignment() {
+      if (!isCurrentSession()) {
+        return
+      }
+
+      const selectedCard = getSelectedCard()
+      const scrollElement = getEntryListScrollElement()
+
+      if (!selectedCard || !scrollElement) {
+        streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
+        return
+      }
+
+      ensureResizeObserver(selectedCard)
+      focusStreamCard(selectedCard)
+
+      if (!hasAppliedInitialScroll) {
+        scrollStreamCardIntoView(selectedCard, scrollElement)
+        hasAppliedInitialScroll = true
+        stableFrameCount = 0
+        streamAlignmentTaskRef.current.delayTimeoutId = globalThis.setTimeout(() => {
+          if (!isCurrentSession()) {
+            return
+          }
+
+          streamAlignmentTaskRef.current.delayTimeoutId = null
+          streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
+        }, STREAM_SCROLL_INITIAL_ALIGNMENT_DELAY_MS)
+        return
+      }
+
+      if (getStreamCardTopDelta(selectedCard, scrollElement) > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+        scrollStreamCardIntoView(selectedCard, scrollElement, "auto")
+        stableFrameCount = 0
+      } else {
+        stableFrameCount += 1
+      }
+
+      if (stableFrameCount >= STREAM_SCROLL_STABLE_FRAME_TARGET) {
+        clearPendingStreamAlignment()
+        return
+      }
+
+      streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
+    }
+
+    streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
+  }
+
   const scrollSelectedCardIntoView = () => {
     if (entryListRef.current) {
       const selectedCard = getSelectedCard()
       if (selectedCard) {
-        if (layoutMode === "stream") {
+        if (settingsState.get().layoutMode === "stream") {
           const scrollElement = getEntryListScrollElement()
           if (scrollElement) {
-            scrollStreamCardIntoView(selectedCard, scrollElement)
-
-            // A second pass keeps keyboard navigation aligned when layout settles after
-            // moving away from an unusually tall card.
-            globalThis.setTimeout(() => {
-              const latestSelectedCard = getSelectedCard()
-              const latestScrollElement = getEntryListScrollElement()
-              if (!latestSelectedCard || !latestScrollElement) {
-                return
-              }
-
-              const containerRect = latestScrollElement.getBoundingClientRect()
-              const selectedRect = latestSelectedCard.getBoundingClientRect()
-              const topDelta = Math.abs(
-                selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET,
-              )
-
-              if (topDelta > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
-                scrollStreamCardIntoView(latestSelectedCard, latestScrollElement, "auto")
-              }
-            }, STREAM_SCROLL_RETRY_DELAY_MS)
+            alignSelectedStreamCard()
             return
           }
         }
@@ -142,9 +275,16 @@ const useKeyHandlers = () => {
 
   // eslint-disable-next-line react-hooks/refs
   const navigateToPreviousArticle = withPhotoSliderCheck(() => {
-    if (prevContent) {
-      handleEntryClick(prevContent)
-      setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
+    const previousContent = getAdjacentEntry("prev")
+
+    if (previousContent) {
+      handleEntryClick(previousContent)
+
+      if (settingsState.get().layoutMode === "stream") {
+        scrollSelectedCardIntoView()
+      } else {
+        globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
+      }
     } else {
       Message.info(polyglot.t("actions.no_previous_article"))
     }
@@ -152,9 +292,16 @@ const useKeyHandlers = () => {
 
   // eslint-disable-next-line react-hooks/refs
   const navigateToNextArticle = withPhotoSliderCheck(() => {
+    const nextContent = getAdjacentEntry("next")
+
     if (nextContent) {
       handleEntryClick(nextContent)
-      setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
+
+      if (settingsState.get().layoutMode === "stream") {
+        scrollSelectedCardIntoView()
+      } else {
+        globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
+      }
     } else {
       Message.info(polyglot.t("actions.no_next_article"))
     }
@@ -162,14 +309,25 @@ const useKeyHandlers = () => {
 
   // eslint-disable-next-line react-hooks/refs
   const navigateToAdjacentUnreadArticle = withPhotoSliderCheck((direction) => {
+    const { activeContent: latestActiveContent } = contentState.get()
+    const filteredEntries = filteredEntriesState.get()
+    if (!latestActiveContent) {
+      return
+    }
+
     const adjacentUnreadEntry = findAdjacentUnreadEntry(
-      activeEntryIndex,
+      latestActiveContent.id,
       direction,
       filteredEntries,
     )
     if (adjacentUnreadEntry) {
       handleEntryClick(adjacentUnreadEntry)
-      setTimeout(scrollSelectedCardIntoView, ANIMATION_DURATION_MS)
+
+      if (settingsState.get().layoutMode === "stream") {
+        scrollSelectedCardIntoView()
+      } else {
+        globalThis.setTimeout(scrollSelectedCardIntoView, ANIMATION_DURATION_MS)
+      }
     } else if (direction === "prev") {
       Message.info(polyglot.t("actions.no_previous_unread_article"))
     } else {
