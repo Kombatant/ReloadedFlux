@@ -97,6 +97,18 @@
   text-align: inherit;
 }
 
+.stream-story-card.selected .stream-story-title.arco-typography,
+.stream-story-card.selected .stream-story-title-link,
+.stream-story-card:focus .stream-story-title.arco-typography,
+.stream-story-card:focus .stream-story-title-link,
+.stream-story-card:focus-visible .stream-story-title.arco-typography,
+.stream-story-card:focus-visible .stream-story-title-link,
+.stream-story-card:focus-within .stream-story-title.arco-typography,
+.stream-story-card:focus-within .stream-story-title-link {
+  color: var(--color-text-1);
+  font-weight: 700;
+}
+
 .stream-story-title-link:hover,
 .stream-story-title-link:focus-visible {
   text-decoration: underline;
