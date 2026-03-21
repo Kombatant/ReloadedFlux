@@ -25,7 +25,7 @@ const ImageComponent = ({ imgNode, isIcon, isBigImage, index, togglePhotoSlider 
       />
     </Tooltip>
   ) : (
-    <div style={{ position: "relative" }}>
+    <div className="image-overlay-target">
       <img {...imgNode.attribs} alt={altText} className={isBigImage ? "big-image" : ""} />
       <Tooltip content={altText} disabled={!altText}>
         <button

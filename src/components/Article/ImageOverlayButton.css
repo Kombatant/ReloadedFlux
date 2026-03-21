@@ -4,6 +4,12 @@
   margin: 0;
 }
 
+.image-overlay-target {
+  display: inline-block;
+  max-width: 100%;
+  position: relative;
+}
+
 .image-overlay-button {
   position: absolute;
   top: 0;

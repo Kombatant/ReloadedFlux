@@ -87,11 +87,10 @@
   border: 0;
   color: inherit;
   cursor: pointer;
-  display: block;
+  display: inline;
   font: inherit;
   padding: 0;
   text-align: inherit;
-  width: 100%;
 }
 
 .stream-story-title-link:hover,
