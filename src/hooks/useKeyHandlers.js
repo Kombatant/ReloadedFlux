@@ -17,6 +17,27 @@ import { ANIMATION_DURATION_MS } from "@/utils/constants"
 import { Message } from "@/utils/feedback"
 import { extractImageSources } from "@/utils/images"
 
+const STREAM_CARD_TOP_OFFSET = 8
+const STREAM_SCROLL_ALIGNMENT_TOLERANCE = 4
+const STREAM_SCROLL_RETRY_DELAY_MS = 120
+
+const getStreamCardScrollTop = (selectedCard, scrollElement) => {
+  const containerRect = scrollElement.getBoundingClientRect()
+  const selectedRect = selectedCard.getBoundingClientRect()
+
+  return Math.max(
+    0,
+    scrollElement.scrollTop + selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET,
+  )
+}
+
+const scrollStreamCardIntoView = (selectedCard, scrollElement, behavior = "smooth") => {
+  scrollElement.scrollTo({
+    behavior,
+    top: getStreamCardScrollTop(selectedCard, scrollElement),
+  })
+}
+
 const findAdjacentUnreadEntry = (currentIndex, direction, entries) => {
   const isSearchingBackward = direction === "prev"
   const searchRange = isSearchingBackward
@@ -45,21 +66,38 @@ const useKeyHandlers = () => {
     return entryListRef.current.getScrollElement?.() || entryListRef.current.contentWrapperEl
   }
 
+  const getSelectedCard = () => {
+    return entryListRef.current?.el?.querySelector(".card-wrapper.selected") || null
+  }
+
   const scrollSelectedCardIntoView = () => {
     if (entryListRef.current) {
-      const selectedCard = entryListRef.current.el.querySelector(".card-wrapper.selected")
+      const selectedCard = getSelectedCard()
       if (selectedCard) {
         if (layoutMode === "stream") {
           const scrollElement = getEntryListScrollElement()
           if (scrollElement) {
-            const containerRect = scrollElement.getBoundingClientRect()
-            const selectedRect = selectedCard.getBoundingClientRect()
-            const nextTop = selectedRect.top - containerRect.top + scrollElement.scrollTop - 8
+            scrollStreamCardIntoView(selectedCard, scrollElement)
 
-            scrollElement.scrollTo({
-              behavior: "smooth",
-              top: Math.max(0, nextTop),
-            })
+            // A second pass keeps keyboard navigation aligned when layout settles after
+            // moving away from an unusually tall card.
+            globalThis.setTimeout(() => {
+              const latestSelectedCard = getSelectedCard()
+              const latestScrollElement = getEntryListScrollElement()
+              if (!latestSelectedCard || !latestScrollElement) {
+                return
+              }
+
+              const containerRect = latestScrollElement.getBoundingClientRect()
+              const selectedRect = latestSelectedCard.getBoundingClientRect()
+              const topDelta = Math.abs(
+                selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET,
+              )
+
+              if (topDelta > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+                scrollStreamCardIntoView(latestSelectedCard, latestScrollElement, "auto")
+              }
+            }, STREAM_SCROLL_RETRY_DELAY_MS)
             return
           }
         }
