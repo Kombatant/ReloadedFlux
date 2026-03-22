@@ -45,6 +45,7 @@ const defaultValue = {
   showFeedIcon: true,
   showHiddenFeeds: false,
   showStatus: "unread",
+  streamRenderSelectedOnly: false,
   showUnreadFeedsOnly: false,
   swipeSensitivity: 1,
   themeColor: "Blue",

@@ -325,7 +325,11 @@ const ArticleBodyRenderer = ({ entry, lightboxState = null, maxWidth = "100%" })
     [setIsPhotoSliderVisible, setSelectedIndex],
   )
 
-  const imageSources = useMemo(() => extractImageSources(entry.content), [entry.content])
+  const imageSources = useMemo(
+    () => entry.imageSources ?? extractImageSources(entry.content),
+    [entry.content, entry.imageSources],
+  )
+  const hasImages = imageSources.length > 0
   const htmlParserOptions = useMemo(
     () => getHtmlParserOptions(imageSources, togglePhotoSlider),
     [imageSources, togglePhotoSlider],
@@ -377,19 +381,21 @@ const ArticleBodyRenderer = ({ entry, lightboxState = null, maxWidth = "100%" })
           />
         )}
         {parsedHtml}
-        <Lightbox
-          animation={lightboxAnimationConfig}
-          carousel={{ finite: true, padding: 0 }}
-          close={() => setIsPhotoSliderVisible(false)}
-          controller={{ closeOnBackdropClick: true }}
-          index={selectedIndex}
-          open={isPhotoSliderVisible}
-          plugins={[Counter, Fullscreen, Zoom]}
-          slides={imageSources.map((item) => ({ src: item }))}
-          on={{
-            view: ({ index }) => setSelectedIndex(index),
-          }}
-        />
+        {hasImages ? (
+          <Lightbox
+            animation={lightboxAnimationConfig}
+            carousel={{ finite: true, padding: 0 }}
+            close={() => setIsPhotoSliderVisible(false)}
+            controller={{ closeOnBackdropClick: true }}
+            index={selectedIndex}
+            open={isPhotoSliderVisible}
+            plugins={[Counter, Fullscreen, Zoom]}
+            slides={imageSources.map((item) => ({ src: item }))}
+            on={{
+              view: ({ index }) => setSelectedIndex(index),
+            }}
+          />
+        ) : null}
       </div>
     </div>
   )

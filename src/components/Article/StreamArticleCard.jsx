@@ -9,7 +9,7 @@ import {
   IconStarFill,
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
-import { useEffect, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import { useNavigate } from "react-router"
 
 import ArticleBodyRenderer from "./ArticleBodyRenderer"
@@ -20,7 +20,6 @@ import FeedIcon from "@/components/ui/FeedIcon"
 import useEntryActions from "@/hooks/useEntryActions"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import { contentState } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { settingsState } from "@/store/settingsState"
 import { generateReadableDate, generateReadingTime, generateRelativeTime } from "@/utils/date"
@@ -35,9 +34,8 @@ const withStopPropagation = (callback) => (event) => {
   callback()
 }
 
-const StreamArticleCard = ({ entry, handleEntryClick }) => {
+const StreamArticleCard = ({ activeEntry, entry, handleEntryClick, isSelected }) => {
   const navigate = useNavigate()
-  const { activeContent } = useStore(contentState)
   const { hasIntegrations } = useStore(dataState)
   const {
     aiProvider,
@@ -45,6 +43,7 @@ const StreamArticleCard = ({ entry, handleEntryClick }) => {
     showDetailedRelativeTime,
     showEstimatedReadingTime,
     showFeedIcon,
+    streamRenderSelectedOnly,
     titleAlignment,
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
@@ -59,8 +58,7 @@ const StreamArticleCard = ({ entry, handleEntryClick }) => {
     handleToggleStatus,
   } = useEntryActions()
 
-  const isSelected = activeContent?.id === entry.id
-  const currentEntry = isSelected ? activeContent : entry
+  const currentEntry = activeEntry ?? entry
   const isUnread = currentEntry.status === "unread"
   const isStarred = currentEntry.starred
   const hasAiSummary = currentEntry.content?.includes("ai-summary")
@@ -70,6 +68,7 @@ const StreamArticleCard = ({ entry, handleEntryClick }) => {
   const isFetchingOriginal = fetchingEntryId === currentEntry.id
   const isSummarizing = summarizingEntryId === currentEntry.id
   const contentMaxWidth = isBelowMedium ? "100%" : `${articleWidth}%`
+  const previewText = useMemo(() => currentEntry.previewText || "", [currentEntry.previewText])
 
   const selectEntry = () => {
     if (!isSelected) {
@@ -223,10 +222,16 @@ const StreamArticleCard = ({ entry, handleEntryClick }) => {
             <span>{generateReadingTime(currentEntry.reading_time)}</span>
           ) : null}
         </div>
-        <ArticleBodyRenderer entry={currentEntry} maxWidth={contentMaxWidth} />
+        {isSelected || !streamRenderSelectedOnly ? (
+          <ArticleBodyRenderer entry={currentEntry} maxWidth={contentMaxWidth} />
+        ) : (
+          <p className="stream-story-preview" style={{ maxWidth: contentMaxWidth }}>
+            {previewText}
+          </p>
+        )}
       </div>
     </article>
   )
 }
 
-export default StreamArticleCard
+export default memo(StreamArticleCard)

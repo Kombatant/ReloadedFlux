@@ -45,29 +45,6 @@ const ArticleCardImage = ({ entry, isWideImage }) => {
   )
 }
 
-const extractTextFromHtml = (html) => {
-  if (!html) {
-    return ""
-  }
-
-  return html
-    .replaceAll(/<[^>]*>/g, "") // Remove all HTML tags
-    .replaceAll("&nbsp;", " ") // Replace space entities
-    .replaceAll(/&#(\d+);/g, (_match, dec) => String.fromCodePoint(dec)) // Handle numeric HTML entities
-    .replaceAll(/&([a-z]+);/g, (_match, entity) => {
-      // Handle named HTML entities
-      const entities = {
-        amp: "&",
-        lt: "<",
-        gt: ">",
-        quot: '"',
-        apos: "'",
-      }
-      return entities[entity] || ""
-    })
-    .trim()
-}
-
 const ArticleCard = ({ entry, handleEntryClick, children }) => {
   const {
     coverDisplayMode,
@@ -196,7 +173,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
     return !showEstimatedReadingTime && hasSideImage ? 4 : 3
   }
 
-  const previewContent = useMemo(() => extractTextFromHtml(entry.content), [entry.content])
+  const previewContent = useMemo(() => entry.previewText || "", [entry.previewText])
 
   return (
     <Dropdown

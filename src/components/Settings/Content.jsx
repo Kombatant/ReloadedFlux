@@ -347,6 +347,19 @@ const Content = () => {
       <Divider />
 
       <SettingItem
+        description={polyglot.t("settings.content.stream_render_selected_only_description")}
+        title={polyglot.t("settings.content.stream_render_selected_only_label")}
+      >
+        <Switch
+          checked={settings.streamRenderSelectedOnly}
+          disabled={settings.layoutMode !== "stream"}
+          onChange={(value) => updateSettings({ streamRenderSelectedOnly: value })}
+        />
+      </SettingItem>
+
+      <Divider />
+
+      <SettingItem
         description={polyglot.t("settings.content.title_alignment_description")}
         title={polyglot.t("appearance.title_alignment_label")}
       >

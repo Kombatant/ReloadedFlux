@@ -35,6 +35,7 @@ import { dataState } from "@/store/dataState"
 import { duplicateHotkeysState } from "@/store/hotkeysState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { Notification } from "@/utils/feedback"
+import { parseCoverImage } from "@/utils/images"
 
 import "./Content.css"
 
@@ -63,7 +64,8 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
 
   useDocumentTitle()
 
-  const { entryDetailRef, entryListRef, handleEntryClick } = useContentContext()
+  const { entryDetailRef, entryListRef, handleEntryClick, streamVirtualizerRef } =
+    useContentContext()
 
   const { navigateToNextArticle, navigateToPreviousArticle, showHotkeysSettings } = useKeyHandlers()
 
@@ -190,7 +192,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
 
     try {
       setIsArticleLoading(true)
-      const entry = await getEntry(entryId)
+      const entry = parseCoverImage(await getEntry(entryId))
       setActiveContent(entry)
     } catch (error) {
       console.error("Failed to fetch entry:", error)
@@ -371,6 +373,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
           info={info}
           markAllAsRead={markAllAsRead}
           refreshArticleList={fetchArticleListWithRelatedData}
+          streamVirtualizerRef={streamVirtualizerRef}
         />
       </div>
     )

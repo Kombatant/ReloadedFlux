@@ -20,6 +20,7 @@ import { AI_PROVIDERS, formatSummaryHtml, summarizeWithProvider } from "@/utils/
 import { checkIsInLast24Hours } from "@/utils/date"
 import { extractTextFromHtml } from "@/utils/dom"
 import { Message, Notification } from "@/utils/feedback"
+import { parseCoverImage } from "@/utils/images"
 
 const updateEntries = (entries, updatedEntries) => {
   const updatedEntryIds = new Set(updatedEntries.map((entry) => entry.id))
@@ -139,7 +140,7 @@ const useEntryActions = () => {
   }
 
   const updateEntryContent = (entry, updates) => {
-    const updatedEntry = { ...entry, ...updates }
+    const updatedEntry = parseCoverImage({ ...entry, ...updates })
 
     if (activeContent?.id === entry.id) {
       setActiveContent(updatedEntry)

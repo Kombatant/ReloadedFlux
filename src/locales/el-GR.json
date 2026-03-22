@@ -330,6 +330,8 @@
       "import_export_label": "Εισαγωγή / Εξαγωγή",
       "article_label": "Άρθρο",
       "article_description": "Επιλογές εμφάνισης άρθρου: στοίχιση τίτλου, μέγεθος γραμματοσειράς και πλάτος άρθρου.",
+      "stream_render_selected_only_label": "Πλήρες περιεχόμενο μόνο για το επιλεγμένο άρθρο",
+      "stream_render_selected_only_description": "Στην εκτεταμένη διάταξη εμφανίζει πλήρες περιεχόμενο μόνο για το επιλεγμένο άρθρο.",
       "article_font_size_label": "Μέγεθος γραμματοσειράς άρθρου",
       "title_alignment_description": "Επιλέξτε την στοίχιση του τίτλου του άρθρου."
     }

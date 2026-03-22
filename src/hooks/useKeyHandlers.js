@@ -42,12 +42,12 @@ const getStreamCardTopDelta = (selectedCard, scrollElement) => {
   return Math.abs(selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET)
 }
 
-const focusStreamCard = (selectedCard) => {
-  if (document.activeElement === selectedCard) {
+const focusStreamCard = (cardElement) => {
+  if (document.activeElement === cardElement) {
     return
   }
 
-  selectedCard.focus({ preventScroll: true })
+  cardElement.focus({ preventScroll: true })
 }
 
 const findAdjacentUnreadEntry = (currentEntryId, direction, entries) => {
@@ -68,7 +68,8 @@ const useKeyHandlers = () => {
   const { activeContent } = useStore(contentState)
   const { polyglot } = useStore(polyglotState)
 
-  const { entryListRef, handleEntryClick, closeActiveContent } = useContentContext()
+  const { entryListRef, handleEntryClick, closeActiveContent, streamVirtualizerRef } =
+    useContentContext()
   const streamAlignmentTaskRef = useRef({
     delayTimeoutId: null,
     frameId: null,
@@ -111,8 +112,16 @@ const useKeyHandlers = () => {
     return entryListRef.current.getScrollElement?.() || entryListRef.current.contentWrapperEl
   }
 
-  const getSelectedCard = () => {
-    return entryListRef.current?.el?.querySelector(".card-wrapper.selected") || null
+  const getSelectedCard = (targetEntryId = null) => {
+    if (!entryListRef.current?.el) {
+      return null
+    }
+
+    if (targetEntryId !== null) {
+      return entryListRef.current.el.querySelector(`[data-entry-id="${targetEntryId}"]`) || null
+    }
+
+    return entryListRef.current.el.querySelector(".card-wrapper.selected") || null
   }
 
   const getAdjacentEntry = (direction) => {
@@ -131,7 +140,7 @@ const useKeyHandlers = () => {
     return entries[currentIndex + step] ?? null
   }
 
-  const alignSelectedStreamCard = () => {
+  const alignSelectedStreamCard = (targetEntryId = null) => {
     clearPendingStreamAlignment()
 
     const task = streamAlignmentTaskRef.current
@@ -179,7 +188,7 @@ const useKeyHandlers = () => {
         return
       }
 
-      const selectedCard = getSelectedCard()
+      const selectedCard = getSelectedCard(targetEntryId)
       const scrollElement = getEntryListScrollElement()
 
       if (!selectedCard || !scrollElement) {
@@ -223,14 +232,28 @@ const useKeyHandlers = () => {
     streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
   }
 
-  const scrollSelectedCardIntoView = () => {
+  const scrollSelectedCardIntoView = (targetEntryId = null) => {
     if (entryListRef.current) {
-      const selectedCard = getSelectedCard()
+      if (targetEntryId !== null && streamVirtualizerRef.current) {
+        const targetIndex = filteredEntriesState
+          .get()
+          .findIndex((entry) => entry.id === Number(targetEntryId))
+
+        if (targetIndex !== -1) {
+          streamVirtualizerRef.current.scrollToIndex(targetIndex, {
+            align: "start",
+            offset: STREAM_CARD_TOP_OFFSET,
+            smooth: true,
+          })
+        }
+      }
+
+      const selectedCard = getSelectedCard(targetEntryId)
       if (selectedCard) {
         if (settingsState.get().layoutMode === "stream") {
           const scrollElement = getEntryListScrollElement()
           if (scrollElement) {
-            alignSelectedStreamCard()
+            alignSelectedStreamCard(targetEntryId)
             return
           }
         }
@@ -281,7 +304,7 @@ const useKeyHandlers = () => {
       handleEntryClick(previousContent)
 
       if (settingsState.get().layoutMode === "stream") {
-        scrollSelectedCardIntoView()
+        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(previousContent.id))
       } else {
         globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
       }
@@ -298,7 +321,7 @@ const useKeyHandlers = () => {
       handleEntryClick(nextContent)
 
       if (settingsState.get().layoutMode === "stream") {
-        scrollSelectedCardIntoView()
+        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(nextContent.id))
       } else {
         globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
       }
@@ -324,7 +347,7 @@ const useKeyHandlers = () => {
       handleEntryClick(adjacentUnreadEntry)
 
       if (settingsState.get().layoutMode === "stream") {
-        scrollSelectedCardIntoView()
+        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(adjacentUnreadEntry.id))
       } else {
         globalThis.setTimeout(scrollSelectedCardIntoView, ANIMATION_DURATION_MS)
       }
@@ -369,7 +392,7 @@ const useKeyHandlers = () => {
       return
     }
 
-    const imageSources = extractImageSources(activeContent.content)
+    const imageSources = activeContent.imageSources ?? extractImageSources(activeContent.content)
     if (imageSources.length === 0) {
       return
     }

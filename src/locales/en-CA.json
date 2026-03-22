@@ -331,6 +331,8 @@
       "import_export_label": "Import / Export",
       "article_label": "Article",
       "article_description": "Article display options: title alignment, font size, and article width.",
+      "stream_render_selected_only_label": "Show full content for selected article",
+      "stream_render_selected_only_description": "Show full content only for the selected article in Expanded layout.",
       "article_font_size_label": "Article Font Size",
       "title_alignment_description": "Choose how the article title is aligned."
     }

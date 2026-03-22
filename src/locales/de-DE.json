@@ -331,6 +331,8 @@
       "import_export_label": "Import / Export",
       "article_label": "Artikel",
       "article_description": "Anzeigeoptionen für Artikel: Titelausrichtung, Schriftgröße und Artikelbreite.",
+      "stream_render_selected_only_label": "Vollständigen Inhalt für ausgewählten Artikel anzeigen",
+      "stream_render_selected_only_description": "Im erweiterten Layout wird vollständiger Inhalt nur für den ausgewählten Artikel angezeigt.",
       "article_font_size_label": "Schriftgröße des Artikels",
       "title_alignment_description": "Wählen Sie die Ausrichtung des Artikeltitels."
     }

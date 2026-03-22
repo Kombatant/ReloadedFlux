@@ -331,6 +331,8 @@
       "import_export_label": "导入/导出",
       "article_label": "文章",
       "article_description": "文章显示选项：标题对齐、字体大小和文章宽度。",
+      "stream_render_selected_only_label": "仅为选中文章显示完整内容",
+      "stream_render_selected_only_description": "在扩展布局中，仅为当前选中的文章显示完整内容。",
       "article_font_size_label": "文章字体大小",
       "title_alignment_description": "选择文章标题的对齐方式。",
       "title_alignment_left": "左对齐",

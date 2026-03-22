@@ -4,6 +4,7 @@ import { useStore } from "@nanostores/react"
 import { throttle } from "lodash-es"
 import { useEffect, useMemo } from "react"
 import SimpleBar from "simplebar-react"
+import { Virtualizer } from "virtua"
 
 import LoadingCards from "@/components/Article/LoadingCards"
 import SearchAndSortBar from "@/components/Article/SearchAndSortBar"
@@ -21,8 +22,9 @@ const StoryStream = ({
   info,
   markAllAsRead,
   refreshArticleList,
+  streamVirtualizerRef,
 }) => {
-  const { isArticleListReady, loadMoreVisible } = useStore(contentState)
+  const { activeContent, isArticleListReady, loadMoreVisible } = useStore(contentState)
   const filteredEntries = useStore(filteredEntriesState)
   const { loadingMore, handleLoadMore } = useLoadMore()
   const canLoadMore = loadMoreVisible && isArticleListReady && !loadingMore
@@ -64,7 +66,6 @@ const StoryStream = ({
         className="entry-list story-stream-list"
         scrollableNodeProps={{
           ref: cardsRef,
-          onScroll: (event) => checkAndLoadMore(event.currentTarget),
         }}
       >
         <LoadingCards />
@@ -74,15 +75,39 @@ const StoryStream = ({
             <Typography.Text>ReactFlux</Typography.Text>
           </div>
         ) : null}
-        {filteredEntries.map((entry) => (
-          <StreamArticleCard key={entry.id} entry={entry} handleEntryClick={handleEntryClick} />
-        ))}
-        {loadMoreVisible ? (
-          <div className="load-more-container story-stream-load-more">
-            <Button loading={loadingMore} type="text" onClick={() => handleLoadMore(getEntries)}>
-              Loading more ...
-            </Button>
-          </div>
+        {isArticleListReady && hasEntries ? (
+          <Virtualizer
+            ref={streamVirtualizerRef}
+            overscan={2}
+            scrollRef={cardsRef}
+            onScroll={() => {
+              const element = cardsRef.current
+              if (element) {
+                checkAndLoadMore(element)
+              }
+            }}
+          >
+            {filteredEntries.map((entry) => (
+              <StreamArticleCard
+                key={entry.id}
+                activeEntry={activeContent?.id === entry.id ? activeContent : null}
+                entry={entry}
+                handleEntryClick={handleEntryClick}
+                isSelected={activeContent?.id === entry.id}
+              />
+            ))}
+            {loadMoreVisible ? (
+              <div className="load-more-container story-stream-load-more">
+                <Button
+                  loading={loadingMore}
+                  type="text"
+                  onClick={() => handleLoadMore(getEntries)}
+                >
+                  Loading more ...
+                </Button>
+              </div>
+            ) : null}
+          </Virtualizer>
         ) : null}
       </SimpleBar>
     </div>

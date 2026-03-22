@@ -4,6 +4,11 @@ export const extractImageSources = (htmlString) => {
   return [...images].map((img) => img.getAttribute("src"))
 }
 
+const extractPreviewText = (doc) => {
+  const textContent = doc.body?.textContent || ""
+  return textContent.replaceAll(/\s+/g, " ").trim()
+}
+
 const getWeiboFirstImage = (docs) => {
   const allImages = [...docs.querySelectorAll("img")]
   const filteredImages = allImages.filter((img) => {
@@ -32,6 +37,8 @@ export const parseCoverImage = (entry) => {
   const doc = new DOMParser().parseFromString(entry.content, "text/html")
   const isWeiboFeed =
     entry.feed?.site_url && /https:\/\/weibo\.com\/\d+\//.test(entry.feed.site_url)
+  const imageSources = [...doc.querySelectorAll("img")].map((img) => img.getAttribute("src"))
+  const previewText = extractPreviewText(doc)
 
   // Get the first image
   const firstImage = isWeiboFeed ? getWeiboFirstImage(doc) : doc.querySelector("img")
@@ -67,5 +74,12 @@ export const parseCoverImage = (entry) => {
     }
   }
 
-  return { ...entry, coverSource, mediaPlayerEnclosure, isMedia }
+  return {
+    ...entry,
+    coverSource,
+    imageSources,
+    isMedia,
+    mediaPlayerEnclosure,
+    previewText,
+  }
 }

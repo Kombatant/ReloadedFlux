@@ -19,6 +19,7 @@ export const ContextProvider = ({ children }) => {
 
   const entryDetailRef = useRef(null)
   const entryListRef = useRef(null)
+  const streamVirtualizerRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -78,6 +79,7 @@ export const ContextProvider = ({ children }) => {
     () => ({
       entryDetailRef,
       entryListRef,
+      streamVirtualizerRef,
       handleEntryClick,
       setActiveContent,
       closeActiveContent,

@@ -139,6 +139,16 @@
   padding: 0;
 }
 
+.stream-story-preview {
+  color: var(--color-text-2);
+  display: -webkit-box;
+  line-height: 1.8;
+  margin: 0 auto;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
 .stream-story-expanded .article-body {
   line-height: 1.85;
   padding-bottom: 12px;
