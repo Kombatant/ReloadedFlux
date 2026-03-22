@@ -18,9 +18,9 @@
 }
 
 .story-stream-list .simplebar-content-wrapper {
+  overflow-anchor: none;
   scroll-behavior: smooth;
   scroll-padding-block: 18px;
-  scroll-snap-type: y proximity;
 }
 
 .story-stream-empty {

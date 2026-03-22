@@ -12,20 +12,27 @@ import { ANIMATION_DURATION_MS } from "@/utils/constants"
 import { Message } from "@/utils/feedback"
 import { extractImageSources } from "@/utils/images"
 
-const STREAM_CARD_TOP_OFFSET = 8
+const STREAM_CARD_TOP_OFFSET_FALLBACK = 18
 const STREAM_SCROLL_ALIGNMENT_TOLERANCE = 4
 const STREAM_SCROLL_INITIAL_ALIGNMENT_DELAY_MS = 140
 const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 1800
 const STREAM_SCROLL_STABLE_FRAME_TARGET = 6
 
+const getStreamCardTopOffset = (scrollElement) => {
+  const computedStyle = globalThis.getComputedStyle(scrollElement)
+  const scrollPaddingTop =
+    computedStyle.scrollPaddingTop || computedStyle.scrollPaddingBlockStart || ""
+  const parsedOffset = Number.parseFloat(scrollPaddingTop)
+
+  return Number.isFinite(parsedOffset) ? parsedOffset : STREAM_CARD_TOP_OFFSET_FALLBACK
+}
+
 const getStreamCardScrollTop = (selectedCard, scrollElement) => {
   const containerRect = scrollElement.getBoundingClientRect()
   const selectedRect = selectedCard.getBoundingClientRect()
+  const topOffset = getStreamCardTopOffset(scrollElement)
 
-  return Math.max(
-    0,
-    scrollElement.scrollTop + selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET,
-  )
+  return Math.max(0, scrollElement.scrollTop + selectedRect.top - containerRect.top - topOffset)
 }
 
 const scrollStreamCardIntoView = (selectedCard, scrollElement, behavior = "smooth") => {
@@ -38,8 +45,9 @@ const scrollStreamCardIntoView = (selectedCard, scrollElement, behavior = "smoot
 const getStreamCardTopDelta = (selectedCard, scrollElement) => {
   const containerRect = scrollElement.getBoundingClientRect()
   const selectedRect = selectedCard.getBoundingClientRect()
+  const topOffset = getStreamCardTopOffset(scrollElement)
 
-  return Math.abs(selectedRect.top - containerRect.top - STREAM_CARD_TOP_OFFSET)
+  return Math.abs(selectedRect.top - containerRect.top - topOffset)
 }
 
 const focusStreamCard = (cardElement) => {
@@ -140,7 +148,7 @@ const useKeyHandlers = () => {
     return entries[currentIndex + step] ?? null
   }
 
-  const alignSelectedStreamCard = (targetEntryId = null) => {
+  const alignSelectedStreamCard = (targetEntryId = null, { skipInitialScroll = false } = {}) => {
     clearPendingStreamAlignment()
 
     const task = streamAlignmentTaskRef.current
@@ -200,9 +208,11 @@ const useKeyHandlers = () => {
       focusStreamCard(selectedCard)
 
       if (!hasAppliedInitialScroll) {
-        scrollStreamCardIntoView(selectedCard, scrollElement)
         hasAppliedInitialScroll = true
         stableFrameCount = 0
+        if (!skipInitialScroll) {
+          scrollStreamCardIntoView(selectedCard, scrollElement)
+        }
         streamAlignmentTaskRef.current.delayTimeoutId = globalThis.setTimeout(() => {
           if (!isCurrentSession()) {
             return
@@ -214,7 +224,9 @@ const useKeyHandlers = () => {
         return
       }
 
-      if (getStreamCardTopDelta(selectedCard, scrollElement) > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+      const topDelta = getStreamCardTopDelta(selectedCard, scrollElement)
+
+      if (topDelta > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
         scrollStreamCardIntoView(selectedCard, scrollElement, "auto")
         stableFrameCount = 0
       } else {
@@ -234,6 +246,15 @@ const useKeyHandlers = () => {
 
   const scrollSelectedCardIntoView = (targetEntryId = null) => {
     if (entryListRef.current) {
+      const scrollElement = getEntryListScrollElement()
+      const topOffset = scrollElement ? getStreamCardTopOffset(scrollElement) : 0
+      const selectedCard = getSelectedCard(targetEntryId)
+
+      if (settingsState.get().layoutMode === "stream" && scrollElement && selectedCard) {
+        alignSelectedStreamCard(targetEntryId)
+        return
+      }
+
       if (targetEntryId !== null && streamVirtualizerRef.current) {
         const targetIndex = filteredEntriesState
           .get()
@@ -242,20 +263,16 @@ const useKeyHandlers = () => {
         if (targetIndex !== -1) {
           streamVirtualizerRef.current.scrollToIndex(targetIndex, {
             align: "start",
-            offset: STREAM_CARD_TOP_OFFSET,
+            offset: -topOffset,
             smooth: true,
           })
         }
       }
 
-      const selectedCard = getSelectedCard(targetEntryId)
       if (selectedCard) {
-        if (settingsState.get().layoutMode === "stream") {
-          const scrollElement = getEntryListScrollElement()
-          if (scrollElement) {
-            alignSelectedStreamCard(targetEntryId)
-            return
-          }
+        if (settingsState.get().layoutMode === "stream" && scrollElement) {
+          alignSelectedStreamCard(targetEntryId, { skipInitialScroll: true })
+          return
         }
 
         selectedCard.scrollIntoView({
