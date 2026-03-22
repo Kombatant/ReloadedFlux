@@ -200,7 +200,7 @@ const useKeyHandlers = () => {
       focusStreamCard(selectedCard)
 
       if (!hasAppliedInitialScroll) {
-        scrollStreamCardIntoView(selectedCard, scrollElement)
+        scrollStreamCardIntoView(selectedCard, scrollElement, "smooth")
         hasAppliedInitialScroll = true
         stableFrameCount = 0
         streamAlignmentTaskRef.current.delayTimeoutId = globalThis.setTimeout(() => {
