@@ -18,22 +18,14 @@ import "./ArticleList.css"
 
 const LoadMoreComponent = ({ getEntries }) => {
   const { isArticleListReady, loadMoreVisible } = useStore(contentState)
-
   const { loadingMore, handleLoadMore } = useLoadMore()
-
   const { ref: loadMoreRef, inView } = useInView()
 
-  const loadMoreEntries = useCallback(async () => {
+  useEffect(() => {
     if (loadMoreVisible && inView && isArticleListReady && !loadingMore) {
-      await handleLoadMore(getEntries)
+      void handleLoadMore(getEntries)
     }
   }, [loadMoreVisible, inView, isArticleListReady, loadingMore, handleLoadMore, getEntries])
-
-  useEffect(() => {
-    const intervalId = setInterval(loadMoreEntries, 500)
-
-    return () => clearInterval(intervalId)
-  }, [loadMoreEntries])
 
   return (
     isArticleListReady &&

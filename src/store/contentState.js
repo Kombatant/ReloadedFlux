@@ -1,6 +1,11 @@
 import { computed, map } from "nanostores"
 
-import { dataState, feedsState, hiddenFeedIdsState, unreadTotalState } from "./dataState"
+import {
+  dataState,
+  feedsGroupedByIdState,
+  hiddenFeedIdSetState,
+  unreadTotalState,
+} from "./dataState"
 import { getSettings, settingsState } from "./settingsState"
 
 import removeDuplicateEntries from "@/utils/deduplicate"
@@ -34,7 +39,7 @@ export const articleHeadingsState = computed([contentState], (content) => {
 })
 
 export const filteredEntriesState = computed(
-  [contentState, dataState, hiddenFeedIdsState, settingsState],
+  [contentState, dataState, hiddenFeedIdSetState, settingsState],
   (content, data, hiddenFeedIds, settings) => {
     const { entries, filterString, filterType, infoFrom } = content
     const filteredEntries = filterEntries(entries, filterType, filterString)
@@ -43,17 +48,15 @@ export const filteredEntriesState = computed(
     const { showHiddenFeeds } = settings
     const isValidFilter = !["starred", "history"].includes(infoFrom)
     const isVisible = (entry) =>
-      compareVersions(version, "2.2.0") >= 0 ||
-      showHiddenFeeds ||
-      !hiddenFeedIds.includes(entry.feed.id)
+      compareVersions(version, "2.2.0") >= 0 || showHiddenFeeds || !hiddenFeedIds.has(entry.feed.id)
 
     return isValidFilter ? filteredEntries.filter((entry) => isVisible(entry)) : filteredEntries
   },
 )
 
 export const dynamicCountState = computed(
-  [contentState, dataState, unreadTotalState, settingsState, feedsState],
-  (content, data, unreadTotal, settings, feeds) => {
+  [contentState, dataState, unreadTotalState, settingsState, feedsGroupedByIdState],
+  (content, data, unreadTotal, settings, feedsGroupedById) => {
     const { infoFrom, total } = content
     const { showStatus } = settings
     const { unreadStarredCount, unreadTodayCount, historyCount, starredCount, unreadInfo } = data
@@ -84,7 +87,7 @@ export const dynamicCountState = computed(
         case "category": {
           const id = content.infoId
           if (id) {
-            const feedsInCategory = feeds.filter((feed) => feed.category.id === Number(id))
+            const feedsInCategory = feedsGroupedById[Number(id)] ?? []
             return feedsInCategory.reduce((acc, feed) => acc + (unreadInfo[feed.id] || 0), 0)
           }
           return total

@@ -11,16 +11,14 @@ import createSetter from "@/utils/nanostores"
 const loadingMoreState = atom(false)
 const setLoadingMore = createSetter(loadingMoreState)
 
-const isUniqueEntry = (entry, existingEntries) =>
-  !existingEntries.some((existing) => existing.id === entry.id)
-
 const useLoadMore = () => {
   const { entries, filterString, infoFrom } = useStore(contentState)
   const { pageSize, showStatus, orderBy, orderDirection } = useStore(settingsState)
   const loadingMore = useStore(loadingMoreState)
 
   const updateEntries = (newEntries) => {
-    const uniqueNewEntries = newEntries.filter((entry) => isUniqueEntry(entry, entries))
+    const existingEntryIds = new Set(entries.map((entry) => entry.id))
+    const uniqueNewEntries = newEntries.filter((entry) => !existingEntryIds.has(entry.id))
     const combinedEntries = [...entries, ...uniqueNewEntries]
     setEntriesWithDeduplication(combinedEntries)
   }
@@ -41,24 +39,17 @@ const useLoadMore = () => {
   const sortProperty = ["starred", "history"].includes(infoFrom) ? "changed_at" : orderBy
 
   const getReferenceEntry = () => {
-    const sortedEntries = [...entries].toSorted((a, b) => {
-      const aValue = getTimestamp(a[sortProperty])
-      const bValue = getTimestamp(b[sortProperty])
-      return orderDirection === "desc" ? bValue - aValue : aValue - bValue
-    })
+    const entriesByTimestamp = new Map()
+    const timestamps = []
 
-    const entriesByTimestamp = {}
-    for (const entry of sortedEntries) {
+    for (const entry of entries) {
       const timestamp = getTimestamp(entry[sortProperty])
-      if (!entriesByTimestamp[timestamp]) {
-        entriesByTimestamp[timestamp] = []
+      if (!entriesByTimestamp.has(timestamp)) {
+        entriesByTimestamp.set(timestamp, [])
+        timestamps.push(timestamp)
       }
-      entriesByTimestamp[timestamp].push(entry)
+      entriesByTimestamp.get(timestamp).push(entry)
     }
-
-    const timestamps = Object.keys(entriesByTimestamp)
-      .map(Number)
-      .toSorted((a, b) => (orderDirection === "desc" ? b - a : a - b))
 
     if (timestamps.length === 0) {
       return null
@@ -67,7 +58,7 @@ const useLoadMore = () => {
     const referenceTimestampIndex = timestamps.length > 1 ? timestamps.length - 2 : 0
     const referenceTimestamp = timestamps[referenceTimestampIndex]
 
-    const timestampEntries = entriesByTimestamp[referenceTimestamp]
+    const timestampEntries = entriesByTimestamp.get(referenceTimestamp)
     return timestampEntries.at(-1)
   }
 

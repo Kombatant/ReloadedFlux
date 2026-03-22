@@ -30,6 +30,15 @@
   align-items: center;
 }
 
+.search-and-sort-bar .stream-nav-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  margin-right: 4px;
+}
+
 .search-and-sort-bar .page-info {
   display: flex;
   align-items: center;

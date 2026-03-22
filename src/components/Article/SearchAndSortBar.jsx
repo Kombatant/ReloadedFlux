@@ -15,7 +15,6 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconCalendar,
-  IconClose,
   IconQuestionCircle,
   IconRecord,
   IconRefresh,
@@ -518,7 +517,7 @@ const SearchAndSortBar = ({ info, markAllAsRead, refreshArticleList, variant = "
 
   const { id } = useParams()
   const { isBelowMedium } = useScreenWidth()
-  const { exitDetailView, navigateToNextArticle, navigateToPreviousArticle } = useKeyHandlers()
+  const { navigateToNextArticle, navigateToPreviousArticle } = useKeyHandlers()
 
   const [calendarVisible, setCalendarVisible] = useState(false)
   const [searchModalVisible, setSearchModalVisible] = useState(false)
@@ -632,6 +631,35 @@ const SearchAndSortBar = ({ info, markAllAsRead, refreshArticleList, variant = "
       <div className="search-and-sort-bar stream-toolbar" style={{ width: "100%" }}>
         <div className="toolbar-main">
           <SidebarTrigger />
+          <div className="stream-nav-group">
+            <CustomTooltip mini content={polyglot.t("article_card.previous_tooltip")}>
+              <Button
+                disabled={!prevContent}
+                icon={<IconArrowLeft />}
+                shape="circle"
+                size="small"
+                onClick={navigateToPreviousArticle}
+              />
+            </CustomTooltip>
+            <CustomTooltip mini content={polyglot.t("article_card.next_tooltip")}>
+              <Button
+                disabled={!nextContent}
+                icon={<IconArrowRight />}
+                shape="circle"
+                size="small"
+                onClick={navigateToNextArticle}
+              />
+            </CustomTooltip>
+            <CustomTooltip mini content={polyglot.t("article_list.refresh_tooltip")}>
+              <Button
+                icon={<IconRefresh />}
+                loading={!isArticleListReady}
+                shape="circle"
+                size="small"
+                onClick={refreshArticleList}
+              />
+            </CustomTooltip>
+          </div>
           <div className="page-info">
             <div className="title-container">
               <div className="title-row">
@@ -723,42 +751,6 @@ const SearchAndSortBar = ({ info, markAllAsRead, refreshArticleList, variant = "
           </CustomTooltip>
           <MarkReadControl info={info} markAllAsRead={markAllAsRead} />
           <LayoutModeSelect layoutMode={layoutMode} layoutOptions={layoutOptions} />
-          <CustomTooltip mini content={polyglot.t("article_list.refresh_tooltip")}>
-            <Button
-              icon={<IconRefresh />}
-              loading={!isArticleListReady}
-              shape="circle"
-              size="small"
-              onClick={refreshArticleList}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("article_card.previous_tooltip")}>
-            <Button
-              disabled={!prevContent}
-              icon={<IconArrowLeft />}
-              shape="circle"
-              size="small"
-              onClick={navigateToPreviousArticle}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("article_card.next_tooltip")}>
-            <Button
-              disabled={!nextContent}
-              icon={<IconArrowRight />}
-              shape="circle"
-              size="small"
-              onClick={navigateToNextArticle}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("article_card.close_tooltip")}>
-            <Button
-              disabled={!activeContent}
-              icon={<IconClose />}
-              shape="circle"
-              size="small"
-              onClick={exitDetailView}
-            />
-          </CustomTooltip>
         </div>
         <SearchModal
           value={modalInputValue}

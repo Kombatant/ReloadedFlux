@@ -31,6 +31,10 @@ export default function SidebarTrigger() {
     }
   }, [currentPath])
 
+  if (!isBelowLarge) {
+    return null
+  }
+
   return (
     <div>
       <div className="brand">
