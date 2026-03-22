@@ -25,6 +25,7 @@ import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import {
   contentState,
+  filteredEntriesState,
   setActiveContent,
   setInfoFrom,
   setInfoId,
@@ -74,19 +75,84 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
   const [isResizingEntryList, setIsResizingEntryList] = useState(false)
   const contentSplitRef = useRef(null)
 
-  const fetchArticleListOnly = async () => {
-    await (isAppDataReady ? fetchArticleList(getEntries) : fetchAppData())
-  }
-
-  const fetchArticleListWithRelatedData = async () => {
-    if (!isAppDataReady) {
-      await fetchAppData()
+  const focusFirstStreamCard = useCallback(() => {
+    if (layoutMode !== "stream" || isBelowMedium) {
       return
     }
 
-    await fetchArticleList(getEntries)
-    await fetchFeedRelatedData()
-  }
+    const firstEntry = filteredEntriesState.get()[0]
+    if (!firstEntry) {
+      setActiveContent(null)
+      return
+    }
+
+    setActiveContent(firstEntry)
+
+    const focusSelectedCard = (attempt = 0) => {
+      const entryList = entryListRef.current
+      if (!entryList) {
+        if (attempt < 8) {
+          globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
+        }
+        return
+      }
+
+      const scrollElement = entryList.getScrollElement?.() || entryList.contentWrapperEl
+      if (scrollElement) {
+        scrollElement.scrollTo({ top: 0, behavior: "auto" })
+      }
+
+      const selectedCard = entryList.el?.querySelector(".card-wrapper.selected")
+      if (selectedCard) {
+        selectedCard.focus({ preventScroll: true })
+        return
+      }
+
+      if (attempt < 8) {
+        globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
+      }
+    }
+
+    globalThis.requestAnimationFrame(() => focusSelectedCard())
+  }, [entryListRef, isBelowMedium, layoutMode])
+
+  const fetchArticleListOnly = useCallback(
+    async (options = {}) => {
+      const { focusFirstInStream = false } = options
+      await (isAppDataReady ? fetchArticleList(getEntries) : fetchAppData())
+      if (focusFirstInStream) {
+        focusFirstStreamCard()
+      }
+    },
+    [isAppDataReady, fetchArticleList, getEntries, fetchAppData, focusFirstStreamCard],
+  )
+
+  const fetchArticleListWithRelatedData = useCallback(
+    async (options = {}) => {
+      const { focusFirstInStream = false } = options
+      if (!isAppDataReady) {
+        await fetchAppData()
+        if (focusFirstInStream) {
+          focusFirstStreamCard()
+        }
+        return
+      }
+
+      await fetchArticleList(getEntries)
+      await fetchFeedRelatedData()
+      if (focusFirstInStream) {
+        focusFirstStreamCard()
+      }
+    },
+    [
+      isAppDataReady,
+      fetchAppData,
+      fetchArticleList,
+      getEntries,
+      fetchFeedRelatedData,
+      focusFirstStreamCard,
+    ],
+  )
 
   // Listen for external refresh requests (e.g., clicking an already-active sidebar item)
   useEffect(() => {
@@ -100,9 +166,9 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
         if (String(info.from) === String(from) && String(info.id) === String(id)) {
           const fullRefreshTargets = ["category", "feed", "all", "today", "starred", "history"]
           if (fullRefreshTargets.includes(String(info.from))) {
-            fetchArticleListWithRelatedData()
+            fetchArticleListWithRelatedData({ focusFirstInStream: true })
           } else {
-            fetchArticleListOnly()
+            fetchArticleListOnly({ focusFirstInStream: true })
           }
         }
       } catch (error) {
@@ -207,9 +273,9 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
       setActiveContent(null)
     }
     if (info.from === "category") {
-      fetchArticleListWithRelatedData()
+      fetchArticleListWithRelatedData({ focusFirstInStream: true })
     } else {
-      fetchArticleListOnly()
+      fetchArticleListOnly({ focusFirstInStream: true })
     }
   }, [info])
 
