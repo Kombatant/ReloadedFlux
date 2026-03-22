@@ -18,7 +18,6 @@
 }
 
 .story-stream-list .simplebar-content-wrapper {
-  scroll-behavior: smooth;
   scroll-padding-block: 18px;
   scroll-snap-type: y proximity;
 }
