@@ -68,6 +68,7 @@ const Content = () => {
       ? polyglot.t("settings.content.ai_lmstudio_url_placeholder")
       : polyglot.t("settings.content.ai_api_key_label")
   const ApiCredentialInput = isOllamaProvider || isLmStudioProvider ? Input : Input.Password
+  const isExpandedLayout = settings.layoutMode === "stream"
 
   useEffect(() => {
     let isActive = true
@@ -348,11 +349,16 @@ const Content = () => {
 
       <SettingItem
         description={polyglot.t("settings.content.stream_render_selected_only_description")}
+        disabled={!isExpandedLayout}
+        disabledLabel={polyglot.t("settings.disabled_label")}
         title={polyglot.t("settings.content.stream_render_selected_only_label")}
+        disabledReason={polyglot.t("settings.only_available_in_layout", {
+          layout: polyglot.t("appearance.layout_mode_stream"),
+        })}
       >
         <Switch
           checked={settings.streamRenderSelectedOnly}
-          disabled={settings.layoutMode !== "stream"}
+          disabled={!isExpandedLayout}
           onChange={(value) => updateSettings({ streamRenderSelectedOnly: value })}
         />
       </SettingItem>

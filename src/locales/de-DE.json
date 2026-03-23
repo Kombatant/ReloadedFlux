@@ -298,6 +298,8 @@
     "enable_swipe_gesture_label": "Wischgeste aktivieren",
     "swipe_sensitivity_description": "Empfindlichkeit der Wischgesten anpassen",
     "swipe_sensitivity_label": "Wischempfindlichkeit",
+    "disabled_label": "Deaktiviert",
+    "only_available_in_layout": "Nur im %{layout}-Layout verfügbar",
     "update_content_on_fetch_label": "Abgerufene Inhalte automatisch speichern",
     "update_content_on_fetch_description": "Abgerufene Inhalte automatisch aktualisieren und in der Datenbank speichern",
     "content": {

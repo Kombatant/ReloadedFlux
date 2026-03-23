@@ -143,7 +143,7 @@ export default function Profile() {
               <Menu.Item
                 key="2"
                 onClick={() =>
-                  window.open(`https://github.com/${GITHUB_REPO_PATH}/issues/new/choose`, "_blank")
+                  window.open(`https://github.com/${GITHUB_REPO_PATH}/issues`, "_blank")
                 }
               >
                 <IconExclamationCircle className="icon-right" />

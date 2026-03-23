@@ -314,6 +314,8 @@
     "enable_swipe_gesture_label": "Habilitar gesto de deslizamiento",
     "swipe_sensitivity_description": "Ajustar la sensibilidad de los gestos de deslizamiento",
     "swipe_sensitivity_label": "Sensibilidad de deslizamiento",
+    "disabled_label": "Desactivado",
+    "only_available_in_layout": "Disponible solo en el diseño %{layout}",
     "update_content_on_fetch_label": "Guardar automáticamente el contenido obtenido",
     "update_content_on_fetch_description": "Actualizar y guardar automáticamente el contenido obtenido en la base de datos",
     "content": {

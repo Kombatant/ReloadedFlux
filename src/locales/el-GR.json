@@ -297,6 +297,8 @@
     "enable_swipe_gesture_label": "Ενεργοποίηση χειρονομίας σάρωσης",
     "swipe_sensitivity_description": "Ρυθμίστε την ευαισθησία της σάρωσης",
     "swipe_sensitivity_label": "Ευαισθησία σάρωσης",
+    "disabled_label": "Απενεργοποιημένο",
+    "only_available_in_layout": "Διαθέσιμο μόνο στη διάταξη %{layout}",
     "update_content_on_fetch_label": "Αυτόματη αποθήκευση ανακτημένου περιεχομένου",
     "update_content_on_fetch_description": "Αποθήκευση και ενημέρωση του περιεχομένου στη βάση δεδομένων",
     "content": {

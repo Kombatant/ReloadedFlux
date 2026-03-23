@@ -29,6 +29,7 @@ const Appearance = () => {
     themeColor,
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
+  const isExpandedLayout = layoutMode === "stream"
 
   const fontFamilyOptions = [
     { label: polyglot.t("appearance.font_family_system"), value: "system-ui" },
@@ -154,10 +155,16 @@ const Appearance = () => {
 
       <SettingItem
         description={polyglot.t("appearance.cover_display_mode_description")}
+        disabled={isExpandedLayout}
+        disabledLabel={polyglot.t("settings.disabled_label")}
         title={polyglot.t("appearance.cover_display_mode_label")}
+        disabledReason={polyglot.t("settings.only_available_in_layout", {
+          layout: polyglot.t("appearance.layout_mode_classic"),
+        })}
       >
         <Select
           className="input-select"
+          disabled={isExpandedLayout}
           value={coverDisplayMode}
           onChange={(value) => handleConfigChange({ coverDisplayMode: value })}
         >

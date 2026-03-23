@@ -298,6 +298,8 @@
     "enable_swipe_gesture_label": "Activer le geste de balayage",
     "swipe_sensitivity_description": "Ajuster la sensibilité des gestes de balayage",
     "swipe_sensitivity_label": "Sensibilité du balayage",
+    "disabled_label": "Désactivé",
+    "only_available_in_layout": "Disponible uniquement dans la disposition %{layout}",
     "update_content_on_fetch_label": "Enregistrer automatiquement le contenu récupéré",
     "update_content_on_fetch_description": "Mettre à jour et enregistrer automatiquement le contenu récupéré dans la base de données",
     "content": {

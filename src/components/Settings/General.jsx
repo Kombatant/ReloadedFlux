@@ -26,6 +26,7 @@ const General = () => {
     enableSwipeGesture,
     homePage,
     language,
+    layoutMode,
     markReadBy,
     markReadOnScroll,
     orderBy,
@@ -36,6 +37,7 @@ const General = () => {
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const { isBelowMedium } = useScreenWidth()
+  const isExpandedLayout = layoutMode === "stream"
 
   const homePageOptions = [
     {
@@ -201,10 +203,16 @@ const General = () => {
 
       <SettingItem
         description={polyglot.t("settings.enable_context_menu_description")}
+        disabled={isExpandedLayout}
+        disabledLabel={polyglot.t("settings.disabled_label")}
         title={polyglot.t("settings.enable_context_menu_label")}
+        disabledReason={polyglot.t("settings.only_available_in_layout", {
+          layout: polyglot.t("appearance.layout_mode_classic"),
+        })}
       >
         <Switch
           checked={enableContextMenu}
+          disabled={isExpandedLayout}
           onChange={(value) => updateSettings({ enableContextMenu: value })}
         />
       </SettingItem>

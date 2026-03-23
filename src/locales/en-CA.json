@@ -298,6 +298,8 @@
     "enable_swipe_gesture_label": "Enable swipe gesture",
     "swipe_sensitivity_description": "Adjust the sensitivity of swipe gestures",
     "swipe_sensitivity_label": "Swipe sensitivity",
+    "disabled_label": "Disabled",
+    "only_available_in_layout": "Only available in %{layout} layout",
     "update_content_on_fetch_label": "Auto-save fetched content",
     "update_content_on_fetch_description": "Automatically update and save fetched content to database",
     "content": {
