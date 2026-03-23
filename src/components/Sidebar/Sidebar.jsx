@@ -89,6 +89,10 @@ const CategoryTitle = ({
     const targetPath = `/category/${category.id}`
     const isSelected = path === targetPath || path.startsWith(`${targetPath}/`)
     if (isSelected) {
+      globalThis.dispatchEvent(
+        new CustomEvent("reloadedflux:refresh", { detail: { from: "category", id: category.id } }),
+      )
+      setActiveContent(null)
       return
     }
 
@@ -198,6 +202,12 @@ const CustomMenuItem = ({ path, Icon, label, count }) => {
 
   const handleNavigation = () => {
     if (isSelected) {
+      globalThis.dispatchEvent(
+        new CustomEvent("reloadedflux:refresh", {
+          detail: { from: path.replace("/", "") || "all", id: "" },
+        }),
+      )
+      setActiveContent(null)
       return
     }
 
@@ -319,6 +329,10 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
           e.stopPropagation()
           const targetPath = `/feed/${feed.id}`
           if (isSelected) {
+            globalThis.dispatchEvent(
+              new CustomEvent("reloadedflux:refresh", { detail: { from: "feed", id: feed.id } }),
+            )
+            setActiveContent(null)
             return
           }
 

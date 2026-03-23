@@ -61,7 +61,6 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
 
   const location = useLocation()
   const params = useParams()
-  const { entryId } = params
 
   useDocumentTitle()
 
@@ -71,115 +70,136 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
   const { navigateToNextArticle, navigateToPreviousArticle, showHotkeysSettings } = useKeyHandlers()
 
   const { fetchAppData, fetchFeedRelatedData } = useAppData()
-  const { fetchArticleList } = useArticleList(info)
+  const { fetchArticleList } = useArticleList(info, getEntries)
   const { isBelowMedium } = useScreenWidth()
 
   const [entryListWidth, setEntryListWidth] = useState(storedEntryListWidth ?? 420)
   const [isResizingEntryList, setIsResizingEntryList] = useState(false)
   const contentSplitRef = useRef(null)
-  const getEntriesRef = useRef(getEntries)
-  const handleEntryClickRef = useRef(handleEntryClick)
-  const lastLoadedInfoKeyRef = useRef(null)
 
-  useEffect(() => {
-    getEntriesRef.current = getEntries
-  }, [getEntries])
+  const focusFirstStreamCard = useCallback(() => {
+    if (layoutMode !== "stream" || isBelowMedium) {
+      return
+    }
 
-  useEffect(() => {
-    handleEntryClickRef.current = handleEntryClick
-  }, [handleEntryClick])
-
-  const focusStreamCard = useCallback(
-    (entryId, options = {}) => {
-      const { resetScroll = false } = options
-      if (layoutMode !== "stream" || isBelowMedium) {
-        return
-      }
-
-      const focusSelectedCard = (attempt = 0) => {
-        const entryList = entryListRef.current
-        if (!entryList) {
-          if (attempt < 8) {
-            globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
-          }
-          return
-        }
-
-        const scrollElement = entryList.getScrollElement?.() || entryList.contentWrapperEl
-        if (scrollElement && resetScroll) {
-          scrollElement.scrollTo({ top: 0, behavior: "auto" })
-        }
-
-        const selectedCard =
-          entryList.el?.querySelector(`[data-entry-id="${entryId}"]`) ||
-          entryList.el?.querySelector(".card-wrapper.selected")
-        if (selectedCard) {
-          selectedCard.focus({ preventScroll: true })
-          return
-        }
-
-        if (attempt < 8) {
-          globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
-        }
-      }
-
-      globalThis.requestAnimationFrame(() => focusSelectedCard())
-    },
-    [entryListRef, isBelowMedium, layoutMode],
-  )
-
-  const selectFirstEntry = useCallback(() => {
     const firstEntry = filteredEntriesState.get()[0]
-
     if (!firstEntry) {
       setActiveContent(null)
       return
     }
 
-    handleEntryClickRef.current(firstEntry)
-    focusStreamCard(firstEntry.id, { resetScroll: true })
-  }, [focusStreamCard])
+    setActiveContent(firstEntry)
 
-  const fetchArticleListOnly = useCallback(async () => {
-    if (!isAppDataReady) {
-      await fetchAppData()
-    }
-
-    await fetchArticleList(getEntriesRef.current)
-  }, [isAppDataReady, fetchArticleList, fetchAppData])
-
-  const fetchArticleListWithRelatedData = useCallback(async () => {
-    if (!isAppDataReady) {
-      await fetchAppData()
-    }
-
-    await fetchArticleList(getEntriesRef.current)
-    if (isAppDataReady) {
-      await fetchFeedRelatedData()
-    }
-  }, [isAppDataReady, fetchAppData, fetchArticleList, fetchFeedRelatedData])
-
-  const fetchSingleEntry = useCallback(
-    async (targetEntryId) => {
-      const existingEntry = entries.find((entry) => entry.id === Number(targetEntryId))
-
-      if (existingEntry) {
-        setActiveContent(existingEntry)
+    const focusSelectedCard = (attempt = 0) => {
+      const entryList = entryListRef.current
+      if (!entryList) {
+        if (attempt < 8) {
+          globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
+        }
         return
       }
 
-      try {
-        setIsArticleLoading(true)
-        const entry = parseCoverImage(await getEntry(targetEntryId))
-        setActiveContent(entry)
-      } catch (error) {
-        console.error("Failed to fetch entry:", error)
-      } finally {
-        setIsArticleLoading(false)
+      const scrollElement = entryList.getScrollElement?.() || entryList.contentWrapperEl
+      if (scrollElement) {
+        scrollElement.scrollTo({ top: 0, behavior: "auto" })
+      }
+
+      const selectedCard = entryList.el?.querySelector(".card-wrapper.selected")
+      if (selectedCard) {
+        selectedCard.focus({ preventScroll: true })
+        return
+      }
+
+      if (attempt < 8) {
+        globalThis.requestAnimationFrame(() => focusSelectedCard(attempt + 1))
+      }
+    }
+
+    globalThis.requestAnimationFrame(() => focusSelectedCard())
+  }, [entryListRef, isBelowMedium, layoutMode])
+
+  const fetchArticleListOnly = useCallback(
+    async (options = {}) => {
+      const { focusFirstInStream = false } = options
+      await (isAppDataReady ? fetchArticleList(getEntries) : fetchAppData())
+      if (focusFirstInStream) {
+        focusFirstStreamCard()
       }
     },
-    [entries],
+    [isAppDataReady, fetchArticleList, getEntries, fetchAppData, focusFirstStreamCard],
   )
+
+  const fetchArticleListWithRelatedData = useCallback(
+    async (options = {}) => {
+      const { focusFirstInStream = false } = options
+      if (!isAppDataReady) {
+        await fetchAppData()
+        if (focusFirstInStream) {
+          focusFirstStreamCard()
+        }
+        return
+      }
+
+      await fetchArticleList(getEntries)
+      await fetchFeedRelatedData()
+      if (focusFirstInStream) {
+        focusFirstStreamCard()
+      }
+    },
+    [
+      isAppDataReady,
+      fetchAppData,
+      fetchArticleList,
+      getEntries,
+      fetchFeedRelatedData,
+      focusFirstStreamCard,
+    ],
+  )
+
+  // Listen for external refresh requests (e.g., clicking an already-active sidebar item)
+  useEffect(() => {
+    const handler = (e) => {
+      try {
+        const { from, id } = e.detail || {}
+        if (!from) {
+          return
+        }
+
+        if (String(info.from) === String(from) && String(info.id) === String(id)) {
+          const fullRefreshTargets = ["category", "feed", "all", "today", "starred", "history"]
+          if (fullRefreshTargets.includes(String(info.from))) {
+            fetchArticleListWithRelatedData({ focusFirstInStream: true })
+          } else {
+            fetchArticleListOnly({ focusFirstInStream: true })
+          }
+        }
+      } catch (error) {
+        console.error("Error handling refresh event:", error)
+      }
+    }
+
+    globalThis.addEventListener("reloadedflux:refresh", handler)
+    return () => globalThis.removeEventListener("reloadedflux:refresh", handler)
+  }, [info, fetchArticleListOnly, fetchArticleListWithRelatedData])
+
+  const fetchSingleEntry = async (entryId) => {
+    const existingEntry = entries.find((entry) => entry.id === Number(entryId))
+
+    if (existingEntry) {
+      setActiveContent(existingEntry)
+      return
+    }
+
+    try {
+      setIsArticleLoading(true)
+      const entry = parseCoverImage(await getEntry(entryId))
+      setActiveContent(entry)
+    } catch (error) {
+      console.error("Failed to fetch entry:", error)
+    } finally {
+      setIsArticleLoading(false)
+    }
+  }
 
   useContentHotkeys({ handleRefreshArticleList: fetchArticleListWithRelatedData })
 
@@ -249,58 +269,40 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
   }, [duplicateHotkeys, polyglot, showHotkeysSettings])
 
   useEffect(() => {
-    let isCancelled = false
-
-    const loadEntriesForSidebarSelection = async () => {
-      const infoKey = `${info.from}:${info.id ?? ""}`
-      if (lastLoadedInfoKeyRef.current === infoKey) {
-        return
-      }
-
-      lastLoadedInfoKeyRef.current = infoKey
-      setInfoFrom(info.from)
-      setInfoId(info.id)
+    setInfoFrom(info.from)
+    setInfoId(info.id)
+    if (activeContent) {
       setActiveContent(null)
-
-      await (info.from === "category" ? fetchArticleListWithRelatedData() : fetchArticleListOnly())
-
-      if (!isCancelled && !entryId) {
-        selectFirstEntry()
-      }
     }
-
-    loadEntriesForSidebarSelection()
-
-    return () => {
-      isCancelled = true
+    if (info.from === "category") {
+      fetchArticleListWithRelatedData({ focusFirstInStream: true })
+    } else {
+      fetchArticleListOnly({ focusFirstInStream: true })
     }
-  }, [
-    entryId,
-    fetchArticleListOnly,
-    fetchArticleListWithRelatedData,
-    info.from,
-    info.id,
-    selectFirstEntry,
-  ])
+  }, [info])
 
   useEffect(() => {
     if (["starred", "history"].includes(info.from)) {
       return
     }
     fetchArticleListOnly()
-  }, [fetchArticleListOnly, info.from, orderBy])
+  }, [orderBy])
 
   useEffect(() => {
     fetchArticleListOnly()
-  }, [fetchArticleListOnly, filterDate, filterString, orderDirection, showStatus])
+  }, [filterDate, filterString, orderDirection, showStatus])
 
   useEffect(() => {
-    if (isBelowMedium && activeContent && !entryId) {
-      setActiveContent(null)
+    if (isBelowMedium && activeContent) {
+      const { entryId } = params
+      if (!entryId) {
+        setActiveContent(null)
+      }
     }
-  }, [activeContent, entryId, isBelowMedium, location.pathname])
+  }, [location.pathname])
 
   useEffect(() => {
+    const { entryId } = params
     if (entryId) {
       if (!activeContent || activeContent.id !== Number(entryId)) {
         fetchSingleEntry(entryId)
@@ -308,7 +310,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
     } else if (activeContent) {
       setActiveContent(null)
     }
-  }, [activeContent, entryId, fetchSingleEntry])
+  }, [params])
 
   const handleEntryListSplitterPointerDown = (event) => {
     if (isBelowMedium) {
