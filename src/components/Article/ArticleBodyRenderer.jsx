@@ -1,7 +1,7 @@
 import { useStore } from "@nanostores/react"
 import ReactHtmlParser, { domToReact } from "html-react-parser"
 import { littlefoot } from "littlefoot"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react"
 import Lightbox from "yet-another-react-lightbox"
 import Counter from "yet-another-react-lightbox/plugins/counter"
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen"
@@ -15,6 +15,7 @@ import ImageOverlayButton from "./ImageOverlayButton"
 
 import PlyrPlayer from "@/components/ui/PlyrPlayer"
 import { settingsState } from "@/store/settingsState"
+import htmlAttributesToProps from "@/utils/html"
 import { extractImageSources } from "@/utils/images"
 import "./ArticleDetail.css"
 import "./littlefoot.css"
@@ -160,7 +161,7 @@ const processFigcaptionContent = (children) => {
     }
     if (child.type === "tag") {
       const Tag = child.name
-      const props = child.attribs || {}
+      const props = htmlAttributesToProps(child.attribs, child.name)
 
       if (child.name === "br") {
         return null
@@ -208,7 +209,7 @@ const handleFigure = (node, imageSources, togglePhotoSlider, options) => {
               </figcaption>
             )
           }
-          return domToReact([child], options)
+          return <Fragment key={`figure-child-${index}`}>{domToReact([child], options)}</Fragment>
         })}
       </figure>
     )
@@ -257,7 +258,12 @@ const handleIframe = (node) => {
   const src = node.attribs?.src
 
   if (src && (src.includes("youtube.com") || src.includes("youtube-nocookie.com"))) {
-    return <iframe {...node.attribs} referrerPolicy="strict-origin-when-cross-origin" />
+    return (
+      <iframe
+        {...htmlAttributesToProps(node.attribs, "iframe")}
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+    )
   }
 
   return node
