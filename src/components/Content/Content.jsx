@@ -9,7 +9,7 @@ import { useSwipeable } from "react-swipeable"
 import FooterPanel from "./FooterPanel"
 import StoryStream from "./StoryStream"
 
-import { getEntry } from "@/apis"
+import { getEntry, updateEntriesStatus } from "@/apis"
 import ActionButtons from "@/components/Article/ActionButtons"
 import ArticleDetail from "@/components/Article/ArticleDetail"
 import ArticleList from "@/components/Article/ArticleList"
@@ -20,6 +20,7 @@ import useArticleList from "@/hooks/useArticleList"
 import useContentContext from "@/hooks/useContentContext"
 import useContentHotkeys from "@/hooks/useContentHotkeys"
 import useDocumentTitle from "@/hooks/useDocumentTitle"
+import useEntryActions from "@/hooks/useEntryActions"
 import useKeyHandlers from "@/hooks/useKeyHandlers"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
@@ -34,7 +35,7 @@ import {
 import { dataState } from "@/store/dataState"
 import { duplicateHotkeysState } from "@/store/hotkeysState"
 import { settingsState, updateSettings } from "@/store/settingsState"
-import { Notification } from "@/utils/feedback"
+import { Message, Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
 
 import "./Content.css"
@@ -47,6 +48,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
     enableSwipeGesture,
     entryListWidth: storedEntryListWidth,
     layoutMode,
+    markReadBy,
     orderBy,
     orderDirection,
     showStatus,
@@ -66,6 +68,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
 
   const { entryDetailRef, entryListRef, handleEntryClick, streamVirtualizerRef } =
     useContentContext()
+  const { handleEntryStatusUpdate } = useEntryActions()
 
   const { navigateToNextArticle, navigateToPreviousArticle, showHotkeysSettings } = useKeyHandlers()
 
@@ -93,7 +96,18 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
       return
     }
 
-    setActiveContent(firstEntry)
+    const shouldAutoMarkAsRead = markReadBy === "view" && firstEntry.status === "unread"
+    const focusedEntry = shouldAutoMarkAsRead ? { ...firstEntry, status: "read" } : firstEntry
+
+    setActiveContent(focusedEntry)
+
+    if (shouldAutoMarkAsRead) {
+      handleEntryStatusUpdate(firstEntry, "read")
+      updateEntriesStatus([firstEntry.id], "read").catch(() => {
+        Message.error(polyglot.t("content.mark_as_read_error"))
+        handleEntryStatusUpdate(firstEntry, "unread")
+      })
+    }
 
     const focusSelectedCard = (attempt = 0) => {
       const entryList = entryListRef.current
@@ -121,7 +135,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
     }
 
     globalThis.requestAnimationFrame(() => focusSelectedCard())
-  }, [entryListRef, isBelowMedium, layoutMode])
+  }, [entryListRef, handleEntryStatusUpdate, isBelowMedium, layoutMode, markReadBy, polyglot])
 
   const fetchArticleListOnly = useCallback(
     async (options = {}) => {
