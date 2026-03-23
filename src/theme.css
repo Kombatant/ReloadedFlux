@@ -30,22 +30,62 @@ body[arco-theme="dark"] {
   );
 }
 
+body[color-name="Red"] {
+  --gray-1: 253 248 248;
+  --gray-2: 249 240 240;
+  --gray-3: 242 225 226;
+  --gray-4: 225 197 199;
+  --gray-5: 201 163 166;
+  --gray-6: 173 126 131;
+  --gray-7: 140 93 99;
+  --gray-8: 109 63 70;
+  --gray-9: 78 39 45;
+  --gray-10: 47 19 23;
+  --color-bg-1: rgb(255 251 251);
+  --color-bg-2: rgb(252 246 246);
+  --color-bg-3: rgb(246 236 236);
+  --color-bg-4: rgb(230 213 214);
+  --color-bg-5: rgb(209 184 186);
+  --color-bg-popup: var(--color-bg-3);
+}
+
+body[arco-theme="dark"][color-name="Red"] {
+  --gray-1: 16 10 10;
+  --gray-2: 24 14 14;
+  --gray-3: 39 21 22;
+  --gray-4: 61 33 35;
+  --gray-5: 86 49 51;
+  --gray-6: 119 76 79;
+  --gray-7: 160 113 117;
+  --gray-8: 197 154 158;
+  --gray-9: 228 203 205;
+  --gray-10: 245 236 237;
+  --color-bg-1: rgb(12 7 7);
+  --color-bg-2: rgb(20 10 11);
+  --color-bg-3: rgb(33 17 18);
+  --color-bg-4: rgb(51 28 29);
+  --color-bg-5: rgb(74 41 42);
+  --color-bg-popup: var(--color-bg-3);
+  --color-menu-dark-bg: var(--color-bg-popup);
+}
+
 body[color-name="Orange"] {
-  --gray-1: 245 245 244;
-  --gray-2: 231 229 228;
-  --gray-3: 214 211 209;
-  --gray-4: 168 162 158;
-  --gray-5: 120 113 108;
-  --gray-6: 87 83 78;
-  --gray-7: 68 64 60;
-  --gray-8: 41 37 36;
-  --gray-9: 28 25 23;
-  --gray-10: 12 10 9;
-  --color-bg-1: rgb(250 250 249);
-  --color-bg-2: rgb(250 250 249);
-  --color-bg-3: rgb(250 250 249);
-  --color-bg-4: rgb(250 250 249);
-  --color-bg-5: rgb(250 250 249);
+  --gray-1: 254 249 245;
+  --gray-2: 252 241 234;
+  --gray-3: 247 225 212;
+  --gray-4: 235 198 176;
+  --gray-5: 216 165 133;
+  --gray-6: 189 126 91;
+  --gray-7: 153 91 61;
+  --gray-8: 119 61 37;
+  --gray-9: 82 36 18;
+  --gray-10: 48 17 7;
+  --color-bg-1: rgb(255 251 247);
+  --color-bg-2: rgb(252 243 236);
+  --color-bg-3: rgb(248 229 216);
+  --color-bg-4: rgb(236 201 180);
+  --color-bg-5: rgb(219 170 142);
+  --color-bg-popup: var(--color-bg-3);
 }
 
 body[arco-theme="dark"][color-name="Orange"] {
@@ -65,6 +105,125 @@ body[arco-theme="dark"][color-name="Orange"] {
   --color-bg-3: rgb(41 37 36);
   --color-bg-4: rgb(68 64 60);
   --color-bg-5: rgb(87 83 78);
+  --color-bg-popup: var(--color-bg-3);
+  --color-menu-dark-bg: var(--color-bg-popup);
+}
+
+body[color-name="Yellow"] {
+  --gray-1: 253 252 245;
+  --gray-2: 250 247 230;
+  --gray-3: 244 236 197;
+  --gray-4: 232 216 153;
+  --gray-5: 212 192 105;
+  --gray-6: 183 161 64;
+  --gray-7: 145 124 36;
+  --gray-8: 109 90 20;
+  --gray-9: 74 58 10;
+  --gray-10: 42 31 4;
+  --color-bg-1: rgb(255 253 244);
+  --color-bg-2: rgb(252 249 232);
+  --color-bg-3: rgb(246 239 206);
+  --color-bg-4: rgb(233 219 165);
+  --color-bg-5: rgb(214 195 119);
+  --color-bg-popup: var(--color-bg-3);
+}
+
+body[arco-theme="dark"][color-name="Yellow"] {
+  --gray-1: 15 13 8;
+  --gray-2: 24 20 11;
+  --gray-3: 39 32 15;
+  --gray-4: 60 48 21;
+  --gray-5: 86 69 31;
+  --gray-6: 122 98 48;
+  --gray-7: 163 134 76;
+  --gray-8: 201 177 114;
+  --gray-9: 229 216 169;
+  --gray-10: 245 239 213;
+  --color-bg-1: rgb(11 10 5);
+  --color-bg-2: rgb(19 16 8);
+  --color-bg-3: rgb(31 25 11);
+  --color-bg-4: rgb(48 38 17);
+  --color-bg-5: rgb(71 57 26);
+  --color-bg-popup: var(--color-bg-3);
+  --color-menu-dark-bg: var(--color-bg-popup);
+}
+
+body[color-name="Green"] {
+  --gray-1: 246 252 248;
+  --gray-2: 237 248 240;
+  --gray-3: 216 240 224;
+  --gray-4: 183 224 197;
+  --gray-5: 145 203 167;
+  --gray-6: 106 177 136;
+  --gray-7: 74 143 106;
+  --gray-8: 47 109 78;
+  --gray-9: 26 77 53;
+  --gray-10: 10 46 29;
+  --color-bg-1: rgb(248 253 250);
+  --color-bg-2: rgb(239 249 242);
+  --color-bg-3: rgb(220 242 228);
+  --color-bg-4: rgb(188 226 203);
+  --color-bg-5: rgb(152 206 172);
+  --color-bg-popup: var(--color-bg-3);
+}
+
+body[arco-theme="dark"][color-name="Green"] {
+  --gray-1: 8 14 10;
+  --gray-2: 11 23 16;
+  --gray-3: 17 38 26;
+  --gray-4: 25 59 41;
+  --gray-5: 39 85 59;
+  --gray-6: 61 119 84;
+  --gray-7: 92 160 117;
+  --gray-8: 132 198 156;
+  --gray-9: 184 226 202;
+  --gray-10: 226 244 233;
+  --color-bg-1: rgb(5 10 7);
+  --color-bg-2: rgb(8 16 11);
+  --color-bg-3: rgb(13 27 19);
+  --color-bg-4: rgb(20 43 30);
+  --color-bg-5: rgb(32 64 45);
+  --color-bg-popup: var(--color-bg-3);
+  --color-menu-dark-bg: var(--color-bg-popup);
+}
+
+body[color-name="Blue"] {
+  --gray-1: 247 250 255;
+  --gray-2: 239 245 253;
+  --gray-3: 223 234 249;
+  --gray-4: 193 214 240;
+  --gray-5: 159 188 228;
+  --gray-6: 120 158 209;
+  --gray-7: 84 126 181;
+  --gray-8: 54 95 149;
+  --gray-9: 31 67 110;
+  --gray-10: 13 38 68;
+  --color-bg-1: rgb(249 252 255);
+  --color-bg-2: rgb(240 247 254);
+  --color-bg-3: rgb(225 236 250);
+  --color-bg-4: rgb(196 215 241);
+  --color-bg-5: rgb(163 190 230);
+  --color-bg-popup: var(--color-bg-3);
+}
+
+body[arco-theme="dark"][color-name="Blue"] {
+  --gray-1: 8 11 16;
+  --gray-2: 11 18 26;
+  --gray-3: 17 30 43;
+  --gray-4: 27 46 66;
+  --gray-5: 40 67 94;
+  --gray-6: 62 96 130;
+  --gray-7: 94 132 172;
+  --gray-8: 133 170 210;
+  --gray-9: 185 211 234;
+  --gray-10: 230 240 248;
+  --color-bg-1: rgb(4 7 11);
+  --color-bg-2: rgb(7 13 20);
+  --color-bg-3: rgb(12 22 35);
+  --color-bg-4: rgb(20 36 56);
+  --color-bg-5: rgb(31 55 82);
+  --color-bg-popup: var(--color-bg-3);
+  --color-menu-dark-bg: var(--color-bg-popup);
 }
 
 /* YInMn Blue -- tuned neutral/backdrop so the blue primaries pop */
@@ -130,6 +289,45 @@ body[arco-theme="dark"][color-name="YInMn Blue"] {
   --color-bg-popup: var(--color-bg-3);
 
   /* Some menu variants use this instead of --color-bg-popup */
+  --color-menu-dark-bg: var(--color-bg-popup);
+}
+
+body[color-name="Violet"] {
+  --gray-1: 251 248 255;
+  --gray-2: 245 239 252;
+  --gray-3: 233 223 247;
+  --gray-4: 212 193 239;
+  --gray-5: 185 159 226;
+  --gray-6: 154 122 207;
+  --gray-7: 122 87 179;
+  --gray-8: 92 58 145;
+  --gray-9: 64 34 106;
+  --gray-10: 35 15 65;
+  --color-bg-1: rgb(253 250 255);
+  --color-bg-2: rgb(246 240 253);
+  --color-bg-3: rgb(236 225 248);
+  --color-bg-4: rgb(215 194 240);
+  --color-bg-5: rgb(188 161 227);
+  --color-bg-popup: var(--color-bg-3);
+}
+
+body[arco-theme="dark"][color-name="Violet"] {
+  --gray-1: 11 9 16;
+  --gray-2: 18 14 25;
+  --gray-3: 29 22 40;
+  --gray-4: 45 34 61;
+  --gray-5: 64 49 88;
+  --gray-6: 91 73 124;
+  --gray-7: 124 104 164;
+  --gray-8: 162 146 200;
+  --gray-9: 206 196 229;
+  --gray-10: 239 236 248;
+  --color-bg-1: rgb(8 6 12);
+  --color-bg-2: rgb(13 10 19);
+  --color-bg-3: rgb(22 17 32);
+  --color-bg-4: rgb(36 27 51);
+  --color-bg-5: rgb(53 42 75);
+  --color-bg-popup: var(--color-bg-3);
   --color-menu-dark-bg: var(--color-bg-popup);
 }
 
