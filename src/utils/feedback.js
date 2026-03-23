@@ -23,7 +23,7 @@ const getFeedbackId = (scope, type, text) => {
     return
   }
 
-  return `reactflux-${scope}-${type}-${createHash(text)}`
+  return `reloadedflux-${scope}-${type}-${createHash(text)}`
 }
 
 const withFeedbackId = (scope, type, payload, getText) => {

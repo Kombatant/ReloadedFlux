@@ -4,7 +4,7 @@
     "new_version_available_description": "Please check the latest version on GitHub"
   },
   "login": {
-    "apptitle": "::ReactFlux",
+    "apptitle": "::ReloadedFlux",
     "success": "Login successfully",
     "auth_error": "Please check your server address and credentials",
     "login_to_your_server": "Login to your server",

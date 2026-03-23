@@ -4,7 +4,7 @@
     "new_version_available_description": "请检查最新版本在 GitHub 上的发布"
   },
   "login": {
-    "apptitle": "::ReactFlux",
+    "apptitle": "::ReloadedFlux",
     "success": "登录成功",
     "auth_error": "请检查您的服务器地址和凭证",
     "login_to_your_server": "登录到您的服务器",

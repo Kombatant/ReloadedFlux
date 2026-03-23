@@ -6,7 +6,7 @@ import { polyglotState } from "@/hooks/useLanguage"
 import { contentState } from "@/store/contentState"
 import { categoriesState, feedsState } from "@/store/dataState"
 
-const BASE_TITLE = "ReactFlux"
+const BASE_TITLE = "ReloadedFlux"
 
 const useDocumentTitle = () => {
   const { activeContent, infoFrom } = useStore(contentState)

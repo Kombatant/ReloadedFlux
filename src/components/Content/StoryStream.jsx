@@ -72,7 +72,7 @@ const StoryStream = ({
         {isArticleListReady && !hasEntries ? (
           <div className="story-stream-empty">
             <IconEmpty style={{ fontSize: 44 }} />
-            <Typography.Text>ReactFlux</Typography.Text>
+            <Typography.Text>ReloadedFlux</Typography.Text>
           </div>
         ) : null}
         {isArticleListReady && hasEntries ? (

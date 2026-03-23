@@ -178,8 +178,8 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
       }
     }
 
-    globalThis.addEventListener("reactflux:refresh", handler)
-    return () => globalThis.removeEventListener("reactflux:refresh", handler)
+    globalThis.addEventListener("reloadedflux:refresh", handler)
+    return () => globalThis.removeEventListener("reloadedflux:refresh", handler)
   }, [info, fetchArticleListOnly, fetchArticleListWithRelatedData])
 
   const fetchSingleEntry = async (entryId) => {
@@ -454,7 +454,7 @@ const Content = ({ info, getEntries, markAllAsRead }) => {
         >
           <IconEmpty style={{ fontSize: "64px" }} />
           <Typography.Title heading={6} style={{ color: "var(--color-text-3)", marginTop: "10px" }}>
-            ReactFlux
+            ReloadedFlux
           </Typography.Title>
         </div>
       )}

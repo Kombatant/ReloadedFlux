@@ -90,7 +90,7 @@ const CategoryTitle = ({
     const isSelected = path === targetPath || path.startsWith(`${targetPath}/`)
     if (isSelected) {
       globalThis.dispatchEvent(
-        new CustomEvent("reactflux:refresh", { detail: { from: "category", id: category.id } }),
+        new CustomEvent("reloadedflux:refresh", { detail: { from: "category", id: category.id } }),
       )
       setActiveContent(null)
       return
@@ -203,7 +203,7 @@ const CustomMenuItem = ({ path, Icon, label, count }) => {
   const handleNavigation = () => {
     if (isSelected) {
       globalThis.dispatchEvent(
-        new CustomEvent("reactflux:refresh", {
+        new CustomEvent("reloadedflux:refresh", {
           detail: { from: path.replace("/", "") || "all", id: "" },
         }),
       )
@@ -330,7 +330,7 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
           const targetPath = `/feed/${feed.id}`
           if (isSelected) {
             globalThis.dispatchEvent(
-              new CustomEvent("reactflux:refresh", { detail: { from: "feed", id: feed.id } }),
+              new CustomEvent("reloadedflux:refresh", { detail: { from: "feed", id: feed.id } }),
             )
             setActiveContent(null)
             return
@@ -608,7 +608,7 @@ const Sidebar = ({ hasUpdate }) => {
                 <IconBook style={{ color: "var(--color-bg-1)" }} />
               </Avatar>
               <Typography.Title heading={6} style={{ margin: 0 }}>
-                ::ReactFlux
+                ::ReloadedFlux
               </Typography.Title>
             </span>
             <div className="menu-header-actions">

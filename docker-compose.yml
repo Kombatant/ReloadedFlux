@@ -1,6 +1,6 @@
 services:
-  reactflux:
-    image: electh/reactflux
+  reloadedflux:
+    image: kombatant/reloadedflux
     restart: always
     ports:
       - 2000:2000

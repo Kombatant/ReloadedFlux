@@ -44,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: electh/reactflux
+          images: kombatant/reloadedflux
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,format=long,prefix=,enable={{is_default_branch}}

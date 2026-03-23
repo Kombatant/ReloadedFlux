@@ -66,7 +66,7 @@ export default function Profile() {
 
   const handleAbout = () => {
     Modal.info({
-      title: <b>About Reactflux...</b>,
+      title: <b>About ReloadedFlux...</b>,
       content: (
         <div>
           <div>
@@ -88,11 +88,11 @@ export default function Profile() {
           <div>
             <b>Github:</b>{" "}
             <a
-              href="https://github.com/Kombatant/ReactFlux"
+              href="https://github.com/Kombatant/ReloadedFlux"
               rel="noopener noreferrer"
               target="_blank"
             >
-              https://github.com/Kombatant/ReactFlux
+              https://github.com/Kombatant/ReloadedFlux
             </a>
           </div>
         </div>

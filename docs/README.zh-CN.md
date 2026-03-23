@@ -1,10 +1,10 @@
-# ReactFlux
+# ReloadedFlux
 
 阅读其他语言版本： [Deutsch](README.de-DE.md), [English](../README.md), [Español](README.es-ES.md), [Français](README.fr-FR.md)
 
 ## 概述
 
-ReactFlux 是 [Miniflux](https://github.com/miniflux/v2) 的第三方 Web 前端，旨在提供更加友好的阅读体验。
+ReloadedFlux 是 [Miniflux](https://github.com/miniflux/v2) 的第三方 Web 前端，旨在提供更加友好的阅读体验。
 
 支持的 Miniflux 版本：2.1.4 及更高版本。
 
@@ -38,9 +38,9 @@ ReactFlux 是 [Miniflux](https://github.com/miniflux/v2) 的第三方 Web 前端
 
 ## 在线演示和截图
 
-试用 ReactFlux 的 [在线演示实例](https://reactflux.pages.dev)。
+试用 ReloadedFlux 的 [在线演示实例](https://reloadedflux.pages.dev)。
 
-查看 ReactFlux 在不同主题下的外观：
+查看 ReloadedFlux 在不同主题下的外观：
 
 ![screenshot](../images/screenshot.png)
 ![devices](../images/devices.png)
@@ -48,14 +48,14 @@ ReactFlux 是 [Miniflux](https://github.com/miniflux/v2) 的第三方 Web 前端
 ## 快速开始
 
 1. 确保您有一个正常运行的 Miniflux 实例
-2. 直接使用我们的 [在线演示实例](https://reactflux.pages.dev) 或使用以下方法之一部署 ReactFlux
+2. 直接使用我们的 [在线演示实例](https://reloadedflux.pages.dev) 或使用以下方法之一部署 ReloadedFlux
 3. 使用您的 Miniflux 用户名和密码或 API 密钥（推荐）登录
 
 ## 部署
 
 ### Cloudflare Pages
 
-ReactFlux 使用 React 编写，构建完成后生成一组静态网页文件，可以直接部署在 Cloudflare Pages 上。
+ReloadedFlux 使用 React 编写，构建完成后生成一组静态网页文件，可以直接部署在 Cloudflare Pages 上。
 
 您可以通过选择 `Framework preset` 为 `Create React App` 来将其部署在 Cloudflare Pages 上。
 
@@ -81,14 +81,14 @@ try_files {path} {path}/ /index.html
 
 ### Vercel
 
-[![部署到 Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/electh/ReactFlux)
+[![部署到 Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Kombatant/ReloadedFlux)
 
 ### Docker
 
-[![dockeri.co](https://dockerico.blankenship.io/image/electh/reactflux)](https://hub.docker.com/r/electh/reactflux)
+[![dockeri.co](https://dockerico.blankenship.io/image/kombatant/reloadedflux)](https://hub.docker.com/r/kombatant/reloadedflux)
 
 ```bash
-docker run -p 2000:2000 electh/reactflux
+docker run -p 2000:2000 kombatant/reloadedflux
 ```
 
 或者使用 [Docker Compose](../docker-compose.yml)：
@@ -103,7 +103,7 @@ docker-compose up -d
 
 ## 翻译指南
 
-为了帮助我们将 ReactFlux 翻译成您的语言，请贡献到 `locales` 文件夹并发送 pull request。
+为了帮助我们将 ReloadedFlux 翻译成您的语言，请贡献到 `locales` 文件夹并发送 pull request。
 
 此外，您需要为相应的语言添加一个 README 文件，并在所有现有的 README 文件中引用它。
 
@@ -124,12 +124,12 @@ docker-compose up -d
 
 > 感谢所有让这个项目变得更加出色的贡献者！
 
-<a href="https://github.com/electh/ReactFlux/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=electh/ReactFlux" alt="ReactFlux 的贡献者们" />
+<a href="https://github.com/Kombatant/ReloadedFlux/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Kombatant/ReloadedFlux" alt="ReloadedFlux 的贡献者们" />
 </a>
 
 使用 [contrib.rocks](https://contrib.rocks) 生成。
 
 ## 星标历史
 
-[![星标历史](https://starchart.cc/electh/ReactFlux.svg)](https://starchart.cc/electh/ReactFlux)
+[![星标历史](https://starchart.cc/Kombatant/ReloadedFlux.svg)](https://starchart.cc/Kombatant/ReloadedFlux)

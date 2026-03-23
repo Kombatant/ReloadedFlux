@@ -4,7 +4,7 @@
     "new_version_available_description": "Über die neueste Version auf GitHub informieren"
   },
   "login": {
-    "apptitle": "::ReactFlux",
+    "apptitle": "::ReloadedFlux",
     "success": "Einloggen erfolgreich",
     "auth_error": "Bitte Server-Adresse und Zugangsdaten überprüfen",
     "login_to_your_server": "Auf Server einloggen",

@@ -4,7 +4,7 @@
     "new_version_available_description": "Ελέγξτε την τελευταία έκδοση στο GitHub"
   },
   "login": {
-    "apptitle": "::ReactFlux",
+    "apptitle": "::ReloadedFlux",
     "success": "Επιτυχής σύνδεση",
     "auth_error": "Ελέγξτε τη διεύθυνση του διακομιστή και τα διαπιστευτήρια",
     "login_to_your_server": "Σύνδεση στον διακομιστή σας",

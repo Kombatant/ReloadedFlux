@@ -1,10 +1,10 @@
-# ReactFlux
+# ReloadedFlux
 
 Lea este texto en otros idiomas: [Deutsch](README.de-DE.md), [English](../README.md), [Français](README.fr-FR.md), [简体中文](README.zh-CN.md)
 
 ## Descripción general
 
-ReactFlux es una interfaz web de terceros para [Miniflux](https://github.com/miniflux/v2), cuyo objetivo es proporcionar una experiencia de lectura más fácil de usar.
+ReloadedFlux es una interfaz web de terceros para [Miniflux](https://github.com/miniflux/v2), cuyo objetivo es proporcionar una experiencia de lectura más fácil de usar.
 
 Versiones de Miniflux compatibles: 2.1.4 y superiores.
 
@@ -38,9 +38,9 @@ Las funcionalidades clave incluyen:
 
 ## Demostración en línea y capturas de pantalla
 
-Pruebe ReactFlux con nuestra [instancia de demostración en línea](https://reactflux.pages.dev).
+Pruebe ReloadedFlux con nuestra [instancia de demostración en línea](https://reloadedflux.pages.dev).
 
-Vea cómo se ve ReactFlux en diferentes temas:
+Vea cómo se ve ReloadedFlux en diferentes temas:
 
 ![screenshot](../images/screenshot.png)
 ![devices](../images/devices.png)
@@ -48,14 +48,14 @@ Vea cómo se ve ReactFlux en diferentes temas:
 ## Inicio Rápido
 
 1. Asegúrese de tener una instancia funcional de Miniflux
-2. Use directamente nuestra [instancia de demostración en línea](https://reactflux.pages.dev) o despliegue ReactFlux utilizando uno de los métodos a continuación
+2. Use directamente nuestra [instancia de demostración en línea](https://reloadedflux.pages.dev) o despliegue ReloadedFlux utilizando uno de los métodos a continuación
 3. Inicie sesión usando su nombre de usuario y contraseña de Miniflux o la clave API (recomendado)
 
 ## Despliegue
 
 ### Páginas de Cloudflare
 
-ReactFlux está construido con React y genera un conjunto de archivos web estáticos después de la compilación, que se pueden implementar directamente en Cloudflare Pages.
+ReloadedFlux está construido con React y genera un conjunto de archivos web estáticos después de la compilación, que se pueden implementar directamente en Cloudflare Pages.
 
 Puede desplegarlo en Cloudflare Pages seleccionando `Framework preset` como `Create React App`.
 
@@ -81,14 +81,14 @@ try_files {path} {path}/ /index.html
 
 ### Vercel
 
-[![Desplegar en Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/electh/ReactFlux)
+[![Desplegar en Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Kombatant/ReloadedFlux)
 
 ### Docker
 
-[![dockeri.co](https://dockerico.blankenship.io/image/electh/reactflux)](https://hub.docker.com/r/electh/reactflux)
+[![dockeri.co](https://dockerico.blankenship.io/image/kombatant/reloadedflux)](https://hub.docker.com/r/kombatant/reloadedflux)
 
 ```bash
-docker run -p 2000:2000 electh/reactflux
+docker run -p 2000:2000 kombatant/reloadedflux
 ```
 
 O usando [Docker Compose](../docker-compose.yml):
@@ -103,7 +103,7 @@ docker-compose up -d
 
 ## Guía de Traducción
 
-Para ayudarnos a traducir ReactFlux a su idioma, por favor contribuya a la carpeta `locales` y envíe una solicitud de extracción.
+Para ayudarnos a traducir ReloadedFlux a su idioma, por favor contribuya a la carpeta `locales` y envíe una solicitud de extracción.
 
 Además, necesita agregar un archivo README para el idioma respectivo y referenciarlo en todos los archivos README existentes.
 
@@ -124,12 +124,12 @@ Para cambios detallados, por favor consulte las modificaciones en [PR #145](http
 
 > ¡Gracias a todos los colaboradores que han hecho este proyecto más increíble!
 
-<a href="https://github.com/electh/ReactFlux/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=electh/ReactFlux" alt="Colaboradores de ReactFlux" />
+<a href="https://github.com/Kombatant/ReloadedFlux/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Kombatant/ReloadedFlux" alt="Colaboradores de ReloadedFlux" />
 </a>
 
 Hecho con [contrib.rocks](https://contrib.rocks).
 
 ## Historial de estrellas en GitHub
 
-[![Historial de estrellas](https://starchart.cc/electh/ReactFlux.svg)](https://starchart.cc/electh/ReactFlux)
+[![Historial de estrellas](https://starchart.cc/Kombatant/ReloadedFlux.svg)](https://starchart.cc/Kombatant/ReloadedFlux)

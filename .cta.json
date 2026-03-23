@@ -3,7 +3,7 @@
   "git": true,
   "mode": "code-router",
   "packageManager": "pnpm",
-  "projectName": "ReactFlux",
+  "projectName": "ReloadedFlux",
   "tailwind": false,
   "toolchain": "eslint+prettier",
   "typescript": false,
