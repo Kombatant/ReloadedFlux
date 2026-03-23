@@ -600,74 +600,83 @@ const Sidebar = ({ hasUpdate }) => {
 
   return (
     <div className="sidebar-container">
-      <SimpleBar style={{ maxHeight: "100%" }}>
-        <Menu hasCollapseButton={false} selectedKeys={selectedKeys}>
-          <div className="menu-header">
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <Avatar className="avatar" size={32}>
-                <IconBook style={{ color: "var(--color-bg-1)" }} />
-              </Avatar>
-              <Typography.Title heading={6} style={{ margin: 0 }}>
-                ::ReloadedFlux
-              </Typography.Title>
-            </span>
-            <div className="menu-header-actions">
-              {hasUpdate ? (
-                <CustomTooltip mini content={polyglot.t("sidebar.update_available_tooltip")}>
-                  <Button
-                    className="update-available-button"
-                    icon={<IconDownload />}
-                    shape="circle"
-                    size="small"
-                    onClick={() =>
-                      globalThis.open(`https://github.com/${GITHUB_REPO_PATH}`, "_blank")
-                    }
-                  />
-                </CustomTooltip>
-              ) : null}
-              <Profile />
-            </div>
-          </div>
-          <Typography.Title className="section-title" heading={6} style={{ paddingLeft: "12px" }}>
-            {polyglot.t("sidebar.articles")}
-          </Typography.Title>
-          <SidebarMenuItems />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography.Title className="section-title" heading={6} style={{ paddingLeft: "12px" }}>
-              {polyglot.t("sidebar.feeds")}
+      <div className="sidebar-pinned-header">
+        <div className="menu-header">
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <Avatar className="avatar" size={32}>
+              <IconBook style={{ color: "var(--color-bg-1)" }} />
+            </Avatar>
+            <Typography.Title heading={6} style={{ margin: 0 }}>
+              ::ReloadedFlux
             </Typography.Title>
-            <div style={{ display: "flex", gap: "8px", marginRight: "8px" }}>
-              <AddFeed />
-            </div>
+          </span>
+          <div className="menu-header-actions">
+            {hasUpdate ? (
+              <CustomTooltip mini content={polyglot.t("sidebar.update_available_tooltip")}>
+                <Button
+                  className="update-available-button"
+                  icon={<IconDownload />}
+                  shape="circle"
+                  size="small"
+                  onClick={() =>
+                    globalThis.open(`https://github.com/${GITHUB_REPO_PATH}`, "_blank")
+                  }
+                />
+              </CustomTooltip>
+            ) : null}
+            <Profile />
           </div>
-          <Skeleton animation={true} loading={!isCoreDataReady} text={{ rows: 6 }} />
-          {isCoreDataReady && (
-            <Collapse
-              activeKey={expandedCategories}
-              bordered={false}
-              triggerRegion="icon"
-              onChange={(_key, keys) => setExpandedCategories(keys)}
+        </div>
+      </div>
+
+      <div className="sidebar-scroll-area">
+        <SimpleBar style={{ maxHeight: "100%" }}>
+          <Menu hasCollapseButton={false} selectedKeys={selectedKeys}>
+            <Typography.Title className="section-title" heading={6} style={{ paddingLeft: "12px" }}>
+              {polyglot.t("sidebar.articles")}
+            </Typography.Title>
+            <SidebarMenuItems />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-              <CategoryGroup
-                onDeleteCategory={handleDeleteCategory}
-                onDeleteFeed={handleDeleteFeed}
-                onEditCategory={handleEditCategory}
-                onEditFeed={handleEditFeed}
-                onMarkAllAsReadCategory={handleMarkAllAsReadCategory}
-                onMarkAllAsReadFeed={handleMarkAllAsReadFeed}
-                onRefreshCategory={handleRefreshCategory}
-                onRefreshFeed={handleRefreshFeed}
-              />
-            </Collapse>
-          )}
-        </Menu>
-      </SimpleBar>
+              <Typography.Title
+                className="section-title"
+                heading={6}
+                style={{ paddingLeft: "12px" }}
+              >
+                {polyglot.t("sidebar.feeds")}
+              </Typography.Title>
+              <div style={{ display: "flex", gap: "8px", marginRight: "8px" }}>
+                <AddFeed />
+              </div>
+            </div>
+            <Skeleton animation={true} loading={!isCoreDataReady} text={{ rows: 6 }} />
+            {isCoreDataReady && (
+              <Collapse
+                activeKey={expandedCategories}
+                bordered={false}
+                triggerRegion="icon"
+                onChange={(_key, keys) => setExpandedCategories(keys)}
+              >
+                <CategoryGroup
+                  onDeleteCategory={handleDeleteCategory}
+                  onDeleteFeed={handleDeleteFeed}
+                  onEditCategory={handleEditCategory}
+                  onEditFeed={handleEditFeed}
+                  onMarkAllAsReadCategory={handleMarkAllAsReadCategory}
+                  onMarkAllAsReadFeed={handleMarkAllAsReadFeed}
+                  onRefreshCategory={handleRefreshCategory}
+                  onRefreshFeed={handleRefreshFeed}
+                />
+              </Collapse>
+            )}
+          </Menu>
+        </SimpleBar>
+      </div>
 
       {selectedCategory && (
         <EditCategoryModal

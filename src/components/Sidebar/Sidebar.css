@@ -199,6 +199,20 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
+}
+
+.sidebar-pinned-header {
+  flex: 0 0 auto;
+  padding: 0 12px;
+  background-color: var(--color-neutral-2);
+  z-index: 1;
+}
+
+.sidebar-scroll-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar-container .arco-menu-light,
