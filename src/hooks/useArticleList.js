@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react"
-import { useEffect, useRef } from "react"
+import { useCallback, useRef } from "react"
 
 import {
   contentState,
@@ -29,93 +29,89 @@ const handleResponses = (response) => {
   }
 }
 
-const useArticleList = (info, getEntries) => {
+const useArticleList = (info) => {
   const { filterDate, filterString } = useStore(contentState)
-  const { isAppDataReady } = useStore(dataState)
   const { showStatus } = useStore(settingsState)
 
   const isLoading = useRef(false)
 
-  const fetchArticleList = async (getEntries) => {
-    if (isLoading.current) {
-      return
-    }
-
-    isLoading.current = true
-    setIsArticleListReady(false)
-
-    try {
-      let response
-
-      // Build filter params with search query
-      // Extract basic search terms
-      const filterParams = {}
-      const basicSearchTerms = extractBasicSearchTerms(filterString)
-      if (basicSearchTerms) {
-        filterParams.search = basicSearchTerms
+  const fetchArticleList = useCallback(
+    async (getEntries) => {
+      if (isLoading.current) {
+        return
       }
 
-      switch (showStatus) {
-        case "starred": {
-          response = await getEntries(null, true, filterParams)
-          break
-        }
-        case "unread": {
-          response = await getEntries("unread", false, filterParams)
-          break
-        }
-        default: {
-          response = await getEntries(null, false, filterParams)
-          break
-        }
-      }
+      isLoading.current = true
+      setIsArticleListReady(false)
 
-      if (!filterDate) {
-        switch (info.from) {
-          case "feed": {
-            if (showStatus === "unread") {
-              setUnreadInfo((prev) => ({
-                ...prev,
-                [Number(info.id)]: response.total,
-              }))
-            }
-            break
-          }
-          case "history": {
-            setHistoryCount(response.total)
-            break
-          }
+      try {
+        let response
+
+        // Build filter params with search query
+        // Extract basic search terms
+        const filterParams = {}
+        const basicSearchTerms = extractBasicSearchTerms(filterString)
+        if (basicSearchTerms) {
+          filterParams.search = basicSearchTerms
+        }
+
+        switch (showStatus) {
           case "starred": {
-            if (showStatus === "unread") {
-              setUnreadStarredCount(response.total)
-            } else {
-              setStarredCount(response.total)
-            }
+            response = await getEntries(null, true, filterParams)
             break
           }
-          case "today": {
-            if (showStatus === "unread") {
-              setUnreadTodayCount(response.total)
-            }
+          case "unread": {
+            response = await getEntries("unread", false, filterParams)
+            break
+          }
+          default: {
+            response = await getEntries(null, false, filterParams)
             break
           }
         }
+
+        if (!filterDate) {
+          switch (info.from) {
+            case "feed": {
+              if (showStatus === "unread") {
+                setUnreadInfo((prev) => ({
+                  ...prev,
+                  [Number(info.id)]: response.total,
+                }))
+              }
+              break
+            }
+            case "history": {
+              setHistoryCount(response.total)
+              break
+            }
+            case "starred": {
+              if (showStatus === "unread") {
+                setUnreadStarredCount(response.total)
+              } else {
+                setStarredCount(response.total)
+              }
+              break
+            }
+            case "today": {
+              if (showStatus === "unread") {
+                setUnreadTodayCount(response.total)
+              }
+              break
+            }
+          }
+        }
+
+        handleResponses(response)
+      } catch (error) {
+        console.error("Error fetching articles:", error)
+      } finally {
+        isLoading.current = false
+        setIsArticleListReady(true)
       }
-
-      handleResponses(response)
-    } catch (error) {
-      console.error("Error fetching articles:", error)
-    } finally {
-      isLoading.current = false
-      setIsArticleListReady(true)
-    }
-  }
-
-  useEffect(() => {
-    if (isAppDataReady) {
-      fetchArticleList(getEntries)
-    }
-  }, [isAppDataReady])
+    },
+    [filterDate, filterString, info.from, info.id, showStatus],
+  )
 
   return { fetchArticleList }
 }
