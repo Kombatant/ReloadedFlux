@@ -321,45 +321,47 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
         </Menu>
       }
     >
-      <MenuItem
-        key={`/feed/${feed.id}`}
-        className={classNames({ "arco-menu-selected": isSelected })}
-        style={{ position: "relative", overflow: "hidden" }}
-        onClick={(e) => {
-          e.stopPropagation()
-          const targetPath = `/feed/${feed.id}`
-          if (isSelected) {
-            globalThis.dispatchEvent(
-              new CustomEvent("reloadedflux:refresh", { detail: { from: "feed", id: feed.id } }),
-            )
-            setActiveContent(null)
-            return
-          }
+      <div>
+        <MenuItem
+          key={`/feed/${feed.id}`}
+          className={classNames({ "arco-menu-selected": isSelected })}
+          style={{ position: "relative", overflow: "hidden" }}
+          onClick={(e) => {
+            e.stopPropagation()
+            const targetPath = `/feed/${feed.id}`
+            if (isSelected) {
+              globalThis.dispatchEvent(
+                new CustomEvent("reloadedflux:refresh", { detail: { from: "feed", id: feed.id } }),
+              )
+              setActiveContent(null)
+              return
+            }
 
-          navigate(targetPath)
-          setActiveContent(null)
-        }}
-      >
-        <div className="custom-menu-item">
-          <Typography.Ellipsis
-            expandable={false}
-            showTooltip={!isBelowMedium}
-            style={{
-              width: feed.unreadCount ? "80%" : "100%",
-              paddingLeft: "20px",
-              boxSizing: "border-box",
-            }}
-          >
-            {showFeedIcon && <FeedIcon className="feed-icon-sidebar" feed={feed} />}
-            {feed.title}
-          </Typography.Ellipsis>
-          {feed.unreadCount !== 0 && (
-            <Typography.Ellipsis className="item-count" expandable={false}>
-              {feed.unreadCount}
+            navigate(targetPath)
+            setActiveContent(null)
+          }}
+        >
+          <div className="custom-menu-item">
+            <Typography.Ellipsis
+              expandable={false}
+              showTooltip={!isBelowMedium}
+              style={{
+                width: feed.unreadCount ? "80%" : "100%",
+                paddingLeft: "20px",
+                boxSizing: "border-box",
+              }}
+            >
+              {showFeedIcon && <FeedIcon className="feed-icon-sidebar" feed={feed} />}
+              {feed.title}
             </Typography.Ellipsis>
-          )}
-        </div>
-      </MenuItem>
+            {feed.unreadCount !== 0 && (
+              <Typography.Ellipsis className="item-count" expandable={false}>
+                {feed.unreadCount}
+              </Typography.Ellipsis>
+            )}
+          </div>
+        </MenuItem>
+      </div>
     </Dropdown>
   )
 }
