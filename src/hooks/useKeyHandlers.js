@@ -15,7 +15,8 @@ import { extractImageSources } from "@/utils/images"
 const STREAM_CARD_TOP_OFFSET_FALLBACK = 18
 const STREAM_SCROLL_ALIGNMENT_TOLERANCE = 4
 const STREAM_SCROLL_INITIAL_ALIGNMENT_DELAY_MS = 220
-const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 1800
+const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 2600
+const STREAM_SCROLL_QUIET_FRAME_TARGET = 20
 const STREAM_SCROLL_STABLE_FRAME_TARGET = 6
 
 const getStreamCardTopOffset = (scrollElement) => {
@@ -82,6 +83,7 @@ const useKeyHandlers = () => {
     delayTimeoutId: null,
     frameId: null,
     maxTimeoutId: null,
+    observedElements: new Set(),
     resizeObserver: null,
     sessionId: 0,
   })
@@ -108,6 +110,8 @@ const useKeyHandlers = () => {
       task.resizeObserver.disconnect()
       task.resizeObserver = null
     }
+
+    task.observedElements = new Set()
   }
 
   useEffect(() => clearPendingStreamAlignment, [])
@@ -148,13 +152,22 @@ const useKeyHandlers = () => {
     return entries[currentIndex + step] ?? null
   }
 
-  const alignSelectedStreamCard = (targetEntryId = null, { skipInitialScroll = false } = {}) => {
+  const alignSelectedStreamCard = (
+    targetEntryId = null,
+    { relatedEntryIds = [], skipInitialScroll = false } = {},
+  ) => {
     clearPendingStreamAlignment()
 
     const task = streamAlignmentTaskRef.current
     const sessionId = task.sessionId + 1
+    const observedEntryIds = new Set(
+      [targetEntryId, ...relatedEntryIds]
+        .filter((entryId) => entryId !== null && entryId !== undefined)
+        .map(String),
+    )
     let stableFrameCount = 0
     let lastTargetScrollTop = null
+    let quietFrameCount = 0
     let shouldSkipNextScroll = skipInitialScroll
 
     task.sessionId = sessionId
@@ -169,7 +182,7 @@ const useKeyHandlers = () => {
       clearPendingStreamAlignment()
     }, STREAM_SCROLL_MAX_SETTLE_TIME_MS)
 
-    const ensureResizeObserver = (selectedCard) => {
+    const ensureResizeObserver = () => {
       if (streamAlignmentTaskRef.current.resizeObserver || typeof ResizeObserver !== "function") {
         return
       }
@@ -180,6 +193,7 @@ const useKeyHandlers = () => {
         }
 
         stableFrameCount = 0
+        quietFrameCount = 0
 
         if (streamAlignmentTaskRef.current.delayTimeoutId !== null) {
           globalThis.clearTimeout(streamAlignmentTaskRef.current.delayTimeoutId)
@@ -193,8 +207,23 @@ const useKeyHandlers = () => {
         streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
       })
 
-      observer.observe(selectedCard)
       streamAlignmentTaskRef.current.resizeObserver = observer
+    }
+
+    const observeElement = (element) => {
+      if (
+        !element ||
+        !(element instanceof Element) ||
+        streamAlignmentTaskRef.current.observedElements.has(element)
+      ) {
+        return
+      }
+
+      streamAlignmentTaskRef.current.observedElements.add(element)
+
+      if (streamAlignmentTaskRef.current.resizeObserver) {
+        streamAlignmentTaskRef.current.resizeObserver.observe(element)
+      }
     }
 
     const scheduleAlignmentRetry = () => {
@@ -225,15 +254,31 @@ const useKeyHandlers = () => {
         return
       }
 
-      ensureResizeObserver(selectedCard)
+      ensureResizeObserver()
+      observeElement(selectedCard)
+      observeElement(scrollElement.querySelector(".simplebar-content"))
+
+      for (const observedEntryId of observedEntryIds) {
+        observeElement(getSelectedCard(observedEntryId))
+      }
+
       focusStreamCard(selectedCard)
 
       const targetScrollTop = getStreamCardScrollTop(selectedCard, scrollElement)
       const targetScrollDelta =
         lastTargetScrollTop === null ? 0 : Math.abs(targetScrollTop - lastTargetScrollTop)
       const topDelta = getStreamCardTopDelta(selectedCard, scrollElement)
+      const maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight)
+      const isClampedToStart =
+        targetScrollTop <= STREAM_SCROLL_ALIGNMENT_TOLERANCE &&
+        scrollElement.scrollTop <= STREAM_SCROLL_ALIGNMENT_TOLERANCE
+      const isClampedToEnd =
+        targetScrollTop >= maxScrollTop - STREAM_SCROLL_ALIGNMENT_TOLERANCE &&
+        scrollElement.scrollTop >= maxScrollTop - STREAM_SCROLL_ALIGNMENT_TOLERANCE
+      const effectiveTopDelta = isClampedToStart || isClampedToEnd ? 0 : topDelta
 
       lastTargetScrollTop = targetScrollTop
+      quietFrameCount += 1
 
       if (targetScrollDelta > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
         stableFrameCount = 0
@@ -241,8 +286,11 @@ const useKeyHandlers = () => {
         stableFrameCount += 1
       }
 
-      if (topDelta <= STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
-        if (stableFrameCount >= STREAM_SCROLL_STABLE_FRAME_TARGET) {
+      if (effectiveTopDelta <= STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+        if (
+          stableFrameCount >= STREAM_SCROLL_STABLE_FRAME_TARGET &&
+          quietFrameCount >= STREAM_SCROLL_QUIET_FRAME_TARGET
+        ) {
           clearPendingStreamAlignment()
         } else {
           streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
@@ -264,43 +312,46 @@ const useKeyHandlers = () => {
       }
 
       scrollStreamCardIntoView(selectedCard, scrollElement)
+      quietFrameCount = 0
       scheduleAlignmentRetry()
     }
 
     streamAlignmentTaskRef.current.frameId = globalThis.requestAnimationFrame(settleAlignment)
   }
 
-  const scrollSelectedCardIntoView = (targetEntryId = null) => {
+  const scrollSelectedCardIntoView = (
+    targetEntryId = null,
+    { relatedEntryIds = [], skipInitialScroll = false } = {},
+  ) => {
     if (entryListRef.current) {
       const scrollElement = getEntryListScrollElement()
       const topOffset = scrollElement ? getStreamCardTopOffset(scrollElement) : 0
       const selectedCard = getSelectedCard(targetEntryId)
+      const isStreamLayout = settingsState.get().layoutMode === "stream"
 
-      if (settingsState.get().layoutMode === "stream" && scrollElement && selectedCard) {
-        alignSelectedStreamCard(targetEntryId)
+      if (isStreamLayout && scrollElement) {
+        if (!selectedCard && targetEntryId !== null && streamVirtualizerRef.current) {
+          const targetIndex = filteredEntriesState
+            .get()
+            .findIndex((entry) => entry.id === Number(targetEntryId))
+
+          if (targetIndex !== -1) {
+            streamVirtualizerRef.current.scrollToIndex(targetIndex, {
+              align: "start",
+              offset: -topOffset,
+              smooth: true,
+            })
+          }
+        }
+
+        alignSelectedStreamCard(targetEntryId, {
+          relatedEntryIds,
+          skipInitialScroll: skipInitialScroll || !selectedCard,
+        })
         return
       }
 
-      if (targetEntryId !== null && streamVirtualizerRef.current) {
-        const targetIndex = filteredEntriesState
-          .get()
-          .findIndex((entry) => entry.id === Number(targetEntryId))
-
-        if (targetIndex !== -1) {
-          streamVirtualizerRef.current.scrollToIndex(targetIndex, {
-            align: "start",
-            offset: -topOffset,
-            smooth: true,
-          })
-        }
-      }
-
       if (selectedCard) {
-        if (settingsState.get().layoutMode === "stream" && scrollElement) {
-          alignSelectedStreamCard(targetEntryId, { skipInitialScroll: true })
-          return
-        }
-
         selectedCard.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -342,12 +393,17 @@ const useKeyHandlers = () => {
   // eslint-disable-next-line react-hooks/refs
   const navigateToPreviousArticle = withPhotoSliderCheck(() => {
     const previousContent = getAdjacentEntry("prev")
+    const { activeContent: latestActiveContent } = contentState.get()
 
     if (previousContent) {
       handleEntryClick(previousContent)
 
       if (settingsState.get().layoutMode === "stream") {
-        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(previousContent.id))
+        globalThis.requestAnimationFrame(() =>
+          scrollSelectedCardIntoView(previousContent.id, {
+            relatedEntryIds: [latestActiveContent?.id],
+          }),
+        )
       } else {
         globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
       }
@@ -359,12 +415,17 @@ const useKeyHandlers = () => {
   // eslint-disable-next-line react-hooks/refs
   const navigateToNextArticle = withPhotoSliderCheck(() => {
     const nextContent = getAdjacentEntry("next")
+    const { activeContent: latestActiveContent } = contentState.get()
 
     if (nextContent) {
       handleEntryClick(nextContent)
 
       if (settingsState.get().layoutMode === "stream") {
-        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(nextContent.id))
+        globalThis.requestAnimationFrame(() =>
+          scrollSelectedCardIntoView(nextContent.id, {
+            relatedEntryIds: [latestActiveContent?.id],
+          }),
+        )
       } else {
         globalThis.setTimeout(() => scrollSelectedCardIntoView(), ANIMATION_DURATION_MS)
       }
@@ -390,7 +451,11 @@ const useKeyHandlers = () => {
       handleEntryClick(adjacentUnreadEntry)
 
       if (settingsState.get().layoutMode === "stream") {
-        globalThis.requestAnimationFrame(() => scrollSelectedCardIntoView(adjacentUnreadEntry.id))
+        globalThis.requestAnimationFrame(() =>
+          scrollSelectedCardIntoView(adjacentUnreadEntry.id, {
+            relatedEntryIds: [latestActiveContent.id],
+          }),
+        )
       } else {
         globalThis.setTimeout(scrollSelectedCardIntoView, ANIMATION_DURATION_MS)
       }
