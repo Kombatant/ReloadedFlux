@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2025-10-20T08:02:26.751Z",
+  "lastUpdate": "2026-03-25T22:25:59.198Z",
   "fonts": {
     "Fira Sans": {
       "dir": "fira-sans",
@@ -32,6 +32,54 @@
         {
           "filename": "va9E4kDNxMZdWfMOD5Vvl4jL.woff2",
           "hash": "3e38d8c01fe97529"
+        }
+      ]
+    },
+    "Inter": {
+      "dir": "inter",
+      "files": 7,
+      "hashes": [
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZJhiI2B.woff2",
+          "hash": "ef572f9187a8be01"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZthiI2B.woff2",
+          "hash": "f0bb586459ce8f09"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZNhiI2B.woff2",
+          "hash": "eadedd9e13c25824"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZxhiI2B.woff2",
+          "hash": "c15ddd00a9927b56"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZBhiI2B.woff2",
+          "hash": "547ad9fdaeb0ae43"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZFhiI2B.woff2",
+          "hash": "6744a7f509ebc6ab"
+        },
+        {
+          "filename": "UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2",
+          "hash": "8909904ab6c872eb"
+        }
+      ]
+    },
+    "Lato": {
+      "dir": "lato",
+      "files": 2,
+      "hashes": [
+        {
+          "filename": "S6uyw4BMUTPHjxAwXjeu.woff2",
+          "hash": "8b9fc9737043f88c"
+        },
+        {
+          "filename": "S6uyw4BMUTPHjx4wXg.woff2",
+          "hash": "918b7dc3e2e2d015"
         }
       ]
     },
