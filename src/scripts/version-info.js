@@ -17,4 +17,7 @@ const versionInfo = {
   gitDate: safeExec("git log -1 --format=%cd --date=iso") ?? new Date().toISOString(),
 }
 
-writeFileSync("src/version-info.json", JSON.stringify(versionInfo, null, 2))
+const versionInfoJson = JSON.stringify(versionInfo, null, 2)
+
+writeFileSync("src/version-info.json", versionInfoJson)
+writeFileSync("public/version-info.json", versionInfoJson)

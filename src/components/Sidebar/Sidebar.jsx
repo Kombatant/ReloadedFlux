@@ -501,7 +501,7 @@ const updateAllEntriesAsRead = () => {
   setEntries((prev) => prev.map((entry) => ({ ...entry, status: "read" })))
 }
 
-const Sidebar = ({ hasUpdate }) => {
+const Sidebar = ({ dismissUpdate, hasUpdate }) => {
   const { isCoreDataReady } = useStore(dataState)
   const { polyglot } = useStore(polyglotState)
   const expandedCategories = useStore(expandedCategoriesState)
@@ -620,9 +620,10 @@ const Sidebar = ({ hasUpdate }) => {
                   icon={<IconDownload />}
                   shape="circle"
                   size="small"
-                  onClick={() =>
+                  onClick={() => {
+                    dismissUpdate()
                     globalThis.open(`https://github.com/${GITHUB_REPO_PATH}`, "_blank")
-                  }
+                  }}
                 />
               </CustomTooltip>
             ) : null}

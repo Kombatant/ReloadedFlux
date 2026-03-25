@@ -7,7 +7,8 @@ import { GITHUB_REPO_PATH, UPDATE_NOTIFICATION_KEY } from "@/utils/constants"
 import { checkIsInLast24Hours, getTimestamp } from "@/utils/date"
 import buildInfo from "@/version-info.json"
 
-const DEFAULT_REMOTE_VERSION_INFO_URL = `https://raw.githubusercontent.com/${GITHUB_REPO_PATH}/main/src/version-info.json`
+const DEFAULT_REMOTE_VERSION_INFO_URL = `https://raw.githubusercontent.com/${GITHUB_REPO_PATH}/main/build/version-info.json`
+const DEFAULT_LATEST_COMMIT_URL = `https://api.github.com/repos/${GITHUB_REPO_PATH}/commits/main`
 
 const isVersionCheckDebugEnabled = () => {
   const rawValue = import.meta.env.VITE_VERSION_CHECK_DEBUG
@@ -41,6 +42,16 @@ const getRemoteVersionInfoUrl = () => {
   }
 }
 
+const getLatestCommitUrl = () => {
+  try {
+    const url = new URL(DEFAULT_LATEST_COMMIT_URL)
+    url.searchParams.set("_", Date.now().toString())
+    return url.toString()
+  } catch {
+    return `${DEFAULT_LATEST_COMMIT_URL}?_=${Date.now()}`
+  }
+}
+
 function useVersionCheck() {
   const { isAppDataReady } = useStore(dataState)
 
@@ -68,39 +79,100 @@ function useVersionCheck() {
         }
 
         const remoteVersionInfoUrl = getRemoteVersionInfoUrl()
-        const remoteBuildInfo = await ofetch(remoteVersionInfoUrl, {
+        try {
+          const remoteBuildInfo = await ofetch(remoteVersionInfoUrl, {
+            cache: "no-store",
+          })
+
+          const currentGitTimestamp = getTimestamp(buildInfo.gitDate)
+          const latestGitTimestamp = getTimestamp(remoteBuildInfo.gitDate)
+          const hasValidDates =
+            Number.isFinite(currentGitTimestamp) && Number.isFinite(latestGitTimestamp)
+
+          if (hasValidDates) {
+            const hasUpdateByDate = currentGitTimestamp < latestGitTimestamp
+            setHasUpdate(hasUpdateByDate)
+            logVersionCheckDebug({
+              reason: "date_comparison",
+              hasUpdate: hasUpdateByDate,
+              remoteVersionInfoUrl,
+              local: buildInfo,
+              remote: remoteBuildInfo,
+              currentGitTimestamp,
+              latestGitTimestamp,
+            })
+            return
+          }
+
+          if (buildInfo.gitHash && remoteBuildInfo.gitHash) {
+            const hasUpdateByHash = buildInfo.gitHash !== remoteBuildInfo.gitHash
+            setHasUpdate(hasUpdateByHash)
+            logVersionCheckDebug({
+              reason: "hash_fallback",
+              hasUpdate: hasUpdateByHash,
+              remoteVersionInfoUrl,
+              local: buildInfo,
+              remote: remoteBuildInfo,
+            })
+            return
+          }
+
+          logVersionCheckDebug({
+            reason: "insufficient_version_data",
+            remoteVersionInfoUrl,
+            local: buildInfo,
+            remote: remoteBuildInfo,
+          })
+        } catch (error) {
+          logVersionCheckDebug({
+            reason: "version_info_request_failed",
+            remoteVersionInfoUrl,
+            error: error instanceof Error ? error.message : String(error),
+          })
+        }
+
+        const latestCommitUrl = getLatestCommitUrl()
+        const latestCommit = await ofetch(latestCommitUrl, {
           cache: "no-store",
         })
+        const latestCommitDate = latestCommit?.commit?.committer?.date
+        const latestCommitHash = latestCommit?.sha?.slice?.(0, buildInfo.gitHash.length)
 
         const currentGitTimestamp = getTimestamp(buildInfo.gitDate)
-        const latestGitTimestamp = getTimestamp(remoteBuildInfo.gitDate)
+        const latestGitTimestamp = getTimestamp(latestCommitDate)
         const hasValidDates =
           Number.isFinite(currentGitTimestamp) && Number.isFinite(latestGitTimestamp)
 
         if (hasValidDates) {
-          const hasUpdateByDate = currentGitTimestamp < latestGitTimestamp
-          setHasUpdate(hasUpdateByDate)
+          const hasUpdateByCommitDate = currentGitTimestamp < latestGitTimestamp
+          setHasUpdate(hasUpdateByCommitDate)
           logVersionCheckDebug({
-            reason: "date_comparison",
-            hasUpdate: hasUpdateByDate,
-            remoteVersionInfoUrl,
+            reason: "commit_date_fallback",
+            hasUpdate: hasUpdateByCommitDate,
+            latestCommitUrl,
             local: buildInfo,
-            remote: remoteBuildInfo,
+            remote: {
+              gitHash: latestCommitHash,
+              gitDate: latestCommitDate,
+            },
             currentGitTimestamp,
             latestGitTimestamp,
           })
           return
         }
 
-        if (buildInfo.gitHash && remoteBuildInfo.gitHash) {
-          const hasUpdateByHash = buildInfo.gitHash !== remoteBuildInfo.gitHash
-          setHasUpdate(hasUpdateByHash)
+        if (buildInfo.gitHash && latestCommitHash) {
+          const hasUpdateByCommitHash = buildInfo.gitHash !== latestCommitHash
+          setHasUpdate(hasUpdateByCommitHash)
           logVersionCheckDebug({
-            reason: "hash_fallback",
-            hasUpdate: hasUpdateByHash,
-            remoteVersionInfoUrl,
+            reason: "commit_hash_fallback",
+            hasUpdate: hasUpdateByCommitHash,
+            latestCommitUrl,
             local: buildInfo,
-            remote: remoteBuildInfo,
+            remote: {
+              gitHash: latestCommitHash,
+              gitDate: latestCommitDate,
+            },
           })
           return
         }
@@ -110,8 +182,12 @@ function useVersionCheck() {
           reason: "insufficient_version_data",
           hasUpdate: false,
           remoteVersionInfoUrl,
+          latestCommitUrl,
           local: buildInfo,
-          remote: remoteBuildInfo,
+          remote: {
+            gitHash: latestCommitHash,
+            gitDate: latestCommitDate,
+          },
         })
       } catch (error) {
         console.error("Check update failed", error)
