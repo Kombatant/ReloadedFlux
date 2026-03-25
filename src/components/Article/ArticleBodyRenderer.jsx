@@ -269,6 +269,41 @@ const handleIframe = (node) => {
   return node
 }
 
+const PARAGRAPH_BLOCK_CHILDREN = new Set(["figure", "iframe", "img", "pre", "table", "video"])
+
+const paragraphContainsBlockContent = (node) =>
+  node.children?.some((child) => {
+    if (child.type !== "tag") {
+      return false
+    }
+
+    if (PARAGRAPH_BLOCK_CHILDREN.has(child.name)) {
+      return true
+    }
+
+    return (
+      child.name === "a" &&
+      child.children?.some((grandchild) => grandchild.type === "tag" && grandchild.name === "img")
+    )
+  }) ?? false
+
+const handleParagraph = (node, options) => {
+  if (!paragraphContainsBlockContent(node)) {
+    return node
+  }
+
+  const { className, ...restProps } = htmlAttributesToProps(node.attribs, "div")
+
+  return (
+    <div
+      {...restProps}
+      className={["article-paragraph-block", className].filter(Boolean).join(" ")}
+    >
+      {domToReact(node.children, options)}
+    </div>
+  )
+}
+
 const getHtmlParserOptions = (imageSources, togglePhotoSlider) => {
   const options = {
     replace: (node) => {
@@ -296,6 +331,9 @@ const getHtmlParserOptions = (imageSources, togglePhotoSlider) => {
         }
         case "iframe": {
           return handleIframe(node)
+        }
+        case "p": {
+          return handleParagraph(node, options)
         }
         case "table": {
           return handleContentTable(node)

@@ -59,6 +59,16 @@ const StoryStream = ({
     () => filteredEntries.findIndex((entry) => entry.id === activeContent?.id),
     [activeContent?.id, filteredEntries],
   )
+  const keepMountedIndexes = useMemo(() => {
+    if (activeEntryIndex === -1) {
+      return []
+    }
+
+    return [activeEntryIndex - 1, activeEntryIndex, activeEntryIndex + 1].filter(
+      (index, position, array) =>
+        index >= 0 && index < filteredEntries.length && array.indexOf(index) === position,
+    )
+  }, [activeEntryIndex, filteredEntries.length])
 
   return (
     <div className="article-container story-stream-layout">
@@ -87,6 +97,7 @@ const StoryStream = ({
         {isArticleListReady && hasEntries ? (
           <Virtualizer
             ref={streamVirtualizerRef}
+            keepMounted={keepMountedIndexes}
             overscan={STREAM_VIRTUAL_OVERSCAN}
             scrollRef={cardsRef}
             onScroll={() => {

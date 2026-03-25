@@ -62,6 +62,10 @@ p {
   margin-block-end: 1em;
 }
 
+.article-body .article-paragraph-block {
+  margin-block: 1em;
+}
+
 .article-content pre {
   border-radius: var(--border-radius-medium);
   line-height: 1.2;
