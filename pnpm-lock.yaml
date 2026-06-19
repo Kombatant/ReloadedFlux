@@ -77,8 +77,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router:
-        specifier: ^7.17.0
-        version: 7.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.18.0
+        version: 7.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-swipeable:
         specifier: ^7.0.2
         version: 7.0.2(react@18.3.1)
@@ -2682,8 +2682,8 @@ packages:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
 
-  react-router@7.17.0:
-    resolution: {integrity: sha512-FDELK7rTMlCHO5+reyXsPlmfr7N1F91lPHsWYfMEGQm/KQ+F4JFM8jGoeQDmDvdTs93Fw9aSilH+uKRb4/jXvQ==}
+  react-router@7.18.0:
+    resolution: {integrity: sha512-pTTGt8J+ji1NOmYnjzT+bAJy/1zD+Jp4ziO6cL7T3ZLvXKtusO7BpFqlRXitqpcPVqllsIXFHRMt+2/k3Xn6HQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -6061,7 +6061,7 @@ snapshots:
 
   react-refresh@0.18.0: {}
 
-  react-router@7.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-router@7.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       cookie: 1.1.1
       react: 18.3.1
