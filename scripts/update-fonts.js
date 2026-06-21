@@ -101,7 +101,7 @@ function buildGoogleFontsURL(fontFamily, weights, styles) {
  * @returns {string} Filename
  */
 function extractFilename(url) {
-  return url.split("/").pop().split("?")[0]
+  return url.split("/").pop().split("?", 1)[0]
 }
 
 /**

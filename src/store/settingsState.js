@@ -6,7 +6,7 @@ import {
   createDefaultSettings,
   mergeImportedSettingsPreservingAi,
   sanitizeSettings,
-} from "@/utils/settingsTransfer/settings-config"
+} from "@/utils/settings-transfer/settings-config"
 
 // First-run only: seed `animationsEnabled` from the OS reduced-motion hint. The
 // base default stays pure (`true`); once the user toggles it, the persisted
@@ -44,4 +44,4 @@ export const updateSettings = (settingsChanges) =>
 
 export const resetSettings = () => settingsState.set(defaultValue)
 
-export { sanitizeSettings } from "@/utils/settingsTransfer/settings-config"
+export { sanitizeSettings } from "@/utils/settings-transfer/settings-config"

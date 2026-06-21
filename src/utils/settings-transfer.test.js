@@ -2,20 +2,20 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { defaultHotkeys, sanitizeHotkeys } from "./settingsTransfer/hotkeys-config.js"
+import { defaultHotkeys, sanitizeHotkeys } from "./settings-transfer/hotkeys-config.js"
 import {
   AI_SETTINGS_KEYS,
   createDefaultSettings,
   mergeImportedSettingsPreservingAi,
   pickExportableSettings,
   sanitizeSettings,
-} from "./settingsTransfer/settings-config.js"
+} from "./settings-transfer/settings-config.js"
 import {
   buildSettingsExportXmlFromSnapshot,
   formatSettingsExportFilename,
   parseSettingsImportXml,
-} from "./settingsTransfer/settings-transfer-core.js"
-import { sanitizeExpandedCategories } from "./settingsTransfer/sidebar-config.js"
+} from "./settings-transfer/settings-transfer-core.js"
+import { sanitizeExpandedCategories } from "./settings-transfer/sidebar-config.js"
 
 test("sanitizeSettings clamps numeric values and falls back on invalid enums", () => {
   const defaults = createDefaultSettings("en-CA")

@@ -1,14 +1,14 @@
 import { hotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
 import { expandedCategoriesState } from "@/store/sidebarState"
-import { pickExportableSettings, sanitizeSettings } from "@/utils/settingsTransfer/settings-config"
-import { buildSettingsExportXmlFromSnapshot } from "@/utils/settingsTransfer/settings-transfer-core"
+import { pickExportableSettings, sanitizeSettings } from "@/utils/settings-transfer/settings-config"
+import { buildSettingsExportXmlFromSnapshot } from "@/utils/settings-transfer/settings-transfer-core"
 
 export {
   buildSettingsExportXmlFromSnapshot,
   formatSettingsExportFilename,
   parseSettingsImportXml,
-} from "@/utils/settingsTransfer/settings-transfer-core"
+} from "@/utils/settings-transfer/settings-transfer-core"
 
 export const getExportableSettingsSnapshot = () => ({
   settings: pickExportableSettings(sanitizeSettings(settingsState.get())),
