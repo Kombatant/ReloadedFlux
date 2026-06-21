@@ -439,5 +439,10 @@
     "minutes": "%{smart_count} λεπτό |||| %{smart_count} λεπτά",
     "in_time": "σε %{time}",
     "time_ago": "πριν %{time}"
+  },
+  "connection": {
+    "title": "Η σύνδεση χάθηκε",
+    "description": "Δεν μπορούμε να συνδεθούμε με τον διακομιστή Miniflux. Δοκιμάστε ξανά αργότερα.",
+    "refresh": "Ανανέωση"
   }
 }

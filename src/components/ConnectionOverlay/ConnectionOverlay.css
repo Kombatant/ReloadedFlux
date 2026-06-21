@@ -1,0 +1,125 @@
+.connection-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  animation: connection-overlay-fade 0.2s ease;
+}
+
+.connection-overlay-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 28px 28px;
+  overflow: hidden;
+  text-align: center;
+  background-color: var(--color-bg-2);
+  border: 1px solid var(--color-border-2);
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.32),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: connection-overlay-pop 0.22s ease;
+}
+
+/* 顶部状态强调线 */
+.connection-overlay-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  content: "";
+  background: linear-gradient(90deg, rgb(var(--danger-5)), rgb(var(--danger-6)));
+}
+
+.connection-overlay-icon-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.connection-overlay-icon {
+  background-color: var(--color-text-1);
+}
+
+/* 品牌图标右下角的状态徽标：实心圆 + 白色感叹号 */
+.connection-overlay-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: #fff;
+  background-color: rgb(var(--danger-6));
+  border: 2px solid var(--color-bg-2);
+  border-radius: 50%;
+}
+
+.connection-overlay-badge svg {
+  font-size: 12px;
+}
+
+.connection-overlay-title {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-1);
+}
+
+.connection-overlay-description {
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-3);
+}
+
+/* 服务器地址作为独立的等宽芯片 */
+.connection-overlay-server {
+  max-width: 100%;
+  margin-bottom: 24px;
+  padding: 6px 12px;
+  overflow: hidden;
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  color: var(--color-text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: var(--color-fill-2);
+  border: 1px solid var(--color-border-2);
+  border-radius: 6px;
+}
+
+@keyframes connection-overlay-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes connection-overlay-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
