@@ -51,7 +51,10 @@ const useClassicKeyHandlers = ({ classicVirtualizerRef } = {}) => {
     }
 
     if (targetEntryId !== null) {
-      return entryListRef.current.el.querySelector(`[data-entry-id="${targetEntryId}"]`) || null
+      return (
+        entryListRef.current.el.querySelector(`[data-entry-id="${CSS.escape(targetEntryId)}"]`) ||
+        null
+      )
     }
 
     return entryListRef.current.el.querySelector(".card-wrapper.selected") || null

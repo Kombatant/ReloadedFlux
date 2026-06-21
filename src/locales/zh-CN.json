@@ -440,5 +440,10 @@
     "minutes": "%{smart_count} 分钟",
     "in_time": "%{time}内",
     "time_ago": "%{time}前"
+  },
+  "connection": {
+    "title": "连接已断开",
+    "description": "无法连接到你的 Miniflux 服务器，请稍后重试。",
+    "refresh": "刷新"
   }
 }

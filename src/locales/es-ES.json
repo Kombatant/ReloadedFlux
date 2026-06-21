@@ -454,5 +454,10 @@
     "minutes": "%{smart_count} minuto |||| %{smart_count} minutos",
     "in_time": "en %{time}",
     "time_ago": "hace %{time}"
+  },
+  "connection": {
+    "title": "Conexión perdida",
+    "description": "No podemos conectar con tu servidor Miniflux. Inténtalo de nuevo más tarde.",
+    "refresh": "Actualizar"
   }
 }

@@ -8,6 +8,7 @@ import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
 import "./App.css"
+import ConnectionOverlay from "./components/ConnectionOverlay/ConnectionOverlay"
 import Main from "./components/Main/Main"
 import Sidebar from "./components/Sidebar/Sidebar"
 import useFeedIconsSync from "./hooks/useFeedIconsSync"
@@ -142,6 +143,7 @@ const App = () => {
           )}
           <Main />
         </div>
+        <ConnectionOverlay />
       </ConfigProvider>
     )
   )

@@ -2,7 +2,7 @@ import { persistentAtom } from "@nanostores/persistent"
 import { computed } from "nanostores"
 
 import createSetter from "@/utils/nanostores"
-import { defaultHotkeys, sanitizeHotkeys } from "@/utils/settingsTransfer/hotkeys-config"
+import { defaultHotkeys, sanitizeHotkeys } from "@/utils/settings-transfer/hotkeys-config"
 
 export const hotkeysState = persistentAtom("hotkeys", defaultHotkeys, {
   encode: (value) => {
@@ -40,4 +40,4 @@ export const resetHotkey = (action) => updateHotkey(action, defaultHotkeys[actio
 export const replaceHotkeys = (hotkeys) =>
   hotkeysState.set(sanitizeHotkeys(hotkeys, defaultHotkeys))
 
-export { defaultHotkeys, sanitizeHotkeys } from "@/utils/settingsTransfer/hotkeys-config"
+export { defaultHotkeys, sanitizeHotkeys } from "@/utils/settings-transfer/hotkeys-config"

@@ -134,7 +134,7 @@ export default [
   {
     files: ["src/**/*.jsx"],
     rules: {
-      "unicorn/filename-case": ["error", { case: "pascalCase" }],
+      "unicorn/filename-case": ["error", { case: "pascalCase", ignore: ["^src$"] }],
     },
   },
   {
@@ -146,7 +146,18 @@ export default [
   {
     files: ["src/hooks/**/*.js", "src/store/**/*.js"],
     rules: {
-      "unicorn/filename-case": ["error", { case: "camelCase" }],
+      "unicorn/filename-case": ["error", { case: "camelCase", ignore: ["^src$"] }],
+    },
+  },
+  {
+    // 这些文件遍历的是 html-react-parser 的 AST 节点（普通对象），
+    // 并非真实 DOM，故 .firstElementChild / .querySelector 不适用。
+    files: [
+      "src/components/Article/ArticleBodyRenderer.jsx",
+      "src/components/Article/ImageOverlayButton.jsx",
+    ],
+    rules: {
+      "unicorn/better-dom-traversing": "off",
     },
   },
   {
