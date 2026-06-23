@@ -19,7 +19,7 @@ if ("serviceWorker" in navigator) {
       console.error("Failed to unregister service workers in development:", error)
     }
   } else {
-    registerSW({ immediate: true })
+    registerSW()
   }
 }
 
