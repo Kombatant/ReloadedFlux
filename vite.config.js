@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -5,12 +6,22 @@ import viteReact from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import { VitePWA } from "vite-plugin-pwa"
 
+import { createVersionInfo, writeVersionInfo } from "./src/scripts/version-info.js"
+
 const { dirname, resolve } = path
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const generateVersionInfo = () => ({
+  name: "reloadedflux-version-info",
+  buildStart() {
+    writeVersionInfo(createVersionInfo())
+  },
+})
+
 export default defineConfig({
   plugins: [
+    generateVersionInfo(),
     viteReact(),
     VitePWA({
       registerType: "prompt",

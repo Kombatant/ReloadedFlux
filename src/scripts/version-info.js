@@ -118,8 +118,8 @@ export const createVersionInfo = (environment = process.env) => {
   }
 }
 
-const writeVersionInfo = (versionInfo) => {
-  const versionInfoJson = JSON.stringify(versionInfo, null, 2)
+export const writeVersionInfo = (versionInfo) => {
+  const versionInfoJson = `${JSON.stringify(versionInfo, null, 2)}\n`
 
   for (const outputPath of VERSION_OUTPUT_PATHS) {
     writeFileSync(outputPath, versionInfoJson)
