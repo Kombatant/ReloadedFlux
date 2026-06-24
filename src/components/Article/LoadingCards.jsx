@@ -9,7 +9,7 @@ const LoadingCard = ({ animationsEnabled, index, isArticleListReady }) => (
   <Card
     className={`card-style loading-card ${animationsEnabled ? "is-animated" : ""}`}
     cover={null}
-    style={{ "--loading-card-delay": `${index * 90}ms` }}
+    style={{ "--loading-card-delay": `${index * 70}ms` }}
   >
     <Card.Meta
       description={

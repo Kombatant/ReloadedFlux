@@ -28,20 +28,23 @@
     linear-gradient(
       100deg,
       transparent 0%,
-      transparent 32%,
-      rgba(var(--primary-6), 0.16) 45%,
-      transparent 58%,
+      transparent 24%,
+      rgba(var(--primary-6), 0.24) 42%,
+      rgba(255, 255, 255, 0.18) 48%,
+      transparent 64%,
       transparent 100%
     ),
     linear-gradient(90deg, var(--color-fill-2), var(--color-fill-3), var(--color-fill-2));
   background-position:
-    120% 0,
+    70% 0,
     0 0;
   background-size:
-    220% 100%,
+    180% 100%,
     100% 100%;
-  animation: loading-card-shimmer 1.45s ease-in-out infinite;
-  animation-delay: var(--loading-card-delay);
+  animation:
+    loading-card-shimmer 900ms linear infinite,
+    loading-card-glow 1.8s ease-in-out infinite;
+  will-change: background-position, filter;
 }
 
 @keyframes loading-card-enter {
@@ -59,14 +62,25 @@
 @keyframes loading-card-shimmer {
   from {
     background-position:
-      120% 0,
+      70% 0,
       0 0;
   }
 
   to {
     background-position:
-      -120% 0,
+      -90% 0,
       0 0;
+  }
+}
+
+@keyframes loading-card-glow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.18);
   }
 }
 
