@@ -56,7 +56,7 @@ jobs:
         env:
           SKIP_BUILD_BRANCH_DEPLOY: "1"
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --frozen-lockfile --trust-lockfile
           pnpm run build
 
       - name: Deploy

@@ -1,11 +1,11 @@
 {
-  "buildVersion": "20260623.1024",
-  "buildDate": "2026-06-23",
-  "buildSequence": 1024,
-  "channel": "main",
-  "gitBranch": "main",
-  "gitHash": "5cfcbb5",
-  "gitCommitDate": "2026-06-23T13:04:10-04:00",
-  "gitDate": "2026-06-23T13:04:10-04:00",
+  "buildVersion": "20260703.784",
+  "buildDate": "2026-07-03",
+  "buildSequence": 784,
+  "channel": "copilot/fix-build-and-deploy-job",
+  "gitBranch": "copilot/fix-build-and-deploy-job",
+  "gitHash": "6356b1f",
+  "gitCommitDate": "2026-07-03T13:04:30Z",
+  "gitDate": "2026-07-03T13:04:30Z",
   "isCanonical": false
 }
