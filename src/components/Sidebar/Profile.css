@@ -22,6 +22,221 @@
   text-align: right;
 }
 
+.about-modal.arco-modal-simple {
+  width: min(520px, calc(100vw - 32px));
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-bg-1);
+}
+
+.about-modal.arco-modal-simple .arco-modal-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.about-modal.arco-modal-simple .arco-modal-body {
+  padding: 0;
+}
+
+.about-modal.arco-modal-simple .arco-modal-footer {
+  margin-top: 0;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-border-2);
+  background: var(--color-bg-1);
+}
+
+.about-modal-content {
+  color: var(--color-text-1);
+  background: var(--color-bg-1);
+}
+
+.about-modal-header {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 28px 28px 24px;
+  background:
+    linear-gradient(135deg, rgba(var(--primary-6), 0.12), transparent 56%),
+    linear-gradient(180deg, var(--color-bg-2), var(--color-bg-1));
+  border-bottom: 1px solid var(--color-border-2);
+}
+
+.about-modal-logo {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--color-text-1);
+  box-shadow: var(--shadow);
+}
+
+.about-modal-logo svg {
+  color: var(--color-bg-1);
+  font-size: 38px;
+}
+
+.about-modal-heading {
+  min-width: 0;
+}
+
+.about-modal-kicker {
+  margin-bottom: 4px;
+  color: rgb(var(--primary-6));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.about-modal-heading h2 {
+  margin: 0;
+  color: var(--color-text-1);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.about-modal-title-strong {
+  font-weight: 700;
+}
+
+.about-modal-heading p {
+  margin: 8px 0 0;
+  color: var(--color-text-2);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.about-modal-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 18px 24px 0;
+}
+
+.about-modal-action {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--color-border-2);
+  border-radius: 8px;
+  color: var(--color-text-1);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  background: var(--color-fill-1);
+  transition:
+    border-color 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease;
+}
+
+.about-modal-action:hover {
+  border-color: rgba(var(--primary-6), 0.4);
+  color: rgb(var(--primary-6));
+  background: rgba(var(--primary-6), 0.08);
+}
+
+.about-modal-action svg {
+  flex: 0 0 auto;
+  font-size: 16px;
+}
+
+.about-modal-details {
+  display: grid;
+  gap: 1px;
+  margin: 18px 24px 24px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-2);
+  border-radius: 8px;
+  background: var(--color-border-2);
+}
+
+.about-modal-detail {
+  display: grid;
+  grid-template-columns: 18px minmax(88px, auto) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--color-bg-1);
+}
+
+.about-modal-detail svg {
+  color: var(--color-text-3);
+  font-size: 16px;
+}
+
+.about-modal-detail span {
+  color: var(--color-text-2);
+  font-size: 13px;
+}
+
+.about-modal-detail strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-1);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+body[arco-theme="dark"] .about-modal-logo {
+  box-shadow: none;
+}
+
+@media screen and (max-width: 520px) {
+  .about-modal-header {
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    padding: 22px 20px 20px;
+  }
+
+  .about-modal-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .about-modal-logo svg {
+    font-size: 30px;
+  }
+
+  .about-modal-heading h2 {
+    font-size: 21px;
+  }
+
+  .about-modal-actions {
+    grid-template-columns: 1fr;
+    padding: 16px 18px 0;
+  }
+
+  .about-modal-details {
+    margin: 16px 18px 18px;
+  }
+
+  .about-modal-detail {
+    grid-template-columns: 18px 1fr;
+    gap: 6px 10px;
+  }
+
+  .about-modal-detail strong {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .about-modal.arco-modal-simple .arco-modal-footer {
+    padding: 14px 18px 18px;
+  }
+}
+
 /* Make profile/menu button transparent but show background on hover/focus */
 .user-profile-container .arco-btn:not(.arco-btn-disabled) {
   background-color: transparent;

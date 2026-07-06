@@ -1,7 +1,12 @@
 import { Button, Divider, Dropdown, Menu, Modal, Radio } from "@arco-design/web-react"
 import {
+  IconBook,
+  IconBranch,
+  IconCalendarClock,
+  IconCode,
   IconDesktop,
   IconExclamationCircle,
+  IconGithub,
   IconInfoCircleFill,
   IconLink,
   IconMoonFill,
@@ -35,6 +40,11 @@ export default function Profile() {
 
   const { setSettingsModalVisible } = useModalToggle()
 
+  const buildVersion = buildInfo.buildVersion ?? buildInfo.gitHash ?? "local"
+  const buildChannel = buildInfo.channel ?? "local"
+  const buildCommit = buildInfo.gitHash ?? "unknown"
+  const buildDate = buildInfo.gitCommitDate ?? buildInfo.gitDate ?? buildInfo.buildDate ?? "unknown"
+
   const handleResetSettings = () => {
     Modal.confirm({
       title: polyglot.t("sidebar.settings_reset_confirm"),
@@ -66,40 +76,69 @@ export default function Profile() {
 
   const handleAbout = () => {
     Modal.info({
-      title: <b>About ReloadedFlux...</b>,
+      className: "about-modal",
+      icon: null,
+      title: null,
       content: (
-        <div>
-          <div>
-            Lovingly forked from{" "}
-            <a href="https://github.com/electh/ReactFlux" rel="noopener noreferrer" target="_blank">
-              https://github.com/electh/ReactFlux
-            </a>
+        <div className="about-modal-content">
+          <div className="about-modal-header">
+            <div aria-hidden="true" className="about-modal-logo">
+              <IconBook />
+            </div>
+            <div className="about-modal-heading">
+              <div className="about-modal-kicker">About</div>
+              <h2>
+                <span className="about-modal-title-strong">Reloaded</span>Flux
+              </h2>
+              <p>
+                A polished web client for Miniflux, maintained by Pete &quot;Kombatant&quot;
+                Vagiakos.
+              </p>
+            </div>
           </div>
-          <p></p>
-          <div>
-            <strong>Author:</strong> Pete &quot;Kombatant&quot; Vagiakos
-          </div>
-          <div>
-            <b>Build version:</b> {buildInfo.buildVersion ?? buildInfo.gitHash}
-          </div>
-          <div>
-            <b>Build channel:</b> {buildInfo.channel ?? "local"}
-          </div>
-          <div>
-            <b>Build commit:</b> {buildInfo.gitHash}
-          </div>
-          <div>
-            <b>Build date:</b> {buildInfo.gitCommitDate ?? buildInfo.gitDate}
-          </div>
-          <div>
-            <b>Github:</b>{" "}
+
+          <div className="about-modal-actions">
             <a
+              className="about-modal-action"
               href="https://github.com/Kombatant/ReloadedFlux"
               rel="noopener noreferrer"
               target="_blank"
             >
-              https://github.com/Kombatant/ReloadedFlux
+              <IconGithub />
+              Project repository
             </a>
+            <a
+              className="about-modal-action"
+              href="https://github.com/electh/ReactFlux"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <IconLink />
+              ReactFlux lineage
+            </a>
+          </div>
+
+          <div aria-label="Build information" className="about-modal-details">
+            <div className="about-modal-detail">
+              <IconCode />
+              <span>Version</span>
+              <strong>{buildVersion}</strong>
+            </div>
+            <div className="about-modal-detail">
+              <IconBranch />
+              <span>Channel</span>
+              <strong>{buildChannel}</strong>
+            </div>
+            <div className="about-modal-detail">
+              <IconGithub />
+              <span>Commit</span>
+              <strong>{buildCommit}</strong>
+            </div>
+            <div className="about-modal-detail">
+              <IconCalendarClock />
+              <span>Build date</span>
+              <strong>{buildDate}</strong>
+            </div>
           </div>
         </div>
       ),
