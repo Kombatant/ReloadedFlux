@@ -35,6 +35,7 @@ import { duplicateHotkeysState } from "@/store/hotkeysState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
+import { extractEntryIdFromPath } from "@/utils/url"
 
 import "./Content.css"
 
@@ -81,6 +82,7 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
   const fetchArticleListOnlyRef = useRef(null)
   const fetchArticleListWithRelatedDataRef = useRef(null)
   const autoSelectAppliedRef = useRef(null)
+  const pendingSingleEntryIdRef = useRef(null)
 
   const fetchArticleListOnly = useCallback(async () => {
     if (!isAppDataReady) {
@@ -142,6 +144,16 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
 
   const fetchSingleEntry = useCallback(
     async (entryId) => {
+      // Prevent repeated URL-entry fetches while contentState updates re-run effects.
+      if (String(pendingSingleEntryIdRef.current) === String(entryId)) {
+        return
+      }
+
+      const { activeContent: latestActiveContent } = contentState.get()
+      if (Number(latestActiveContent?.id) === Number(entryId)) {
+        return
+      }
+
       const existingEntry = entries.find((entry) => entry.id === Number(entryId))
 
       if (existingEntry) {
@@ -150,12 +162,21 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
       }
 
       try {
+        pendingSingleEntryIdRef.current = entryId
         setIsArticleLoading(true)
         const entry = parseCoverImage(await getEntry(entryId))
+        const currentEntryId = extractEntryIdFromPath(globalThis.location?.pathname || "")
+        if (String(currentEntryId) !== String(entryId)) {
+          return
+        }
+
         setActiveContent(entry)
       } catch (error) {
         console.error("Failed to fetch entry:", error)
       } finally {
+        if (String(pendingSingleEntryIdRef.current) === String(entryId)) {
+          pendingSingleEntryIdRef.current = null
+        }
         setIsArticleLoading(false)
       }
     },
