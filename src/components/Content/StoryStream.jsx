@@ -67,7 +67,15 @@ const StoryStream = ({
   // Rather than show that glitch frame, keep the freshly-mounted list invisible
   // (it still lays out + measures off-screen) and show the loading skeleton until
   // the layout has settled: no card overlaps its predecessor. Then reveal.
-  const settleKey = `${infoFrom}:${isArticleListReady}:${filteredEntries.length}`
+  //
+  // Keyed to list *identity* (source + ready flip), NOT filteredEntries.length:
+  // background load-more appends (and mark-as-read removals under the unread
+  // filter) change the length without remounting the list. Re-hiding on those
+  // set visibility:hidden on the focused card — which blurs it to <body> and
+  // clamps the collapsed scroller back to scrollTop 0 — so keyboard navigation
+  // intermittently "lost" the just-selected article. Appended cards mount far
+  // below the viewport, so the first-card overlap glitch can't occur there.
+  const settleKey = `${info.from}:${info.id}:${isArticleListReady}`
   const [streamSettled, setStreamSettled] = useState(false)
   const [settledKey, setSettledKey] = useState(settleKey)
   // Adjust state during render when the list identity changes (the React-blessed
