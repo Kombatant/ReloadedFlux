@@ -8,6 +8,7 @@ import usePhotoSlider from "./usePhotoSlider"
 import useContentContext from "@/hooks/useContentContext"
 import { contentState, filteredEntriesState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
+import { setStreamAlignmentActive } from "@/store/streamAlignmentState"
 import { Message } from "@/utils/feedback"
 import { extractImageSources } from "@/utils/images"
 import {
@@ -153,6 +154,10 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
 
     task.observedElements = new Map()
     task.restartRequested = false
+
+    // Session over: unblock load-more (StoryStream re-checks on this flip).
+    // A session starting right after re-sets it true synchronously.
+    setStreamAlignmentActive(false)
   }
 
   useEffect(() => clearPendingStreamAlignment, [])
@@ -271,6 +276,8 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
       scrollTop: getEntryListScrollElement()?.scrollTop,
     }))
 
+    setStreamAlignmentActive(true)
+
     const task = streamAlignmentTaskRef.current
     const controller = new AbortController()
     const { signal } = controller
@@ -340,6 +347,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
         if (!selectedCard || !scrollElement) {
           if (!scrollElement) {
             streamDebug("align:exit", { targetEntryId, reason: "no scroll element" })
+            clearPendingStreamAlignment()
             return
           }
 
@@ -368,6 +376,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
               targetEntryId,
               reason: "card never mounted — selected card cannot be aligned",
             })
+            clearPendingStreamAlignment()
             return
           }
         }

@@ -14,12 +14,14 @@ import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
+import { streamAlignmentActiveState } from "@/store/streamAlignmentState"
 import { streamDebug } from "@/utils/stream-debug"
 
 import "./StoryStream.css"
 
 const STREAM_PRELOAD_AHEAD_COUNT = 3
 const STREAM_VIRTUAL_OVERSCAN = 6
+const STREAM_LOAD_MORE_REMAINING_ITEMS = 20
 
 const StoryStream = ({
   cardsRef,
@@ -40,27 +42,62 @@ const StoryStream = ({
 
   const checkAndLoadMore = useMemo(
     () =>
-      throttle((element) => {
+      // eslint-disable-next-line react-hooks/refs -- runs only from scroll events / alignment listener, never during render
+      throttle(() => {
         if (!canLoadMore) {
           return
         }
 
-        const threshold = element.scrollHeight * 0.82
-        const scrolledDistance = element.scrollTop + element.clientHeight
+        // Never request an append while the alignment glide is running: the
+        // 300-entry remeasure lands mid-scroll and knocks the animated scroll
+        // off target. The alignment-state listener below re-checks the moment
+        // the glide finishes, so nothing is lost by skipping here.
+        if (streamAlignmentActiveState.get()) {
+          return
+        }
 
-        if (scrolledDistance >= threshold) {
+        const virtualizer = streamVirtualizerRef.current
+        if (!virtualizer) {
+          return
+        }
+
+        // Trigger on remaining *items*, not a scrollHeight percentage. In a
+        // virtualized list unmounted cards are only estimated (far smaller
+        // than they render), so a ratio against scrollHeight saturates while
+        // the user is still near the top of the loaded list — load-more then
+        // re-fires on every scroll event and fetches the entire backlog.
+        const lastVisibleIndex = virtualizer.findItemIndex(
+          virtualizer.scrollOffset + virtualizer.viewportSize,
+        )
+        const loadedCount = filteredEntriesState.get().length
+        const remainingItems = loadedCount - 1 - lastVisibleIndex
+
+        if (remainingItems <= STREAM_LOAD_MORE_REMAINING_ITEMS) {
           streamDebug("stream:load-more-triggered", {
-            scrollTop: element.scrollTop,
-            scrollHeight: element.scrollHeight,
+            lastVisibleIndex,
+            loadedCount,
+            remainingItems,
           })
           handleLoadMore(getEntries)
         }
       }, 200),
-    [canLoadMore, getEntries, handleLoadMore],
+    [canLoadMore, getEntries, handleLoadMore, streamVirtualizerRef],
   )
 
   useEffect(() => {
     return () => checkAndLoadMore.cancel()
+  }, [checkAndLoadMore])
+
+  // Keyboard navigation produces scroll events only *during* alignment (which
+  // the check above skips), so re-check once each alignment session ends —
+  // otherwise a keyboard-only user would never trigger load-more.
+  useEffect(() => {
+    const unbind = streamAlignmentActiveState.listen((active) => {
+      if (!active) {
+        checkAndLoadMore()
+      }
+    })
+    return unbind
   }, [checkAndLoadMore])
 
   const hasEntries = filteredEntries.length > 0
@@ -263,12 +300,7 @@ const StoryStream = ({
               keepMounted={keepMountedIndexes}
               overscan={STREAM_VIRTUAL_OVERSCAN}
               scrollRef={cardsRef}
-              onScroll={() => {
-                const element = cardsRef.current
-                if (element) {
-                  checkAndLoadMore(element)
-                }
-              }}
+              onScroll={() => checkAndLoadMore()}
             >
               {filteredEntries.map((entry, index) => (
                 <StreamArticleCard
