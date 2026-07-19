@@ -14,6 +14,7 @@ import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
+import { streamDebug } from "@/utils/stream-debug"
 
 import "./StoryStream.css"
 
@@ -48,6 +49,10 @@ const StoryStream = ({
         const scrolledDistance = element.scrollTop + element.clientHeight
 
         if (scrolledDistance >= threshold) {
+          streamDebug("stream:load-more-triggered", {
+            scrollTop: element.scrollTop,
+            scrollHeight: element.scrollHeight,
+          })
           handleLoadMore(getEntries)
         }
       }, 200),
@@ -82,6 +87,7 @@ const StoryStream = ({
   // "derive state from props" pattern), so the new list never paints in its
   // unsettled state for even one frame.
   if (settledKey !== settleKey) {
+    streamDebug("stream:list-identity-changed", { from: settledKey, to: settleKey })
     setSettledKey(settleKey)
     setStreamSettled(false)
   }
@@ -125,6 +131,11 @@ const StoryStream = ({
       }
       frame += 1
       if (isLaidOut() || frame >= MAX_FRAMES) {
+        streamDebug("stream:settled", {
+          settleKey,
+          frames: frame,
+          hitFrameCap: frame >= MAX_FRAMES,
+        })
         setStreamSettled(true)
         return
       }

@@ -246,6 +246,85 @@ test("waitForScrollEnd does not resolve 'stable' before any movement (timeout ba
   }
 })
 
+test("waitForScrollEnd resolves 'never-started' when the scroll never moves", async () => {
+  delete globalThis.onscrollend
+  const raf = installFakeRaf()
+  const element = createScrollElement(50)
+
+  // The issued scroll was silently cancelled: scrollTop never leaves 50. The
+  // watchdog must report it in ~neverStartedTimeout, well before the idle
+  // timeout.
+  const promise = waitForScrollEnd(element, {
+    timeout: 1000,
+    stableWindow: 5,
+    tolerance: 4,
+    expectedTop: 300,
+    neverStartedTimeout: 20,
+  })
+
+  const pumpInterval = setInterval(() => raf.flushFrames(1), 2)
+
+  try {
+    assert.equal(await promise, "never-started")
+    assert.equal(element.scrollTop, 50)
+  } finally {
+    clearInterval(pumpInterval)
+  }
+})
+
+test("waitForScrollEnd does not fire 'never-started' once the scroll has moved", async () => {
+  delete globalThis.onscrollend
+  const raf = installFakeRaf()
+  const element = createScrollElement(0)
+
+  // Scroll starts moving before the watchdog window elapses, then settles on
+  // target: the watchdog must stay disarmed and the normal detector resolve.
+  const promise = waitForScrollEnd(element, {
+    timeout: 1000,
+    stableWindow: 5,
+    tolerance: 4,
+    expectedTop: 100,
+    neverStartedTimeout: 20,
+  })
+
+  const pumpInterval = setInterval(() => {
+    if (element.scrollTop < 100) {
+      element.scrollTop = Math.min(100, element.scrollTop + 30)
+    }
+    raf.flushFrames(1)
+  }, 2)
+
+  try {
+    assert.equal(await promise, "stable")
+    assert.equal(element.scrollTop, 100)
+  } finally {
+    clearInterval(pumpInterval)
+  }
+})
+
+test("waitForScrollEnd without neverStartedTimeout keeps the timeout backstop", async () => {
+  delete globalThis.onscrollend
+  const raf = installFakeRaf()
+  const element = createScrollElement(50)
+
+  // Default (option omitted): a never-moving scroll still resolves via the
+  // idle timeout, exactly as before the watchdog existed.
+  const promise = waitForScrollEnd(element, {
+    timeout: 30,
+    stableWindow: 5,
+    tolerance: 4,
+    expectedTop: 300,
+  })
+
+  const pumpInterval = setInterval(() => raf.flushFrames(1), 2)
+
+  try {
+    assert.equal(await promise, "timeout")
+  } finally {
+    clearInterval(pumpInterval)
+  }
+})
+
 test("waitForScrollEnd resolves 'aborted' immediately when signal already aborted", async () => {
   delete globalThis.onscrollend
   installFakeRaf()

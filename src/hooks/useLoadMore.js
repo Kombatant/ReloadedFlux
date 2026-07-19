@@ -7,6 +7,7 @@ import { getTimestamp } from "@/utils/date"
 import { parseCoverImage } from "@/utils/images"
 import { extractBasicSearchTerms } from "@/utils/kmp"
 import createSetter from "@/utils/nanostores"
+import { streamDebug } from "@/utils/stream-debug"
 
 const loadingMoreState = atom(false)
 const setLoadingMore = createSetter(loadingMoreState)
@@ -122,6 +123,10 @@ const useLoadMore = () => {
 
       if (response?.entries?.length > 0) {
         const newEntries = response.entries.map((entry) => parseCoverImage(entry))
+        streamDebug("stream:load-more-appending", {
+          fetched: response.entries.length,
+          existing: entries.length,
+        })
         updateEntries(newEntries)
       }
       if (response.total < pageSize) {

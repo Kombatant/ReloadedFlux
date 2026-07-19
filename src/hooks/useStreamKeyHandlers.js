@@ -15,10 +15,12 @@ import {
   quickScrollTo,
   STREAM_SCROLL_ALIGNMENT_TOLERANCE,
   STREAM_SCROLL_END_TIMEOUT_MS,
+  STREAM_SCROLL_NEVER_STARTED_TIMEOUT_MS,
   STREAM_SCROLL_STABLE_WINDOW_MS,
   waitForElement,
   waitForScrollEnd,
 } from "@/utils/scroll"
+import { streamDebug } from "@/utils/stream-debug"
 
 const STREAM_CARD_TOP_OFFSET_FALLBACK = 18
 const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 2600
@@ -129,6 +131,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     if (task.scrollInFlight) {
       task.lastInterruptedAt = Date.now()
       task.scrollInFlight = false
+      streamDebug("align:interrupted", "in-flight scroll aborted (rapid-nav stamp set)")
     }
 
     // Aborting the session signal propagates into every pending await
@@ -225,10 +228,16 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
         if (Math.abs(currentHeight - previousHeight) > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
           task.observedElements.set(entry.target, currentHeight)
           meaningfulChange = true
+          streamDebug("align:resize", {
+            entryId: entry.target.dataset?.entryId,
+            previousHeight,
+            currentHeight,
+          })
         }
       }
 
       if (meaningfulChange) {
+        streamDebug("align:restart-requested", "card height changed → re-arming alignment")
         requestRestart()
       }
     })
@@ -255,6 +264,13 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
   ) => {
     clearPendingStreamAlignment()
 
+    streamDebug("align:start", () => ({
+      targetEntryId,
+      relatedEntryIds,
+      skipInitialScroll,
+      scrollTop: getEntryListScrollElement()?.scrollTop,
+    }))
+
     const task = streamAlignmentTaskRef.current
     const controller = new AbortController()
     const { signal } = controller
@@ -268,6 +284,11 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
 
     // Hard safety cap for buggy/noisy engines: tear everything down on fire.
     task.maxTimeoutId = globalThis.setTimeout(() => {
+      streamDebug("align:max-settle-timeout", {
+        targetEntryId,
+        timeoutMs: STREAM_SCROLL_MAX_SETTLE_TIME_MS,
+        scrollTop: getEntryListScrollElement()?.scrollTop,
+      })
       clearPendingStreamAlignment()
     }, STREAM_SCROLL_MAX_SETTLE_TIME_MS)
 
@@ -291,13 +312,20 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
         .get()
         .findIndex((entry) => entry.id === Number(targetEntryId))
 
-      if (targetIndex !== -1) {
-        streamVirtualizerRef.current.scrollToIndex(targetIndex, {
-          align: "start",
-          offset: -topOffset,
-          smooth: settingsState.get().animationsEnabled,
+      if (targetIndex === -1) {
+        streamDebug("align:reveal-skipped", {
+          targetEntryId,
+          reason: "entry not in filteredEntries",
         })
+        return
       }
+
+      streamDebug("align:reveal", { targetEntryId, targetIndex, topOffset })
+      streamVirtualizerRef.current.scrollToIndex(targetIndex, {
+        align: "start",
+        offset: -topOffset,
+        smooth: settingsState.get().animationsEnabled,
+      })
     }
 
     let correctionCount = 0
@@ -311,9 +339,11 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
         // Card not mounted yet (virtua): reveal it, then wait for the node.
         if (!selectedCard || !scrollElement) {
           if (!scrollElement) {
+            streamDebug("align:exit", { targetEntryId, reason: "no scroll element" })
             return
           }
 
+          streamDebug("align:card-not-mounted", { targetEntryId })
           revealCard()
 
           try {
@@ -321,7 +351,11 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
               signal,
               timeout: STREAM_CARD_WAIT_TIMEOUT_MS,
             })
-          } catch {
+          } catch (error) {
+            streamDebug("align:card-wait-failed", {
+              targetEntryId,
+              reason: error?.name === "AbortError" ? "aborted" : "timeout",
+            })
             // Aborted or never appeared — let the loop re-check / exit.
           }
 
@@ -330,6 +364,10 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
           }
           selectedCard = getSelectedCard(targetEntryId)
           if (!selectedCard) {
+            streamDebug("align:exit", {
+              targetEntryId,
+              reason: "card never mounted — selected card cannot be aligned",
+            })
             return
           }
         }
@@ -342,19 +380,34 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
         // Single focus owner (Step 4): focus the card here, once per pass.
         focusStreamCard(selectedCard)
 
-        const { effectiveTopDelta, targetScrollTop } = measureStreamCardAlignment(
+        const { effectiveTopDelta, targetScrollTop, topDelta } = measureStreamCardAlignment(
           selectedCard,
           scrollElement,
         )
 
+        streamDebug("align:measure", {
+          targetEntryId,
+          pass: correctionCount,
+          scrollTop: scrollElement.scrollTop,
+          targetScrollTop,
+          topDelta,
+          effectiveTopDelta,
+        })
+
         // Already aligned: never issue a no-op scroll (scrollend would not fire
         // and the stability fallback would just spin).
         if (effectiveTopDelta <= STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+          streamDebug("align:done", { targetEntryId, reason: "aligned", passes: correctionCount })
           clearPendingStreamAlignment()
           return
         }
 
         if (correctionCount >= STREAM_ALIGNMENT_MAX_CORRECTIONS) {
+          streamDebug("align:done", {
+            targetEntryId,
+            reason: "max corrections reached — card may not be top-aligned",
+            residualPx: effectiveTopDelta,
+          })
           clearPendingStreamAlignment()
           return
         }
@@ -374,6 +427,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
           // Wait for it to settle once before correcting, rather than firing an
           // immediate competing scroll.
           firstScrollSkipped = true
+          streamDebug("align:strategy", { targetEntryId, strategy: "skip-initial (await reveal)" })
         } else if (animateThisPass && rapidNav) {
           // Rapid nav: short fixed JS tween. virtua's native smooth is too slow
           // to keep up with fast keypresses, so we accept the per-frame cost for
@@ -385,6 +439,11 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
           const onAbort = () => waitController.abort()
           signal.addEventListener("abort", onAbort, { once: true })
 
+          streamDebug("align:strategy", {
+            targetEntryId,
+            strategy: "rapid-nav quick tween",
+            targetScrollTop,
+          })
           task.scrollInFlight = true
           const reason = await quickScrollTo(scrollElement, targetScrollTop, {
             signal: waitController.signal,
@@ -392,6 +451,12 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
 
           signal.removeEventListener("abort", onAbort)
           task.waitController = null
+          streamDebug("align:quick-tween-finished", {
+            targetEntryId,
+            reason,
+            scrollTop: scrollElement.scrollTop,
+            targetScrollTop,
+          })
           if (reason !== "aborted") {
             task.scrollInFlight = false
           }
@@ -421,11 +486,23 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
             .findIndex((entry) => entry.id === Number(targetEntryId))
 
           if (targetIndex !== -1 && streamVirtualizerRef.current) {
+            streamDebug("align:strategy", {
+              targetEntryId,
+              strategy: "virtua smooth scrollToIndex",
+              targetIndex,
+              targetScrollTop,
+            })
             task.scrollInFlight = true
             streamVirtualizerRef.current.scrollToIndex(targetIndex, {
               align: "start",
               offset: 0,
               smooth: true,
+            })
+          } else {
+            streamDebug("align:strategy", {
+              targetEntryId,
+              strategy: "virtua smooth SKIPPED",
+              reason: targetIndex === -1 ? "entry not in filteredEntries" : "no virtualizer ref",
             })
           }
           // Fall through to waitForScrollEnd below (do NOT continue): the same
@@ -440,26 +517,42 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
           // virtua's scrollToIndex lands ~topOffset (scroll-padding, ~18px) short
           // of our measured target, so a correction always fires. Snapping it
           // "auto" produces a visible little jerk at the end of an otherwise
-          // smooth glide. When animations are on and the residual is small, tween
-          // it instead so the tail reads as one continuous motion.
+          // smooth glide, so with animations on the correction is always
+          // tweened. A small residual (the usual scroll-padding cleanup) gets a
+          // very short tween so the tail of a glide reads as one continuous
+          // motion. A large residual means the smooth scroll was killed
+          // mid-flight — virtua's height compensation stopping it short or
+          // dragging it backward — and gets the full-length recovery tween
+          // instead of a big jump.
           const residual = Math.abs(targetScrollTop - scrollElement.scrollTop)
-          const animateResidual =
-            getAnimationScrollBehavior() === "smooth" && residual <= STREAM_SMOOTH_RESIDUAL_MAX_PX
 
-          if (animateResidual) {
+          if (getAnimationScrollBehavior() === "smooth") {
+            const isSmallResidual = residual <= STREAM_SMOOTH_RESIDUAL_MAX_PX
             const waitController = new AbortController()
             task.waitController = waitController
             const onAbort = () => waitController.abort()
             signal.addEventListener("abort", onAbort, { once: true })
 
+            streamDebug("align:strategy", {
+              targetEntryId,
+              strategy: isSmallResidual ? "residual tween" : "off-target recovery tween",
+              residual,
+              targetScrollTop,
+            })
             task.scrollInFlight = true
             const reason = await quickScrollTo(scrollElement, targetScrollTop, {
               signal: waitController.signal,
-              duration: STREAM_SMOOTH_RESIDUAL_DURATION_MS,
+              duration: isSmallResidual ? STREAM_SMOOTH_RESIDUAL_DURATION_MS : undefined,
             })
 
             signal.removeEventListener("abort", onAbort)
             task.waitController = null
+            streamDebug("align:residual-tween-finished", {
+              targetEntryId,
+              reason,
+              scrollTop: scrollElement.scrollTop,
+              targetScrollTop,
+            })
             if (reason !== "aborted") {
               task.scrollInFlight = false
             }
@@ -471,6 +564,12 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
             continue
           }
 
+          streamDebug("align:strategy", {
+            targetEntryId,
+            strategy: "instant auto snap",
+            residual,
+            targetScrollTop,
+          })
           scrollStreamCardIntoView(selectedCard, scrollElement, "auto", targetScrollTop)
           correctionCount += 1
           task.scrollInFlight = true
@@ -486,10 +585,19 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
           timeout: STREAM_SCROLL_END_TIMEOUT_MS,
           stableWindow: STREAM_SCROLL_STABLE_WINDOW_MS,
           expectedTop: targetScrollTop,
+          neverStartedTimeout: STREAM_SCROLL_NEVER_STARTED_TIMEOUT_MS,
         })
 
         signal.removeEventListener("abort", onAbort)
         task.waitController = null
+        streamDebug("align:scroll-settled", {
+          targetEntryId,
+          reason,
+          scrollTop: scrollElement.scrollTop,
+          targetScrollTop,
+          offTargetPx: Math.abs(scrollElement.scrollTop - targetScrollTop),
+          restartRequested: task.restartRequested,
+        })
         // Scroll completed normally (not interrupted) — clear in-flight so a
         // later, unhurried nav animates again.
         if (reason !== "aborted") {
@@ -498,6 +606,57 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
 
         if (signal.aborted) {
           return
+        }
+
+        if (reason === "never-started") {
+          // The scroll we issued never moved a pixel: a competing scrollTop
+          // write (virtua's height compensation after a card expand/collapse)
+          // silently cancelled the native smooth scroll at birth. Without this
+          // branch the idle timeout would ride out a full second of frozen
+          // scroll and then snap. Recover with the JS tween instead — it
+          // re-asserts scrollTop every frame, so those writes can't kill it.
+          const residual = Math.abs(scrollElement.scrollTop - targetScrollTop)
+
+          if (residual > STREAM_SCROLL_ALIGNMENT_TOLERANCE) {
+            streamDebug("align:strategy", {
+              targetEntryId,
+              strategy: "never-started fallback tween",
+              residual,
+              targetScrollTop,
+            })
+
+            const fallbackController = new AbortController()
+            task.waitController = fallbackController
+            const onFallbackAbort = () => fallbackController.abort()
+            signal.addEventListener("abort", onFallbackAbort, { once: true })
+
+            task.scrollInFlight = true
+            const tweenReason = await quickScrollTo(scrollElement, targetScrollTop, {
+              signal: fallbackController.signal,
+            })
+
+            signal.removeEventListener("abort", onFallbackAbort)
+            task.waitController = null
+            streamDebug("align:fallback-tween-finished", {
+              targetEntryId,
+              reason: tweenReason,
+              scrollTop: scrollElement.scrollTop,
+              targetScrollTop,
+            })
+            if (tweenReason !== "aborted") {
+              task.scrollInFlight = false
+            }
+            if (signal.aborted) {
+              return
+            }
+          }
+
+          // Loop back to re-measure without burning an extra correction: the
+          // never-started scroll accomplished nothing. No spin risk — every
+          // path into this wait either increments correctionCount or is
+          // once-only (skip-initial), so the session stays bounded.
+          task.restartRequested = false
+          continue
         }
 
         // A ResizeObserver restart aborts only the wait; clear the flag and
@@ -515,6 +674,10 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     { relatedEntryIds = [], skipInitialScroll = false } = {},
   ) => {
     if (!entryListRef.current || !getEntryListScrollElement()) {
+      streamDebug("align:skipped", {
+        targetEntryId,
+        reason: "entry list / scroll element not mounted",
+      })
       return
     }
 
@@ -562,6 +725,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     const { activeContent: latestActiveContent } = contentState.get()
 
     if (previousContent) {
+      streamDebug("nav:key", { direction: "prev", targetEntryId: previousContent.id })
       handleEntryClick(previousContent)
 
       globalThis.requestAnimationFrame(() =>
@@ -580,6 +744,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     const { activeContent: latestActiveContent } = contentState.get()
 
     if (nextContent) {
+      streamDebug("nav:key", { direction: "next", targetEntryId: nextContent.id })
       handleEntryClick(nextContent)
 
       globalThis.requestAnimationFrame(() =>
@@ -606,6 +771,10 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
       filteredEntries,
     )
     if (adjacentUnreadEntry) {
+      streamDebug("nav:key", {
+        direction: `${direction}-unread`,
+        targetEntryId: adjacentUnreadEntry.id,
+      })
       handleEntryClick(adjacentUnreadEntry)
 
       globalThis.requestAnimationFrame(() =>

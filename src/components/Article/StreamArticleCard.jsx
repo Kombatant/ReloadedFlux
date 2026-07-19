@@ -33,6 +33,7 @@ import {
 import { generateReadableDate, generateReadingTime, generateRelativeTime } from "@/utils/date"
 import { Message } from "@/utils/feedback"
 import { getEntryImageSources, preloadImageMetadata } from "@/utils/images"
+import { streamDebug } from "@/utils/stream-debug"
 
 import "./StreamArticleCard.css"
 
@@ -217,6 +218,7 @@ const StreamArticleCard = ({
 
   const selectEntry = () => {
     if (!isSelected) {
+      streamDebug("nav:card-click", { targetEntryId: entry.id })
       handleEntryClick(entry)
     }
   }

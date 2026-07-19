@@ -27,6 +27,7 @@ import { duplicateHotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
 import { Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
+import { streamDebug } from "@/utils/stream-debug"
 import { extractEntryIdFromPath } from "@/utils/url"
 
 import "./Content.css"
@@ -92,11 +93,13 @@ const StreamContent = ({ info, getEntries, markAllAsRead }) => {
       if (targetIndex === 0 && scrollElement) {
         // behavior "auto" reveals instantly; smoothness is owned by the JS
         // alignment loop (getAnimationScrollBehavior), not CSS.
+        streamDebug("reveal:scroll-to-top", { entryId })
         scrollElement.scrollTo({ top: 0, behavior: "auto" })
         return true
       }
 
       if (targetIndex !== -1) {
+        streamDebug("reveal:scroll-to-index", { entryId, targetIndex })
         streamVirtualizerRef.current?.scrollToIndex(targetIndex, {
           align: "start",
           smooth: false,
@@ -104,6 +107,7 @@ const StreamContent = ({ info, getEntries, markAllAsRead }) => {
         return true
       }
 
+      streamDebug("reveal:failed", { entryId, reason: "entry not in filteredEntries" })
       return false
     },
     [entryListRef],
@@ -427,6 +431,10 @@ const StreamContent = ({ info, getEntries, markAllAsRead }) => {
 
     if (autoFocusedEntryRef.current !== target.id) {
       autoFocusedEntryRef.current = target.id
+      streamDebug("nav:auto-focus", {
+        targetEntryId: target.id,
+        source: urlEntryInList ? "url deep-link" : "first entry",
+      })
       focusStreamCard(target.id)
     }
   }, [

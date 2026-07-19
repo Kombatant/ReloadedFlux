@@ -13,6 +13,15 @@ export const STREAM_SCROLL_ALIGNMENT_TOLERANCE = 4
 export const STREAM_SCROLL_STABLE_WINDOW_MS = 120
 export const STREAM_SCROLL_END_TIMEOUT_MS = 1000
 export const STREAM_ELEMENT_WAIT_TIMEOUT_MS = 800
+// A native smooth scroll is silently cancelled by any competing scrollTop
+// write on the same element (virtua's height compensation does exactly that
+// when a card expands/collapses). A cancelled-at-birth scroll never moves, so
+// without a dedicated watchdog the only way out is the full idle `timeout` —
+// a visible one-second freeze. If the position hasn't left its starting point
+// at all within this window, the scroll clearly isn't coming; report it so the
+// caller can fall back to an abort-proof JS tween. Native smooth startup
+// latency is only a few frames, so this window is comfortably above it.
+export const STREAM_SCROLL_NEVER_STARTED_TIMEOUT_MS = 200
 // Duration of the manual "quick scroll" tween used during rapid navigation —
 // short enough to keep up with fast keypresses (so the view doesn't lag a full
 // native smooth-scroll behind), long enough to still read as motion rather than
@@ -130,6 +139,12 @@ export const supportsScrollEnd = () => "onscrollend" in globalThis
 // no progress for that long. A long smooth scroll keeps resetting it, so it
 // won't snap the tail of a big jump. The caller's session max timeout remains
 // the absolute cap.
+//
+// `neverStartedTimeout` (optional): resolves "never-started" if the position
+// has not left its starting point (within `tolerance`) after this many ms —
+// the signature of a native smooth scroll that a competing scrollTop write
+// cancelled before it moved. Once any real movement is seen the watchdog is
+// permanently disarmed for this wait.
 export const waitForScrollEnd = (
   scrollElement,
   {
@@ -138,6 +153,7 @@ export const waitForScrollEnd = (
     stableWindow = STREAM_SCROLL_STABLE_WINDOW_MS,
     tolerance = STREAM_SCROLL_ALIGNMENT_TOLERANCE,
     expectedTop = null,
+    neverStartedTimeout = null,
   } = {},
 ) =>
   new Promise((resolve) => {
@@ -148,7 +164,9 @@ export const waitForScrollEnd = (
 
     let settled = false
     let frameId = null
-    let lastScrollTop = scrollElement.scrollTop
+    const initialScrollTop = scrollElement.scrollTop
+    let lastScrollTop = initialScrollTop
+    const startedAt = now()
     let stableSince = now()
     let lastProgressAt = now()
     // A smooth scroll has startup latency: scrollTop stays put for the first
@@ -218,6 +236,19 @@ export const waitForScrollEnd = (
         lastProgressAt = now()
       } else if (stoppedLongEnough && (atTarget(current) || stuckShort)) {
         finish("stable")
+        return
+      }
+
+      // Cancelled-at-birth watchdog: total displacement from the starting
+      // position (not per-frame movement, which a slow ease-in could stay
+      // under) decides whether the scroll ever actually started.
+      if (
+        neverStartedTimeout !== null &&
+        !hasMoved &&
+        Math.abs(current - initialScrollTop) <= tolerance &&
+        now() - startedAt >= neverStartedTimeout
+      ) {
+        finish("never-started")
         return
       }
 
