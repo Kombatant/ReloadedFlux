@@ -11,3 +11,6 @@ allowBuilds:
   esbuild: true
   simple-git-hooks: true
   unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - nanostores@1.4.2
