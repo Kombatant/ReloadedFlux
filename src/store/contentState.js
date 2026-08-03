@@ -1,6 +1,5 @@
 import { computed, map } from "nanostores"
 
-
 import removeDuplicateEntries from "@/utils/deduplicate"
 import { extractHeadings } from "@/utils/dom"
 import { filterEntries } from "@/utils/filter"
@@ -138,7 +137,10 @@ export const setLoadMoreVisible = createSetter(contentState, "loadMoreVisible")
 export const setTotal = createSetter(contentState, "total")
 export const resetContent = () => contentState.set(defaultValue)
 
-// Entries setter function with deduplication capability
+// Entries setter function with deduplication capability.
+// Returns the entries that were dropped as duplicates so the caller can mark
+// them as read; doing that here would require importing the api and hook
+// layers, which import this module in turn.
 export const setEntriesWithDeduplication = (newEntries) => {
   const { infoFrom } = contentState.get()
   const { removeDuplicates } = settingsState.get()
@@ -146,10 +148,14 @@ export const setEntriesWithDeduplication = (newEntries) => {
   // Skip deduplication when disabled or for specific sources (starred/history)
   if (removeDuplicates === "none" || ["starred", "history"].includes(infoFrom)) {
     setEntries(newEntries)
-    return
+    return []
   }
 
   // Apply deduplication based on selected strategy and update entries
-  const deduplicatedEntries = removeDuplicateEntries(newEntries, removeDuplicates)
+  const { entries: deduplicatedEntries, duplicates } = removeDuplicateEntries(
+    newEntries,
+    removeDuplicates,
+  )
   setEntries(deduplicatedEntries)
+  return duplicates
 }

@@ -79,6 +79,27 @@ export const handleEntriesStatusUpdate = (entries, newStatus) => {
   setEntries((prev) => updateEntries(prev, updatedEntries))
 }
 
+// Marks entries dropped by deduplication as read, optimistically. Lives here
+// rather than in utils/deduplicate so that module stays free of api/hook
+// imports; those edges previously formed import cycles.
+export const markDuplicatesAsRead = (duplicateEntries) => {
+  const unreadDuplicateIds = duplicateEntries
+    .filter((entry) => entry.status === "unread")
+    .map((entry) => entry.id)
+
+  if (unreadDuplicateIds.length === 0) {
+    return
+  }
+
+  const { polyglot } = polyglotState.get()
+
+  handleEntriesStatusUpdate(duplicateEntries, "read")
+  updateEntriesStatus(unreadDuplicateIds, "read").catch(() => {
+    Message.error(polyglot.t("deduplicate.mark_as_read_error"))
+    handleEntriesStatusUpdate(duplicateEntries, "unread")
+  })
+}
+
 const handleEntryStatusUpdate = (entry, newStatus) => {
   handleEntriesStatusUpdate([entry], newStatus)
 }

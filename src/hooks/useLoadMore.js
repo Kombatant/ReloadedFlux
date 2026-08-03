@@ -1,6 +1,7 @@
 import { useStore } from "@nanostores/react"
 import { atom } from "nanostores"
 
+import { markDuplicatesAsRead } from "@/hooks/useEntryActions"
 import { contentState, setEntriesWithDeduplication, setLoadMoreVisible } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
 import { getTimestamp } from "@/utils/date"
@@ -21,7 +22,7 @@ const useLoadMore = () => {
     const existingEntryIds = new Set(entries.map((entry) => entry.id))
     const uniqueNewEntries = newEntries.filter((entry) => !existingEntryIds.has(entry.id))
     const combinedEntries = [...entries, ...uniqueNewEntries]
-    setEntriesWithDeduplication(combinedEntries)
+    markDuplicatesAsRead(setEntriesWithDeduplication(combinedEntries))
   }
 
   const getFilterParams = () => {
