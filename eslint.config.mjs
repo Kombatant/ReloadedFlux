@@ -1,5 +1,8 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
 import globals from "globals"
-import importPlugin from "eslint-plugin-import-x"
+import importPlugin, { createNodeResolver } from "eslint-plugin-import-x"
 import js from "@eslint/js"
 import prettier from "eslint-config-prettier"
 import promise from "eslint-plugin-promise"
@@ -8,6 +11,8 @@ import reactCompiler from "eslint-plugin-react-compiler"
 import reactHooks from "eslint-plugin-react-hooks"
 import reactRefresh from "eslint-plugin-react-refresh"
 import unicorn from "eslint-plugin-unicorn"
+
+const rootDirectory = path.dirname(fileURLToPath(import.meta.url))
 
 export default [
   {
@@ -71,7 +76,10 @@ export default [
       "import/no-anonymous-default-export": "error",
       "import/no-cycle": "error",
       "import/no-duplicates": "error",
-      "import/no-relative-parent-imports": "error",
+      // Incompatible with the "@/" alias: the resolver maps it to a real path
+      // outside the importing file's directory, so every aliased import is
+      // flagged. The codebase has no relative parent imports by convention.
+      "import/no-relative-parent-imports": "off",
       "import/no-self-import": "error",
       "import/no-useless-path-segments": ["error", { noUselessIndex: true }],
       "import/order": [
@@ -129,6 +137,15 @@ export default [
     },
     settings: {
       react: { version: "detect" },
+      // import-x reads this key by its own name regardless of the alias the
+      // plugin is registered under. Without it the legacy "node" resolver is
+      // used, which requires eslint-import-resolver-node and crashes the run.
+      "import-x/resolver-next": [
+        createNodeResolver({
+          extensions: [".mjs", ".cjs", ".js", ".jsx", ".json", ".node"],
+          alias: { "@": [path.resolve(rootDirectory, "./src")] },
+        }),
+      ],
     },
   },
   {

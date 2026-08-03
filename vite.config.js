@@ -21,7 +21,9 @@ const vendorChunks = {
 // Rolldown (Vite 8) only accepts the function form of manualChunks.
 const manualChunks = (id) => {
   const segments = id.split("node_modules/")
-  if (segments.length < 2) return undefined
+  if (segments.length < 2) {
+    return
+  }
 
   const parts = segments.at(-1).split("/")
   const pkg = parts[0].startsWith("@") ? `${parts[0]}/${parts[1]}` : parts[0]
