@@ -1,7 +1,7 @@
 import { persistentAtom } from "@nanostores/persistent"
 
 import { getBrowserLanguage } from "@/utils/locales"
-import { prefersReducedMotion } from "@/utils/scroll"
+import { prefersReducedMotion } from "@/utils/scroll-timing"
 import {
   createDefaultSettings,
   mergeImportedSettingsPreservingAi,

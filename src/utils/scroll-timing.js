@@ -28,6 +28,12 @@ export const STREAM_SCROLL_NEVER_STARTED_TIMEOUT_MS = 200
 // an instant jump.
 export const STREAM_QUICK_SCROLL_DURATION_MS = 180
 
+// First-run default seed only. Guarded so non-browser contexts (Node/tests)
+// never crash. Lives here rather than in scroll.js so that settingsState can
+// read it without importing the store-dependent scroll module.
+export const prefersReducedMotion = () =>
+  globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+
 const raf = (callback) =>
   typeof globalThis.requestAnimationFrame === "function"
     ? globalThis.requestAnimationFrame(callback)
