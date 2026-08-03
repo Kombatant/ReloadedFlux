@@ -12,6 +12,23 @@ const { dirname, resolve } = path
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const vendorChunks = {
+  arco: ["@arco-design/web-react"],
+  highlight: ["highlight.js"],
+  react: ["react", "react-dom", "react-router"],
+}
+
+// Rolldown (Vite 8) only accepts the function form of manualChunks.
+const manualChunks = (id) => {
+  const segments = id.split("node_modules/")
+  if (segments.length < 2) return undefined
+
+  const parts = segments.at(-1).split("/")
+  const pkg = parts[0].startsWith("@") ? `${parts[0]}/${parts[1]}` : parts[0]
+
+  return Object.keys(vendorChunks).find((chunk) => vendorChunks[chunk].includes(pkg))
+}
+
 const generateVersionInfo = () => ({
   name: "reloadedflux-version-info",
   buildStart() {
@@ -49,11 +66,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          arco: ["@arco-design/web-react"],
-          highlight: ["highlight.js"],
-          react: ["react", "react-dom", "react-router"],
-        },
+        manualChunks,
       },
     },
   },
