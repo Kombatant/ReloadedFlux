@@ -1,11 +1,11 @@
 {
-  "buildVersion": "20260729.790",
+  "buildVersion": "20260729.795",
   "buildDate": "2026-07-29",
-  "buildSequence": 790,
-  "channel": "copilot/fix-github-actions-job",
-  "gitBranch": "copilot/fix-github-actions-job",
-  "gitHash": "ca36c74",
-  "gitCommitDate": "2026-07-29T13:10:06Z",
-  "gitDate": "2026-07-29T13:10:06Z",
+  "buildSequence": 795,
+  "channel": "main",
+  "gitBranch": "main",
+  "gitHash": "f08749b",
+  "gitCommitDate": "2026-07-29T16:15:20+03:00",
+  "gitDate": "2026-07-29T16:15:20+03:00",
   "isCanonical": false
 }
