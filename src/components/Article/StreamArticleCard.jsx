@@ -12,7 +12,6 @@ import { useStore } from "@nanostores/react"
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 
-import ArticleBodyRenderer from "./ArticleBodyRenderer"
 
 import { updateEntriesStatus } from "@/apis"
 import AiSpark from "@/components/icons/AiSpark"
@@ -34,6 +33,8 @@ import { generateReadableDate, generateReadingTime, generateRelativeTime } from 
 import { Message } from "@/utils/feedback"
 import { getEntryImageSources, preloadImageMetadata } from "@/utils/images"
 import { streamDebug } from "@/utils/stream-debug"
+
+import ArticleBodyRenderer from "./ArticleBodyRenderer"
 
 import "./StreamArticleCard.css"
 

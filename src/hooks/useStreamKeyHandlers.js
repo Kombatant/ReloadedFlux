@@ -1,9 +1,6 @@
 import { useStore } from "@nanostores/react"
 import { useEffect, useRef } from "react"
 
-import { polyglotState } from "./useLanguage"
-import useModalToggle from "./useModalToggle"
-import usePhotoSlider from "./usePhotoSlider"
 
 import useContentContext from "@/hooks/useContentContext"
 import { contentState, filteredEntriesState } from "@/store/contentState"
@@ -22,6 +19,10 @@ import {
   waitForScrollEnd,
 } from "@/utils/scroll"
 import { streamDebug } from "@/utils/stream-debug"
+
+import { polyglotState } from "./useLanguage"
+import useModalToggle from "./useModalToggle"
+import usePhotoSlider from "./usePhotoSlider"
 
 const STREAM_CARD_TOP_OFFSET_FALLBACK = 18
 const STREAM_SCROLL_MAX_SETTLE_TIME_MS = 2600

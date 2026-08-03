@@ -9,8 +9,6 @@ import { useStore } from "@nanostores/react"
 import { useMemo, useState } from "react"
 import { useParams } from "react-router"
 
-import { ActiveButton, SearchForm, ToolbarMenuButton } from "./SearchBarShared"
-import SidebarTrigger from "./SidebarTrigger.jsx"
 
 import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
@@ -27,6 +25,9 @@ import draftFilterTypeState from "@/store/searchBarState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { getStartOfToday } from "@/utils/date"
 import createSetter from "@/utils/nanostores"
+
+import { ActiveButton, SearchForm, ToolbarMenuButton } from "./SearchBarShared"
+import SidebarTrigger from "./SidebarTrigger"
 
 import "./ClassicSearchBar.css"
 

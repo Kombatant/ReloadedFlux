@@ -3,7 +3,6 @@ import { IconDownload, IconUpload } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useRef, useState } from "react"
 
-import SettingItem from "./SettingItem"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import { dataState } from "@/store/dataState"
@@ -18,6 +17,8 @@ import {
   parseSettingsImportXml,
 } from "@/utils/settings-transfer"
 import compareVersions from "@/utils/version"
+
+import SettingItem from "./SettingItem"
 
 const languageOptions = [
   { label: "English", value: "en-CA" },

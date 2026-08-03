@@ -2,11 +2,12 @@ import { Divider, Input, Select } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
-import SettingItem from "./SettingItem"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { AI_PROVIDERS, fetchProviderModels } from "@/utils/ai"
+
+import SettingItem from "./SettingItem"
 
 const summaryLanguageOptions = [
   { label: "English", value: "en-CA" },

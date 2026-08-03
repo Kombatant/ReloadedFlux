@@ -1,10 +1,11 @@
 import { Table } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-import EditableTagGroup from "./EditableTagGroup"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import { hotkeysState } from "@/store/hotkeysState"
+
+import EditableTagGroup from "./EditableTagGroup"
 
 const Hotkeys = () => {
   const { polyglot } = useStore(polyglotState)

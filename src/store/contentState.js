@@ -1,5 +1,12 @@
 import { computed, map } from "nanostores"
 
+
+import removeDuplicateEntries from "@/utils/deduplicate"
+import { extractHeadings } from "@/utils/dom"
+import { filterEntries } from "@/utils/filter"
+import createSetter from "@/utils/nanostores"
+import compareVersions from "@/utils/version"
+
 import {
   dataState,
   feedsGroupedByIdState,
@@ -7,12 +14,6 @@ import {
   unreadTotalState,
 } from "./dataState"
 import { getSettings, settingsState } from "./settingsState"
-
-import removeDuplicateEntries from "@/utils/deduplicate"
-import { extractHeadings } from "@/utils/dom"
-import { filterEntries } from "@/utils/filter"
-import createSetter from "@/utils/nanostores"
-import compareVersions from "@/utils/version"
 
 const defaultValue = {
   activeContent: null, // 当前打开的文章

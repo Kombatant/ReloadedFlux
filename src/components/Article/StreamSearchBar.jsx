@@ -13,13 +13,6 @@ import { useStore } from "@nanostores/react"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router"
 
-import {
-  MarkReadControl,
-  SearchForm,
-  ToolbarActionButton,
-  ToolbarMenuButton,
-} from "./SearchBarShared"
-import SidebarTrigger from "./SidebarTrigger.jsx"
 
 import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
@@ -37,6 +30,14 @@ import { categoriesState, feedsState } from "@/store/dataState"
 import draftFilterTypeState from "@/store/searchBarState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import createSetter from "@/utils/nanostores"
+
+import {
+  MarkReadControl,
+  SearchForm,
+  ToolbarActionButton,
+  ToolbarMenuButton,
+} from "./SearchBarShared"
+import SidebarTrigger from "./SidebarTrigger"
 
 import "./StreamSearchBar.css"
 

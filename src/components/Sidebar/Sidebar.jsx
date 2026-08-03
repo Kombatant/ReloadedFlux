@@ -30,8 +30,6 @@ import { useLocation, useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
-import AddFeed from "./AddFeed.jsx"
-import Profile from "./Profile.jsx"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
 import CustomTooltip from "@/components/ui/CustomTooltip"
@@ -56,6 +54,9 @@ import { expandedCategoriesState, setExpandedCategories } from "@/store/sidebarS
 import { GITHUB_REPO_PATH } from "@/utils/constants"
 import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
+
+import AddFeed from "./AddFeed"
+import Profile from "./Profile"
 
 import "./Sidebar.css"
 
