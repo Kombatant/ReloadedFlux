@@ -24,7 +24,6 @@ import General from "./General"
 import Hotkeys from "./Hotkeys"
 import Reading from "./Reading"
 
-
 import "./SettingsTabs.css"
 
 const CustomTabTitle = ({ icon, title }) => (

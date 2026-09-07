@@ -1,7 +1,6 @@
 import { Divider, InputNumber, Select, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
 

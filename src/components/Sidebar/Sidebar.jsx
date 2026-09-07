@@ -30,7 +30,6 @@ import { useLocation, useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
-
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import EditCategoryModal from "@/components/ui/EditCategoryModal"

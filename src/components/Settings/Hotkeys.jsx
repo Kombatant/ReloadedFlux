@@ -1,7 +1,6 @@
 import { Table } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-
 import { polyglotState } from "@/hooks/useLanguage"
 import { hotkeysState } from "@/store/hotkeysState"
 
