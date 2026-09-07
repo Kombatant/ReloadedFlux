@@ -1,6 +1,5 @@
 import { computed, map } from "nanostores"
 
-
 import { sortMixedLanguageArray } from "@/utils/locales"
 import createSetter from "@/utils/nanostores"
 

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useLocation, useParams } from "react-router"
 import { useSwipeable } from "react-swipeable"
 
-
 import { getEntry } from "@/apis"
 import ActionButtons from "@/components/Article/ActionButtons"
 import ArticleDetail from "@/components/Article/ArticleDetail"

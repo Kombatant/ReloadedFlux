@@ -9,7 +9,6 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom"
 import "yet-another-react-lightbox/styles.css"
 import "yet-another-react-lightbox/plugins/counter.css"
 
-
 import PlyrPlayer from "@/components/ui/PlyrPlayer"
 import { settingsState } from "@/store/settingsState"
 import htmlAttributesToProps from "@/utils/html"
