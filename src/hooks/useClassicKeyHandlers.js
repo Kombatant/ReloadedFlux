@@ -1,7 +1,6 @@
 import { useStore } from "@nanostores/react"
 import { useRef } from "react"
 
-
 import useContentContext from "@/hooks/useContentContext"
 import { contentState, filteredEntriesState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"

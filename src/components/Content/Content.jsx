@@ -6,7 +6,6 @@ import { settingsState } from "@/store/settingsState"
 import ClassicContent from "./ClassicContent"
 import StreamContent from "./StreamContent"
 
-
 const Content = ({ info, getEntries, markAllAsRead }) => {
   const { layoutMode } = useStore(settingsState)
   const { isBelowMedium } = useScreenWidth()

@@ -1,7 +1,6 @@
 import { Divider, InputNumber, Select, Slider, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import { settingsState, updateSettings } from "@/store/settingsState"

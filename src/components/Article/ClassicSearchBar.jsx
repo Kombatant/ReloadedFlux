@@ -9,7 +9,6 @@ import { useStore } from "@nanostores/react"
 import { useMemo, useState } from "react"
 import { useParams } from "react-router"
 
-
 import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
