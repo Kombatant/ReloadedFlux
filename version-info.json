@@ -1,11 +1,11 @@
 {
-  "buildVersion": "20260907.05",
+  "buildVersion": "20260907.982",
   "buildDate": "2026-09-07",
-  "buildSequence": 5,
-  "channel": "main",
-  "gitBranch": "main",
-  "gitHash": "40f4313",
-  "gitCommitDate": "2026-09-07T16:20:45Z",
-  "gitDate": "2026-09-07T16:20:45Z",
-  "isCanonical": true
+  "buildSequence": 982,
+  "channel": "pr-145-react-router-8",
+  "gitBranch": "pr-145-react-router-8",
+  "gitHash": "8b7d47d",
+  "gitCommitDate": "2026-09-07T12:22:23-04:00",
+  "gitDate": "2026-09-07T12:22:23-04:00",
+  "isCanonical": false
 }
