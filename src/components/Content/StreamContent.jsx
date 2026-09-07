@@ -3,7 +3,6 @@ import { useStore } from "@nanostores/react"
 import { useCallback, useEffect, useRef } from "react"
 import { useParams } from "react-router"
 
-import StoryStream from "./StoryStream"
 
 import { getEntry } from "@/apis"
 import useAppData from "@/hooks/useAppData"
@@ -29,6 +28,8 @@ import { Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
 import { streamDebug } from "@/utils/stream-debug"
 import { extractEntryIdFromPath } from "@/utils/url"
+
+import StoryStream from "./StoryStream"
 
 import "./Content.css"
 

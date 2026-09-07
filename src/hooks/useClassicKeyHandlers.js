@@ -1,9 +1,6 @@
 import { useStore } from "@nanostores/react"
 import { useRef } from "react"
 
-import { polyglotState } from "./useLanguage"
-import useModalToggle from "./useModalToggle"
-import usePhotoSlider from "./usePhotoSlider"
 
 import useContentContext from "@/hooks/useContentContext"
 import { contentState, filteredEntriesState } from "@/store/contentState"
@@ -11,6 +8,10 @@ import { settingsState } from "@/store/settingsState"
 import { Message } from "@/utils/feedback"
 import { extractImageSources } from "@/utils/images"
 import { getAnimationScrollBehavior } from "@/utils/scroll"
+
+import { polyglotState } from "./useLanguage"
+import useModalToggle from "./useModalToggle"
+import usePhotoSlider from "./usePhotoSlider"
 
 // If consecutive navigations land within this window, the user is hammering the
 // key faster than a smooth scroll completes — animate instantly so the middle

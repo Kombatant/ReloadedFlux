@@ -25,7 +25,6 @@ import { atom, computed } from "nanostores"
 import { Fragment, useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router"
 
-import SettingItem from "./SettingItem"
 
 import { exportOPML, importOPML, refreshAllFeed, updateFeed } from "@/apis"
 import CustomLink from "@/components/ui/CustomLink"
@@ -42,6 +41,8 @@ import { downloadFile, readFileAsText } from "@/utils/file"
 import { filterByQuery } from "@/utils/kmp"
 import createSetter from "@/utils/nanostores"
 import sleep from "@/utils/time"
+
+import SettingItem from "./SettingItem"
 import "./FeedList.css"
 
 const filterStringState = atom("")

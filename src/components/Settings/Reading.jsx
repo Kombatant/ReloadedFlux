@@ -1,11 +1,12 @@
 import { Divider, InputNumber, Select, Slider, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-import SettingItem from "./SettingItem"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import { settingsState, updateSettings } from "@/store/settingsState"
+
+import SettingItem from "./SettingItem"
 
 const Reading = () => {
   const {

@@ -3,9 +3,10 @@ import { IconPlus, IconRefresh } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useEffect, useRef, useState } from "react"
 
+import { duplicateHotkeysState, resetHotkey, updateHotkey } from "@/store/hotkeysState"
+
 import EditableTag from "./EditableTag"
 
-import { duplicateHotkeysState, resetHotkey, updateHotkey } from "@/store/hotkeysState"
 
 const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slice(1)
 

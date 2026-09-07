@@ -1,13 +1,12 @@
-import { updateEntriesStatus } from "@/apis"
-import { handleEntriesStatusUpdate } from "@/hooks/useEntryActions"
-import { polyglotState } from "@/hooks/useLanguage"
-import { Message } from "@/utils/feedback"
-
+// Pure: this module only decides which entries are duplicates. Marking them as
+// read is a side effect owned by the caller, which keeps utils/ free of api and
+// hook imports (those edges previously formed two import cycles).
+//
+// Returns { entries, duplicates } where `entries` preserves the original order
+// and `duplicates` are the entries that were dropped.
 const removeDuplicateEntries = (entries, option) => {
-  const { polyglot } = polyglotState.get()
-
   if (entries.length === 0 || option === "none") {
-    return entries
+    return { entries, duplicates: [] }
   }
 
   const originalOrder = entries.map((entry, index) => ({
@@ -57,22 +56,14 @@ const removeDuplicateEntries = (entries, option) => {
       return true
     })
 
-  const unreadDuplicateIds = duplicateEntries
-    .filter((entry) => entry.status === "unread")
-    .map((entry) => entry.id)
-  if (unreadDuplicateIds.length > 0) {
-    handleEntriesStatusUpdate(duplicateEntries, "read")
-    updateEntriesStatus(unreadDuplicateIds, "read").catch(() => {
-      Message.error(polyglot.t("deduplicate.mark_as_read_error"))
-      handleEntriesStatusUpdate(duplicateEntries, "unread")
-    })
+  return {
+    entries: uniqueEntries.toSorted((a, b) => {
+      const indexA = originalOrder.find((order) => order.id === a.id).index
+      const indexB = originalOrder.find((order) => order.id === b.id).index
+      return indexA - indexB
+    }),
+    duplicates: duplicateEntries,
   }
-
-  return uniqueEntries.toSorted((a, b) => {
-    const indexA = originalOrder.find((order) => order.id === a.id).index
-    const indexB = originalOrder.find((order) => order.id === b.id).index
-    return indexA - indexB
-  })
 }
 
 export default removeDuplicateEntries

@@ -6,13 +6,14 @@ import { useInView } from "react-intersection-observer"
 import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
-import ArticleCard from "./ArticleCard"
-import LoadingCards from "./LoadingCards"
 
 import FadeTransition from "@/components/ui/FadeTransition"
 import Ripple from "@/components/ui/Ripple"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
+
+import ArticleCard from "./ArticleCard"
+import LoadingCards from "./LoadingCards"
 
 import "./ArticleList.css"
 

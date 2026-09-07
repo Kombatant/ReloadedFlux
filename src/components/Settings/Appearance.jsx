@@ -2,7 +2,6 @@ import { Divider, Select, Switch, Tooltip } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
-import SettingItem from "./SettingItem"
 
 import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import { polyglotState } from "@/hooks/useLanguage"
@@ -15,6 +14,8 @@ import {
   isLightOnlyColor,
   isModeRestrictedColor,
 } from "@/utils/colors"
+
+import SettingItem from "./SettingItem"
 
 import "./Appearance.css"
 

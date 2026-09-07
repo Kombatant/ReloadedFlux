@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useLocation, useParams } from "react-router"
 import { useSwipeable } from "react-swipeable"
 
-import FooterPanel from "./FooterPanel"
 
 import { getEntry } from "@/apis"
 import ActionButtons from "@/components/Article/ActionButtons"
@@ -36,6 +35,8 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
 import { extractEntryIdFromPath } from "@/utils/url"
+
+import FooterPanel from "./FooterPanel"
 
 import "./Content.css"
 

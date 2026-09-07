@@ -1,7 +1,8 @@
-import apiClient from "./ofetch"
 
 import { dataState } from "@/store/dataState"
 import compareVersions from "@/utils/version"
+
+import apiClient from "./ofetch"
 
 export const getCategories = async () => apiClient.get("/v1/categories")
 

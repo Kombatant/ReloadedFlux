@@ -12,6 +12,9 @@ import {
 import { useStore } from "@nanostores/react"
 import SimpleBar from "simplebar-react"
 
+import { polyglotState } from "@/hooks/useLanguage"
+import useScreenWidth from "@/hooks/useScreenWidth"
+
 import Ai from "./Ai"
 import Appearance from "./Appearance"
 import ArticleDisplay from "./ArticleDisplay"
@@ -21,8 +24,6 @@ import General from "./General"
 import Hotkeys from "./Hotkeys"
 import Reading from "./Reading"
 
-import { polyglotState } from "@/hooks/useLanguage"
-import useScreenWidth from "@/hooks/useScreenWidth"
 
 import "./SettingsTabs.css"
 

@@ -2,12 +2,13 @@ import { Tooltip } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
-import ImageLinkTag from "./ImageLinkTag"
 
 import { settingsState } from "@/store/settingsState"
 import { MIN_THUMBNAIL_SIZE } from "@/utils/constants"
 import htmlAttributesToProps from "@/utils/html"
 import { getCachedImageMetadata, preloadImageMetadata } from "@/utils/images"
+
+import ImageLinkTag from "./ImageLinkTag"
 
 import "./ImageOverlayButton.css"
 

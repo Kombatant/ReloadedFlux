@@ -1,6 +1,7 @@
 import { settingsState } from "@/store/settingsState"
 
 export {
+  prefersReducedMotion,
   quickScrollTo,
   STREAM_SCROLL_ALIGNMENT_TOLERANCE,
   STREAM_SCROLL_END_TIMEOUT_MS,
@@ -15,8 +16,3 @@ export {
 // first-run default (see settingsState) and is NOT consulted here.
 export const getAnimationScrollBehavior = () =>
   settingsState.get().animationsEnabled ? "smooth" : "auto"
-
-// First-run default seed only. Guarded so non-browser contexts (Node/tests)
-// never crash.
-export const prefersReducedMotion = () =>
-  globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false

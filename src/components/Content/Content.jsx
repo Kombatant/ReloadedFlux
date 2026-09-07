@@ -1,10 +1,11 @@
 import { useStore } from "@nanostores/react"
 
+import useScreenWidth from "@/hooks/useScreenWidth"
+import { settingsState } from "@/store/settingsState"
+
 import ClassicContent from "./ClassicContent"
 import StreamContent from "./StreamContent"
 
-import useScreenWidth from "@/hooks/useScreenWidth"
-import { settingsState } from "@/store/settingsState"
 
 const Content = ({ info, getEntries, markAllAsRead }) => {
   const { layoutMode } = useStore(settingsState)

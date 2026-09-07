@@ -17,7 +17,6 @@ import {
 import { useStore } from "@nanostores/react"
 import { memo, useState } from "react"
 
-import ArticleTOC from "./ArticleTOC"
 
 import AiSpark from "@/components/icons/AiSpark"
 import CustomTooltip from "@/components/ui/CustomTooltip"
@@ -33,6 +32,8 @@ import {
 } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { settingsState } from "@/store/settingsState"
+
+import ArticleTOC from "./ArticleTOC"
 import "./ActionButtons.css"
 
 const DesktopButtons = memo(

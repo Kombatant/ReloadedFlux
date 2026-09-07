@@ -4,7 +4,6 @@ import { forwardRef, useEffect, useRef } from "react"
 import { useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 
-import ArticleBodyRenderer from "./ArticleBodyRenderer"
 
 import CustomLink from "@/components/ui/CustomLink"
 import FadeTransition from "@/components/ui/FadeTransition"
@@ -18,6 +17,8 @@ import {
 } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
 import { generateReadableDate, generateReadingTime, generateRelativeTime } from "@/utils/date"
+
+import ArticleBodyRenderer from "./ArticleBodyRenderer"
 import "./ArticleDetail.css"
 
 const ArticleDetail = forwardRef((_, ref) => {

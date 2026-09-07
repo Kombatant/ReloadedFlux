@@ -1,10 +1,11 @@
 import { Divider, InputNumber, Select, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
-import SettingItem from "./SettingItem"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
+
+import SettingItem from "./SettingItem"
 
 const ArticleDisplay = () => {
   const {
