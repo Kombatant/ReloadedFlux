@@ -1,10 +1,36 @@
-export const getBrowserLanguage = () => {
-  const browserLanguage = navigator.language
-  if (browserLanguage === "zh-Hans-CN") {
+/* eslint-disable import/extensions */
+import { SUPPORTED_LANGUAGES } from "./settings-transfer/settings-config.js"
+
+export const DEFAULT_LANGUAGE = "en-CA"
+
+// Resolve any browser language tag to a locale we actually ship, so an
+// unsupported region (en-GB, de-AT, ...) falls back to its language match
+// instead of being stored verbatim and failing to load.
+export const resolveLanguage = (browserLanguage) => {
+  if (!browserLanguage || typeof browserLanguage !== "string") {
+    return DEFAULT_LANGUAGE
+  }
+
+  const normalized = browserLanguage.replaceAll("_", "-")
+  const exactMatch = SUPPORTED_LANGUAGES.find(
+    (supported) => supported.toLowerCase() === normalized.toLowerCase(),
+  )
+  if (exactMatch) {
+    return exactMatch
+  }
+
+  const [subtag] = normalized.toLowerCase().split("-")
+  if (subtag === "zh") {
     return "zh-CN"
   }
-  return browserLanguage
+
+  const subtagMatch = SUPPORTED_LANGUAGES.find(
+    (supported) => supported.slice(0, 2).toLowerCase() === subtag,
+  )
+  return subtagMatch ?? DEFAULT_LANGUAGE
 }
+
+export const getBrowserLanguage = () => resolveLanguage(navigator.language)
 
 // Determine priority type for sorting text
 const getTextType = (text) => {

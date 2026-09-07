@@ -22,10 +22,14 @@ export const THEME_COLOR_NAMES = [
   "Gray",
 ]
 
+// Locales shipped in src/locales; keep in sync with @/utils/locales
+export const SUPPORTED_LANGUAGES = ["en-CA", "de-DE", "es-ES", "fr-FR", "zh-CN", "el-GR"]
+
 const ENUM_VALUES = {
   aiProvider: ["none", ...AI_PROVIDER_KEYS],
   coverDisplayMode: ["auto", "banner", "thumbnail"],
   homePage: ["all", "today", "starred", "history"],
+  language: SUPPORTED_LANGUAGES,
   layoutMode: ["classic", "stream"],
   markReadBy: ["view", "manually"],
   orderBy: ["created_at", "published_at"],
@@ -336,9 +340,11 @@ export const sanitizeSettings = (value, defaultSettings = createDefaultSettings(
   )
 
   sanitizedSettings.fontFamily = sanitizeString(storedValue.fontFamily, defaultSettings.fontFamily)
-  sanitizedSettings.language = sanitizeString(storedValue.language, defaultSettings.language, {
-    trim: true,
-  })
+  sanitizedSettings.language = sanitizeEnum(
+    typeof storedValue.language === "string" ? storedValue.language.trim() : storedValue.language,
+    defaultSettings.language,
+    ENUM_VALUES.language,
+  )
 
   if (
     sanitizedSettings.aiApiKey &&
