@@ -4,7 +4,6 @@ import { forwardRef, useEffect, useRef } from "react"
 import { useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 
-
 import CustomLink from "@/components/ui/CustomLink"
 import FadeTransition from "@/components/ui/FadeTransition"
 import usePhotoSlider from "@/hooks/usePhotoSlider"
