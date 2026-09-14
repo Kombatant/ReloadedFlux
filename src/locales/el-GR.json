@@ -162,7 +162,30 @@
     "filter_headings": "Φιλτράρισμα επικεφαλίδων"
   },
   "content": {
-    "mark_as_read_error": "Αποτυχία σήμανσης ως αναγνωσμένου, δοκιμάστε ξανά αργότερα"
+    "mark_as_read_error": "Αποτυχία σήμανσης ως αναγνωσμένου, δοκιμάστε ξανά αργότερα",
+    "social_embed_load_bluesky": "Φόρτωση δημοσίευσης",
+    "social_embed_load_tiktok": "Φόρτωση βίντεο",
+    "social_embed_load_mastodon": "Φόρτωση δημοσίευσης",
+    "social_embed_open_instagram": "Προβολή στο Instagram",
+    "social_embed_open_generic": "Προβολή στο %{platform}",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "απαντήσεις",
+    "tweet_retweets": "αναδημοσιεύσεις",
+    "tweet_likes": "μου αρέσει",
+    "instagram_card_post": "Δημοσίευση Instagram",
+    "instagram_card_reel": "Reel Instagram",
+    "social_embed_open_threads": "Προβολή στο Threads",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Δημοσίευση Threads",
+    "social_embed_open_facebook": "Προβολή στο Facebook",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Δημοσίευση Facebook",
+    "social_embed_load_facebook_video": "Φόρτωση βίντεο"
   },
   "deduplicate": {
     "mark_as_read_error": "Αποτυχία σήμανσης διπλότυπων ως αναγνωσμένων"

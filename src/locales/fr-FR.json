@@ -162,7 +162,30 @@
     "filter_headings": "Filtrer les titres"
   },
   "content": {
-    "mark_as_read_error": "Impossible de marquer comme lu, veuillez réessayer plus tard"
+    "mark_as_read_error": "Impossible de marquer comme lu, veuillez réessayer plus tard",
+    "social_embed_load_bluesky": "Charger la publication",
+    "social_embed_load_tiktok": "Charger la vidéo",
+    "social_embed_load_mastodon": "Charger la publication",
+    "social_embed_open_instagram": "Voir sur Instagram",
+    "social_embed_open_generic": "Voir sur %{platform}",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "réponses",
+    "tweet_retweets": "republications",
+    "tweet_likes": "j'aime",
+    "instagram_card_post": "Publication Instagram",
+    "instagram_card_reel": "Reel Instagram",
+    "social_embed_open_threads": "Voir sur Threads",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Publication Threads",
+    "social_embed_open_facebook": "Voir sur Facebook",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Publication Facebook",
+    "social_embed_load_facebook_video": "Charger la vidéo"
   },
   "deduplicate": {
     "mark_as_read_error": "Impossible de marquer les articles en double comme lus"

@@ -162,7 +162,30 @@
     "filter_headings": "Filter headings"
   },
   "content": {
-    "mark_as_read_error": "Failed to mark as read, please try again later"
+    "mark_as_read_error": "Failed to mark as read, please try again later",
+    "social_embed_load_bluesky": "Load post",
+    "social_embed_load_tiktok": "Load video",
+    "social_embed_load_mastodon": "Load post",
+    "social_embed_open_instagram": "View on Instagram",
+    "social_embed_open_generic": "View on %{platform}",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "replies",
+    "tweet_retweets": "reposts",
+    "tweet_likes": "likes",
+    "instagram_card_post": "Instagram post",
+    "instagram_card_reel": "Instagram reel",
+    "social_embed_open_threads": "View on Threads",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Threads post",
+    "social_embed_open_facebook": "View on Facebook",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Facebook post",
+    "social_embed_load_facebook_video": "Load video"
   },
   "deduplicate": {
     "mark_as_read_error": "Failed to mark duplicate articles as read"

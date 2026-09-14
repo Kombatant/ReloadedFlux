@@ -1,0 +1,32 @@
+.tweet-embed-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--color-text-1);
+}
+
+.tweet-embed-media {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+.tweet-embed-media-2,
+.tweet-embed-media-3,
+.tweet-embed-media-4 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.tweet-embed-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tweet-embed-media-1 img {
+  max-height: 500px;
+  object-fit: contain;
+}

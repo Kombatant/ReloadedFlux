@@ -162,7 +162,30 @@
     "filter_headings": "Überschriften filtern"
   },
   "content": {
-    "mark_as_read_error": "Als gelesen markieren fehlgeschlagen, bitte später erneut versuchen"
+    "mark_as_read_error": "Als gelesen markieren fehlgeschlagen, bitte später erneut versuchen",
+    "social_embed_load_bluesky": "Beitrag laden",
+    "social_embed_load_tiktok": "Video laden",
+    "social_embed_load_mastodon": "Beitrag laden",
+    "social_embed_open_instagram": "Auf Instagram ansehen",
+    "social_embed_open_generic": "Auf %{platform} ansehen",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "Antworten",
+    "tweet_retweets": "Reposts",
+    "tweet_likes": "Likes",
+    "instagram_card_post": "Instagram-Beitrag",
+    "instagram_card_reel": "Instagram-Reel",
+    "social_embed_open_threads": "Auf Threads ansehen",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Threads-Beitrag",
+    "social_embed_open_facebook": "Auf Facebook ansehen",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Facebook-Beitrag",
+    "social_embed_load_facebook_video": "Video laden"
   },
   "deduplicate": {
     "mark_as_read_error": "Duplikate als gelesen markieren fehlgeschlagen"

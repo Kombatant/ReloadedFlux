@@ -13,10 +13,12 @@ import PlyrPlayer from "@/components/ui/PlyrPlayer"
 import { settingsState } from "@/store/settingsState"
 import htmlAttributesToProps from "@/utils/html"
 import { extractImageSources } from "@/utils/images"
+import { matchSocialEmbed } from "@/utils/social-embeds"
 
 import CodeBlock from "./CodeBlock"
 import ImageLinkTag from "./ImageLinkTag"
 import ImageOverlayButton from "./ImageOverlayButton"
+import SocialEmbed from "./SocialEmbed"
 import "./ArticleDetail.css"
 import "./littlefoot.css"
 
@@ -269,6 +271,148 @@ const handleIframe = (node) => {
   return node
 }
 
+const findSocialPermalink = (node) => {
+  // The original markup hangs the permalink off a data attribute; sanitizers
+  // usually drop it, so fall back to scanning the surviving anchors.
+  const dataPermalink = node.attribs?.["data-instgrm-permalink"]
+  if (dataPermalink && matchSocialEmbed(dataPermalink)) {
+    return dataPermalink
+  }
+
+  const stack = [...(node.children ?? [])]
+  while (stack.length > 0) {
+    const child = stack.shift()
+    if (child.type === "tag") {
+      if (child.name === "a" && matchSocialEmbed(child.attribs?.href ?? "")) {
+        return child.attribs.href
+      }
+      stack.push(...(child.children ?? []))
+    }
+  }
+
+  return null
+}
+
+// Text the blockquote renders outside its anchors. An Instagram placeholder has
+// none (all its wording lives inside the permalink links); a hand-written
+// pull-quote has its own prose.
+const collectTextOutsideLinks = (node) => {
+  let text = ""
+  const stack = [...(node.children ?? [])]
+
+  while (stack.length > 0) {
+    const child = stack.shift()
+    if (child.type === "text") {
+      text += child.data ?? ""
+    } else if (child.type === "tag" && child.name !== "a") {
+      stack.push(...(child.children ?? []))
+    }
+  }
+
+  return text.trim()
+}
+
+// Twitter/X oEmbed fallbacks carry the tweet text in the blockquote body, so the
+// "no prose" test cannot identify them. They instead end with an attribution run
+// — "— Author (@handle)" immediately followed by the status permalink — which a
+// hand-written pull-quote citing a tweet will not have.
+//
+// Miniflux rewraps the fallback's contents in a <p>, and the em dash often ends
+// up glued to the tweet's last word ("...OTA.— Author (@handle)"), so match the
+// attribution inside any text node rather than expecting a standalone one.
+const TWEET_ATTRIBUTION_PATTERN = /[—–-]\s*[^()]*\(@[\w.]+\)\s*$/
+
+const flattenNodes = (node) => {
+  const flat = []
+  const stack = [...(node.children ?? [])]
+
+  while (stack.length > 0) {
+    const child = stack.shift()
+    flat.push(child)
+    if (child.type === "tag" && child.name !== "a") {
+      stack.unshift(...(child.children ?? []))
+    }
+  }
+
+  return flat
+}
+
+const hasTweetAttribution = (node, permalink) => {
+  const flat = flattenNodes(node)
+
+  // Locate the status permalink, then confirm the text just before it is an
+  // attribution run.
+  const anchorIndex = flat.findIndex(
+    (child) => child.type === "tag" && child.name === "a" && child.attribs?.href === permalink,
+  )
+
+  if (anchorIndex === -1) {
+    return false
+  }
+
+  for (let index = anchorIndex - 1; index >= 0; index -= 1) {
+    const child = flat[index]
+    if (child.type === "text") {
+      const text = child.data.trim()
+      if (text) {
+        return TWEET_ATTRIBUTION_PATTERN.test(text)
+      }
+    } else if (child.type === "tag" && child.name === "a") {
+      // Handle mentions (@user links) sit between the body and the attribution
+      // in some fallbacks; keep scanning past them.
+      continue
+    }
+  }
+
+  return false
+}
+
+const isEmbedPlaceholder = (node, embed) => {
+  if (embed.platform.id === "twitter") {
+    return hasTweetAttribution(node, embed.permalink)
+  }
+
+  // Every other platform's fallback keeps its wording inside the permalink
+  // anchors, so any prose of its own means this is a real quote.
+  return collectTextOutsideLinks(node).length === 0
+}
+
+// The Instagram fallback's attribution sits inside its anchors, so this collects
+// every text node rather than only the ones outside links.
+const collectAllText = (node) => {
+  let text = ""
+  const stack = [...(node.children ?? [])]
+
+  while (stack.length > 0) {
+    const child = stack.shift()
+    if (child.type === "text") {
+      text += child.data ?? ""
+    } else if (child.type === "tag") {
+      stack.unshift(...(child.children ?? []))
+    }
+  }
+
+  return text
+}
+
+const handleBlockquote = (node) => {
+  // Sanitizers strip the class hook and the platform <script>, so the embed
+  // arrives as a bare blockquote. Detect it by the permalink that survives.
+  const permalink = findSocialPermalink(node)
+  const embed = matchSocialEmbed(permalink)
+
+  if (!embed) {
+    return node
+  }
+
+  // Guard against converting a genuine pull-quote that merely cites a post.
+  if (!isEmbedPlaceholder(node, embed)) {
+    return node
+  }
+
+  return <SocialEmbed embed={embed} fallbackText={collectAllText(node)} />
+}
+
 const PARAGRAPH_BLOCK_CHILDREN = new Set(["figure", "iframe", "img", "pre", "table", "video"])
 
 const paragraphContainsBlockContent = (node) =>
@@ -337,6 +481,9 @@ const getHtmlParserOptions = (imageSources, togglePhotoSlider) => {
         }
         case "table": {
           return handleContentTable(node)
+        }
+        case "blockquote": {
+          return handleBlockquote(node)
         }
         default: {
           return node

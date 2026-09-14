@@ -162,7 +162,30 @@
     "filter_headings": "筛选标题"
   },
   "content": {
-    "mark_as_read_error": "标记为已读失败，请稍后再试"
+    "mark_as_read_error": "标记为已读失败，请稍后再试",
+    "social_embed_load_bluesky": "加载帖子",
+    "social_embed_load_tiktok": "加载视频",
+    "social_embed_load_mastodon": "加载帖子",
+    "social_embed_open_instagram": "在 Instagram 中查看",
+    "social_embed_open_generic": "在 %{platform} 中查看",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "条回复",
+    "tweet_retweets": "次转发",
+    "tweet_likes": "个赞",
+    "instagram_card_post": "Instagram 帖子",
+    "instagram_card_reel": "Instagram 快拍",
+    "social_embed_open_threads": "在 Threads 中查看",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Threads 帖子",
+    "social_embed_open_facebook": "在 Facebook 中查看",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Facebook 帖子",
+    "social_embed_load_facebook_video": "加载视频"
   },
   "deduplicate": {
     "mark_as_read_error": "标记重复文章为已读失败"

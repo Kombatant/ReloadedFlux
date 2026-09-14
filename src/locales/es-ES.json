@@ -178,7 +178,30 @@
     "filter_headings": "Filtrar títulos"
   },
   "content": {
-    "mark_as_read_error": "No se pudo marcar como leído, por favor intente de nuevo más tarde"
+    "mark_as_read_error": "No se pudo marcar como leído, por favor intente de nuevo más tarde",
+    "social_embed_load_bluesky": "Cargar publicación",
+    "social_embed_load_tiktok": "Cargar vídeo",
+    "social_embed_load_mastodon": "Cargar publicación",
+    "social_embed_open_instagram": "Ver en Instagram",
+    "social_embed_open_generic": "Ver en %{platform}",
+    "social_embed_platform_instagram": "Instagram",
+    "social_embed_platform_twitter": "X",
+    "social_embed_platform_bluesky": "Bluesky",
+    "social_embed_platform_tiktok": "TikTok",
+    "social_embed_platform_mastodon": "Mastodon",
+    "tweet_replies": "respuestas",
+    "tweet_retweets": "republicaciones",
+    "tweet_likes": "me gusta",
+    "instagram_card_post": "Publicación de Instagram",
+    "instagram_card_reel": "Reel de Instagram",
+    "social_embed_open_threads": "Ver en Threads",
+    "social_embed_platform_threads": "Threads",
+    "threads_card_post": "Publicación de Threads",
+    "social_embed_open_facebook": "Ver en Facebook",
+    "social_embed_platform_facebook": "Facebook",
+    "social_embed_platform_facebookVideo": "Facebook",
+    "facebook_card_post": "Publicación de Facebook",
+    "social_embed_load_facebook_video": "Cargar vídeo"
   },
   "deduplicate": {
     "mark_as_read_error": "No se pudo marcar los artículos duplicados como leídos"
