@@ -7,7 +7,9 @@
 }
 
 .search-and-sort-bar.classic-toolbar {
-  --classic-layout-selector-width: 156px;
+  /* Sized for the view toggle, whose switch track makes it wider than the
+     menu button that used to sit here. Also reserves the title's padding. */
+  --classic-layout-selector-width: 190px;
   justify-content: space-between;
   background-color: rgb(var(--color-bg-1));
   min-height: 44px;
@@ -249,6 +251,15 @@
   max-width: none;
 }
 
+/* The view toggle is wider than the menu button it replaced (the switch track
+   adds to the label), so let it size to its content and stay centred in the
+   slot rather than being squeezed into the fixed slot width. */
+.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-toggle-button {
+  width: auto;
+  max-width: none;
+  margin: 0 auto;
+}
+
 .layout-mode-option {
   display: inline-flex;
   align-items: center;
@@ -353,6 +364,95 @@
   color: rgb(var(--gray-1));
 }
 
+/* ---------------------------------------------------------------------------
+   Two-state toolbar toggles (unread/all filter, classic/stream view).
+   A switch track inside the pill marks these as toggles rather than menus,
+   which is what separates them from the neighbouring dropdown buttons.
+   --------------------------------------------------------------------------- */
+
+.search-and-sort-bar .toolbar-toggle-button {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.search-and-sort-bar .toolbar-toggle-track {
+  position: relative;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 15px;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, currentColor 32%, transparent);
+  transition: background-color 0.2s ease;
+}
+
+.search-and-sort-bar .toolbar-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: var(--color-bg-2);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+  transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.search-and-sort-bar .toolbar-toggle-button.is-active .toolbar-toggle-track {
+  background-color: rgb(255 255 255 / 45%);
+}
+
+.search-and-sort-bar .toolbar-toggle-button.is-active .toolbar-toggle-knob {
+  background-color: #fff;
+  transform: translateX(11px);
+}
+
+/* Both state labels share one grid cell, so the wider of the pair fixes the
+   button width in every locale and the pill never resizes as it flips. */
+.search-and-sort-bar .toolbar-toggle-labels {
+  display: inline-grid;
+}
+
+.search-and-sort-bar .toolbar-toggle-label {
+  grid-area: 1 / 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.search-and-sort-bar .toolbar-toggle-label[data-visible="false"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The active state already picks up the shared .is-active hover further down.
+   Only the inactive pill needs its own: the shared fill-2 to fill-3 step is
+   too faint here, so deepen it to fill-4. It stays neutral deliberately, since
+   a primary tint would preview the active colour while the toggle is off. */
+.search-and-sort-bar
+  .toolbar-action-button.toolbar-toggle-button:not(.is-active):not(.arco-btn-disabled):hover,
+.search-and-sort-bar
+  .toolbar-action-button.toolbar-toggle-button:not(.is-active):not(
+    .arco-btn-disabled
+  ):focus-visible {
+  border-color: var(--color-border-3);
+  background-color: rgb(var(--color-fill-4)) !important;
+}
+
+/* Compact mode collapses these to icon-only squares; the track would crowd the
+   icon, so drop it and keep the coloured state as the only signal. */
+.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .toolbar-toggle-track {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-and-sort-bar .toolbar-toggle-button,
+  .search-and-sort-bar .toolbar-toggle-track,
+  .search-and-sort-bar .toolbar-toggle-knob {
+    transition: none;
+  }
+}
+
 .search-and-sort-bar .toolbar-button-label {
   display: inline-flex;
   align-items: center;
@@ -443,27 +543,30 @@
 
 /* Restore background on hover/focus for toolbar buttons */
 .search-and-sort-bar .button-group button:not(.arco-btn-disabled):hover,
-.search-and-sort-bar .button-group button:not(.arco-btn-disabled):focus,
+.search-and-sort-bar .button-group button:not(.arco-btn-disabled):focus-visible,
 .search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):hover,
-.search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):focus {
+.search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):focus-visible {
   background-color: rgb(var(--color-fill-2)) !important;
   color: var(--color-text-1);
 }
 
 .search-and-sort-bar.classic-toolbar .button-group button:not(.arco-btn-disabled):hover,
-.search-and-sort-bar.classic-toolbar .button-group button:not(.arco-btn-disabled):focus,
+.search-and-sort-bar.classic-toolbar .button-group button:not(.arco-btn-disabled):focus-visible,
 .search-and-sort-bar.classic-toolbar .button-group .arco-btn:not(.arco-btn-disabled):hover,
-.search-and-sort-bar.classic-toolbar .button-group .arco-btn:not(.arco-btn-disabled):focus {
+.search-and-sort-bar.classic-toolbar .button-group .arco-btn:not(.arco-btn-disabled):focus-visible {
   background-color: var(--color-bg-1) !important;
 }
 
 .search-and-sort-bar .toolbar-menu-button:not(.arco-btn-disabled):hover,
-.search-and-sort-bar .toolbar-menu-button:not(.arco-btn-disabled):focus {
+.search-and-sort-bar .toolbar-menu-button:not(.arco-btn-disabled):focus-visible {
   border-radius: 999px;
 }
 
+/* :focus-visible rather than :focus throughout, so that clicking a toolbar
+   button does not leave its hover paint stuck on after the pointer leaves.
+   Keyboard focus still gets the same treatment. */
 .search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):hover,
-.search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):focus {
+.search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):focus-visible {
   border-color: var(--color-border-3);
   background-color: rgb(var(--color-fill-3)) !important;
 }
@@ -473,13 +576,14 @@
   .toolbar-action-button:not(.arco-btn-disabled):hover,
 .search-and-sort-bar.classic-toolbar
   .layout-selector-slot
-  .toolbar-action-button:not(.arco-btn-disabled):focus {
+  .toolbar-action-button:not(.arco-btn-disabled):focus-visible {
   border-color: var(--color-border-3);
   background-color: rgb(var(--color-fill-3)) !important;
 }
 
 .search-and-sort-bar.stream-toolbar .toolbar-action-button.is-active:not(.arco-btn-disabled):hover,
-.search-and-sort-bar.stream-toolbar .toolbar-action-button.is-active:not(.arco-btn-disabled):focus {
+.search-and-sort-bar.stream-toolbar
+  .toolbar-action-button.is-active:not(.arco-btn-disabled):focus-visible {
   border-color: rgb(var(--primary-5));
   background-color: rgb(var(--primary-5)) !important;
   color: rgb(var(--gray-1));

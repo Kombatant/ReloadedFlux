@@ -1,4 +1,4 @@
-import { Button, DatePicker, Dropdown, Menu, Typography } from "@arco-design/web-react"
+import { Button, DatePicker, Dropdown, Typography } from "@arco-design/web-react"
 import {
   IconCalendar,
   IconSearch,
@@ -25,7 +25,7 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { getStartOfToday } from "@/utils/date"
 import createSetter from "@/utils/nanostores"
 
-import { ActiveButton, SearchForm, ToolbarMenuButton } from "./SearchBarShared"
+import { ActiveButton, SearchForm, ToolbarToggleButton } from "./SearchBarShared"
 import SidebarTrigger from "./SidebarTrigger"
 
 import "./ClassicSearchBar.css"
@@ -100,24 +100,12 @@ const ClassicSearchBar = () => {
     setCalendarVisible(false)
   }
 
-  const layoutOptions = useMemo(
-    () => [
-      {
-        icon: <LayoutColumnIcon />,
-        label: polyglot.t("appearance.layout_mode_classic"),
-        value: "classic",
-      },
-      {
-        icon: <LayoutCombinedIcon />,
-        label: polyglot.t("appearance.layout_mode_stream"),
-        value: "stream",
-      },
-    ],
-    [polyglot],
-  )
-  const currentLayout =
-    layoutOptions.find((option) => option.value === layoutMode) ?? layoutOptions[0]
-  const viewControlLabel = `${polyglot.t("article_list.view_label")}: ${currentLayout.label}`
+  const isStreamLayout = layoutMode === "stream"
+  const viewToggleTooltip = isStreamLayout
+    ? polyglot.t("article_list.view_toggle_to_classic")
+    : polyglot.t("article_list.view_toggle_to_stream")
+  const toggleLayoutMode = () =>
+    updateSettings({ layoutMode: isStreamLayout ? "classic" : "stream" })
 
   return (
     <div className="search-and-sort-bar classic-toolbar" style={{ width: "100%" }}>
@@ -142,27 +130,14 @@ const ClassicSearchBar = () => {
       </div>
       {isBelowMedium ? null : (
         <div className="layout-selector-slot">
-          <ToolbarMenuButton
-            className="classic-layout-menu-button"
-            icon={currentLayout.icon}
-            label={viewControlLabel}
-            tooltip={viewControlLabel}
-          >
-            {layoutOptions.map((option) => (
-              <Menu.Item
-                key={option.value}
-                className="toolbar-menu-item"
-                onClick={() => updateSettings({ layoutMode: option.value })}
-              >
-                <span className="toolbar-menu-item-label">
-                  {option.icon}
-                  <span>
-                    {polyglot.t("article_list.view_label")}: {option.label}
-                  </span>
-                </span>
-              </Menu.Item>
-            ))}
-          </ToolbarMenuButton>
+          <ToolbarToggleButton
+            active={isStreamLayout}
+            activeLabel={polyglot.t("appearance.layout_mode_stream")}
+            icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
+            inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
+            tooltip={viewToggleTooltip}
+            onClick={toggleLayoutMode}
+          />
         </div>
       )}
       <div className="button-group">
