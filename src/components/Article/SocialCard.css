@@ -12,6 +12,18 @@
   text-decoration: none;
 }
 
+.article-body a.social-card,
+.article-body a.social-card-header {
+  border-bottom: none;
+  color: inherit;
+}
+
+.article-body a.social-card:hover,
+.article-body a.social-card-header:hover {
+  border-bottom: none;
+  color: inherit;
+}
+
 .social-card-clickable {
   transition:
     background-color 0.2s ease,
@@ -31,8 +43,10 @@
 .social-card-header {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 10px;
   color: inherit;
+  text-align: start;
   text-decoration: none;
 }
 
@@ -44,10 +58,16 @@ a.social-card-header:hover .social-card-name {
   text-decoration: underline;
 }
 
+/* .article-body sets `display:block; margin:10px auto` on images via
+   `.article-body img:not(.icon-image)` [0,3,1], which centers the avatar and
+   breaks the header's flex row. These selectors are scoped through
+   .article-body so they outrank it rather than silently losing. */
+.article-body img.social-card-avatar:not(.icon-image),
 .social-card-avatar {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
+  margin: 0;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -74,9 +94,12 @@ a.social-card-header:hover .social-card-name {
 
 .social-card-identity {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
   line-height: 1.3;
+  text-align: start;
 }
 
 .social-card-name {
@@ -115,6 +138,7 @@ a.social-card-header:hover .social-card-name {
 
 .social-card-body {
   margin-top: 12px;
+  text-align: start;
 }
 
 .social-card-footer {
