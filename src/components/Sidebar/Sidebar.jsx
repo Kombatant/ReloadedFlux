@@ -14,8 +14,10 @@ import {
   IconBook,
   IconCalendar,
   IconDelete,
+  IconDesktop,
   IconDownload,
   IconEdit,
+  IconGithub,
   IconHistory,
   IconMinusCircle,
   IconRefresh,
@@ -714,7 +716,8 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
       )}
 
       <Modal
-        title={polyglot.t("sidebar.update_available_title")}
+        className="update-modal"
+        title={null}
         visible={isUpdateModalVisible}
         footer={[
           <Button key="dismiss" onClick={handleDismissUpdate}>
@@ -730,14 +733,35 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
         ]}
         onCancel={handleCloseUpdateDialog}
       >
-        <Typography.Paragraph type="secondary">
-          {polyglot.t("sidebar.update_available_description")}
-        </Typography.Paragraph>
-        <div>
-          <strong>{polyglot.t("sidebar.current_build_label")}:</strong> {currentBuildLabel}
-        </div>
-        <div>
-          <strong>{polyglot.t("sidebar.github_build_label")}:</strong> {remoteBuildLabel}
+        <div className="update-modal-content">
+          <div className="update-modal-header">
+            <div aria-hidden="true" className="update-modal-logo">
+              <IconDownload />
+            </div>
+            <div className="update-modal-heading">
+              <div className="update-modal-kicker">
+                {polyglot.t("sidebar.update_available_tooltip")}
+              </div>
+              <h2>{polyglot.t("sidebar.update_available_title")}</h2>
+              <p>{polyglot.t("sidebar.update_available_description")}</p>
+            </div>
+          </div>
+
+          <div
+            aria-label={polyglot.t("sidebar.update_available_title")}
+            className="update-modal-details"
+          >
+            <div className="update-modal-detail">
+              <IconDesktop />
+              <span>{polyglot.t("sidebar.current_build_label")}</span>
+              <strong>{currentBuildLabel}</strong>
+            </div>
+            <div className="update-modal-detail update-modal-detail-highlight">
+              <IconGithub />
+              <span>{polyglot.t("sidebar.github_build_label")}</span>
+              <strong>{remoteBuildLabel}</strong>
+            </div>
+          </div>
         </div>
       </Modal>
     </div>

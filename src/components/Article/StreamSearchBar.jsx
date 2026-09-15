@@ -7,7 +7,6 @@ import {
   IconSearch,
   IconSortAscending,
   IconSortDescending,
-  IconStarFill,
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
@@ -35,6 +34,7 @@ import {
   SearchForm,
   ToolbarActionButton,
   ToolbarMenuButton,
+  ToolbarToggleButton,
 } from "./SearchBarShared"
 import SidebarTrigger from "./SidebarTrigger"
 
@@ -134,69 +134,34 @@ const StreamSearchBar = ({ info, markAllAsRead, streamVirtualizerRef }) => {
     closeSearchDropdown()
   }
 
-  const statusOptions = useMemo(() => {
-    const options = [
-      {
-        label: polyglot.t("article_list.filter_status_unread"),
-        value: "unread",
-        icon: <IconRecord />,
-      },
-      {
-        label: polyglot.t("article_list.filter_status_all"),
-        value: "all",
-        icon: <IconAlignLeft />,
-      },
-    ]
-
-    if (["category", "feed"].includes(infoFrom)) {
-      options.push({
-        label: polyglot.t("article_list.filter_status_starred"),
-        value: "starred",
-        icon: <IconStarFill />,
-      })
-    }
-
-    return options
-  }, [infoFrom, polyglot])
-
-  const layoutOptions = useMemo(
-    () => [
-      {
-        icon: <LayoutColumnIcon />,
-        label: polyglot.t("appearance.layout_mode_classic"),
-        value: "classic",
-      },
-      {
-        icon: <LayoutCombinedIcon />,
-        label: polyglot.t("appearance.layout_mode_stream"),
-        value: "stream",
-      },
-    ],
-    [polyglot],
-  )
-
-  const currentStatus =
-    statusOptions.find((option) => option.value === showStatus) ?? statusOptions[0]
-  const currentLayout =
-    layoutOptions.find((option) => option.value === layoutMode) ?? layoutOptions[0]
   const sortDirectionLabel =
     orderDirection === "desc"
       ? polyglot.t("article_list.sort_direction_desc")
       : polyglot.t("article_list.sort_direction_asc")
-  const statusControlLabel =
-    showStatus === "unread"
-      ? polyglot.t("article_list.filter_status_unread_only")
-      : showStatus === "all"
-        ? polyglot.t("article_list.filter_status_all_items")
-        : currentStatus.label
+  // Any status other than "unread" (including a leftover "starred") reads as
+  // "all items" here, so the two-state toggle can never get stuck.
+  const isUnreadOnly = showStatus === "unread"
+  const statusToggleTooltip = isUnreadOnly
+    ? polyglot.t("article_list.filter_status_toggle_to_all")
+    : polyglot.t("article_list.filter_status_toggle_to_unread")
+  const toggleShowStatus = () => updateSettings({ showStatus: isUnreadOnly ? "all" : "unread" })
   const sortControlLabel = `${polyglot.t("article_list.sort_label")}: ${sortDirectionLabel}`
-  const viewControlLabel = `${polyglot.t("article_list.view_label")}: ${currentLayout.label}`
 
+  const isStreamLayout = layoutMode === "stream"
+  const viewToggleTooltip = isStreamLayout
+    ? polyglot.t("article_list.view_toggle_to_classic")
+    : polyglot.t("article_list.view_toggle_to_stream")
+  const toggleLayoutMode = () =>
+    updateSettings({ layoutMode: isStreamLayout ? "classic" : "stream" })
+
+  // The stream toolbar only exposes a two-state unread/all toggle, so a
+  // "starred" status carried over from the classic layout would filter the
+  // list without the toggle being able to say so. Normalise it to "all".
   useEffect(() => {
-    if (infoFrom === "starred" && showStatus === "starred") {
+    if (showStatus === "starred") {
       updateSettings({ showStatus: "all" })
     }
-  }, [infoFrom, showStatus])
+  }, [showStatus])
 
   useLayoutEffect(() => {
     const toolbar = toolbarRef.current
@@ -365,80 +330,39 @@ const StreamSearchBar = ({ info, markAllAsRead, streamVirtualizerRef }) => {
           </div>
           {isBelowMedium ? null : (
             <div className="stream-view-control mobile-only-view-control">
-              <ToolbarMenuButton
-                icon={currentLayout.icon}
-                label={viewControlLabel}
-                tooltip={viewControlLabel}
-              >
-                {layoutOptions.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    className="toolbar-menu-item"
-                    onClick={() => updateSettings({ layoutMode: option.value })}
-                  >
-                    <span className="toolbar-menu-item-label">
-                      {option.icon}
-                      <span>
-                        {polyglot.t("article_list.view_label")}: {option.label}
-                      </span>
-                    </span>
-                  </Menu.Item>
-                ))}
-              </ToolbarMenuButton>
+              <ToolbarToggleButton
+                active={isStreamLayout}
+                activeLabel={polyglot.t("appearance.layout_mode_stream")}
+                icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
+                inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
+                tooltip={viewToggleTooltip}
+                onClick={toggleLayoutMode}
+              />
             </div>
           )}
         </div>
         <div className="stream-secondary-controls">
           {isBelowMedium ? null : (
             <div className="stream-view-control desktop-view-control">
-              <ToolbarMenuButton
-                icon={currentLayout.icon}
-                label={viewControlLabel}
-                tooltip={viewControlLabel}
-              >
-                {layoutOptions.map((option) => (
-                  <Menu.Item
-                    key={option.value}
-                    className="toolbar-menu-item"
-                    onClick={() => updateSettings({ layoutMode: option.value })}
-                  >
-                    <span className="toolbar-menu-item-label">
-                      {option.icon}
-                      <span>
-                        {polyglot.t("article_list.view_label")}: {option.label}
-                      </span>
-                    </span>
-                  </Menu.Item>
-                ))}
-              </ToolbarMenuButton>
+              <ToolbarToggleButton
+                active={isStreamLayout}
+                activeLabel={polyglot.t("appearance.layout_mode_stream")}
+                icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
+                inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
+                tooltip={viewToggleTooltip}
+                onClick={toggleLayoutMode}
+              />
             </div>
           )}
           {infoFrom === "history" ? null : (
-            <ToolbarMenuButton
-              className={showStatus === "unread" ? "is-active" : ""}
-              icon={currentStatus.icon}
-              label={statusControlLabel}
-              tooltip={statusControlLabel}
-            >
-              {statusOptions.map((option) => (
-                <Menu.Item
-                  key={option.value}
-                  className="toolbar-menu-item"
-                  onClick={() => updateSettings({ showStatus: option.value })}
-                >
-                  <span className="toolbar-menu-item-label">
-                    {option.icon}
-                    <span>
-                      {option.value === "unread"
-                        ? polyglot.t("article_list.filter_status_unread_only")
-                        : option.value === "all"
-                          ? polyglot.t("article_list.filter_status_all_items")
-                          : option.label}
-                    </span>
-                  </span>
-                </Menu.Item>
-              ))}
-            </ToolbarMenuButton>
+            <ToolbarToggleButton
+              active={isUnreadOnly}
+              activeLabel={polyglot.t("article_list.filter_status_unread_only")}
+              icon={isUnreadOnly ? <IconRecord /> : <IconAlignLeft />}
+              inactiveLabel={polyglot.t("article_list.filter_status_all_items")}
+              tooltip={statusToggleTooltip}
+              onClick={toggleShowStatus}
+            />
           )}
           <ToolbarMenuButton
             icon={orderDirection === "desc" ? <IconSortDescending /> : <IconSortAscending />}

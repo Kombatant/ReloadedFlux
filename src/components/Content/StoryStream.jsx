@@ -106,9 +106,9 @@ const StoryStream = ({
   // selected) first card before it has measured it, so on a fresh category swap
   // card #2 briefly paints at ~40px down — overlapping the tall selected card as
   // a floating ghost — until the ResizeObserver remeasures (the 1-2s flash).
-  // Rather than show that glitch frame, keep the freshly-mounted list invisible
-  // (it still lays out + measures off-screen) and show the loading skeleton until
-  // the layout has settled: no card overlaps its predecessor. Then reveal.
+  // Keep the freshly-mounted list invisible but in its final layout while virtua
+  // measures it. Reveal once the cards AND footer no longer overlap; a single
+  // short card can overlap the footer even though there is no second card.
   //
   // Keyed to list *identity* (source + ready flip), NOT filteredEntries.length:
   // background load-more appends (and mark-as-read removals under the unread
@@ -144,17 +144,26 @@ const StoryStream = ({
         return false
       }
       const scRect = scroller.getBoundingClientRect()
-      const cards = [...scroller.querySelectorAll(".card-wrapper")]
-      if (cards.length === 0) {
+      const items = [
+        ...scroller.querySelectorAll(
+          ".stream-story-card, .story-stream-end, .story-stream-load-more",
+        ),
+      ]
+      if (items.length === 0) {
         return false
       }
       let prevBottom = -Infinity
-      for (const card of cards) {
-        const rect = card.getBoundingClientRect()
+      for (const item of items) {
+        // virtua hides each item until its ResizeObserver has measured it.
+        // Check that wrapper, not inherited visibility from our loading guard.
+        if (item.parentElement.style.visibility === "hidden") {
+          return false
+        }
+        const rect = item.getBoundingClientRect()
         const top = rect.top - scRect.top
-        // Any card overlapping the previous one (virtua not yet remeasured) =
-        // not settled.
-        if (top < prevBottom - 4) {
+        // Include the end/load-more footer in the overlap check even when the
+        // feed contains only one article.
+        if (rect.width <= 0 || rect.height <= 0 || top < prevBottom - 4) {
           return false
         }
         prevBottom = rect.bottom - scRect.top
@@ -269,10 +278,8 @@ const StoryStream = ({
           tabIndex: -1,
         }}
       >
-        {/* While fetching, show the skeleton cards. While the freshly mounted
-            virtua list is still laying out (not yet settled), show the brand
-            book icon pulsing as a loading indicator — this masks the
-            floating-card glitch without leaving a blank gap. */}
+        {/* The loading indicator overlays the hidden list so measuring and
+            revealing it use the same width and scroll coordinates. */}
         {!isArticleListReady && <LoadingCards />}
         {isArticleListReady && hasEntries && !streamSettled ? (
           <div aria-busy="true" aria-live="polite" className="story-stream-settling">
@@ -290,9 +297,10 @@ const StoryStream = ({
             style={
               streamSettled
                 ? undefined
-                : // Keep it mounted so virtua measures, but invisible and out of
-                  // flow so the skeleton above is what the user sees.
-                  { position: "absolute", visibility: "hidden", pointerEvents: "none" }
+                : // Keep normal-flow geometry: an absolutely positioned wrapper
+                  // with no width collapses during measurement, then reflows on
+                  // reveal and can leave stale painted content in short cards.
+                  { visibility: "hidden", pointerEvents: "none" }
             }
           >
             <Virtualizer

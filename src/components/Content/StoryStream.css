@@ -27,6 +27,9 @@
    truth (older WebKit ignores a per-call "auto" override of CSS smooth). */
 
 .story-stream-settling {
+  position: absolute;
+  inset: 0 0 auto;
+  pointer-events: none;
   display: flex;
   min-height: 280px;
   align-items: center;

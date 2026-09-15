@@ -1,0 +1,38 @@
+.tweet-embed-text {
+  margin: 0;
+  text-align: start;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--color-text-1);
+}
+
+.tweet-embed-media {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+.tweet-embed-media-2,
+.tweet-embed-media-3,
+.tweet-embed-media-4 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Scoped through .article-body to outrank `.article-body img:not(.icon-image)`,
+   which would otherwise center each image and add vertical margins. */
+.article-body .tweet-embed-media img:not(.icon-image),
+.tweet-embed-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+.tweet-embed-media-1 img {
+  max-height: 500px;
+  object-fit: contain;
+}

@@ -174,6 +174,59 @@ export const ToolbarActionButton = ({
   </CustomTooltip>
 )
 
+/**
+ * Two-state toolbar toggle: a switch track plus the active state's label.
+ *
+ * Both labels are rendered stacked in a single grid cell so the wider of the
+ * pair sets the button width in every locale, and the pill does not resize as
+ * it flips. Only the active one is visible; the other stays laid out but
+ * hidden, and is hidden from assistive tech so the label is not read twice.
+ */
+export const ToolbarToggleButton = ({
+  active = false,
+  activeLabel,
+  inactiveLabel,
+  icon,
+  tooltip,
+  onClick,
+}) => {
+  const buttonClassName = [
+    "toolbar-action-button",
+    "toolbar-toggle-button",
+    active ? "is-active" : "",
+  ]
+    .filter(Boolean)
+    .join(" ")
+
+  return (
+    <CustomTooltip mini content={tooltip}>
+      <Button
+        aria-label={active ? activeLabel : inactiveLabel}
+        aria-pressed={active}
+        className={buttonClassName}
+        size="small"
+        type="text"
+        onClick={onClick}
+      >
+        <span className="toolbar-button-label">
+          <span aria-hidden="true" className="toolbar-toggle-track">
+            <span className="toolbar-toggle-knob" />
+          </span>
+          {icon}
+          <span className="toolbar-toggle-labels">
+            <span aria-hidden={!active} className="toolbar-toggle-label" data-visible={active}>
+              {activeLabel}
+            </span>
+            <span aria-hidden={active} className="toolbar-toggle-label" data-visible={!active}>
+              {inactiveLabel}
+            </span>
+          </span>
+        </span>
+      </Button>
+    </CustomTooltip>
+  )
+}
+
 export const ToolbarMenuButton = ({
   icon,
   label,

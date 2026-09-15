@@ -2,3 +2,5 @@ node_modules/
 .codex
 /build
 .gitignore
+src/version-info.json
+public/version-info.json

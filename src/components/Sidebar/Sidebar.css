@@ -229,3 +229,205 @@
 .arco-menu-light .arco-menu-inline-header:hover {
   background-color: var(--color-neutral-3);
 }
+
+/* Update available modal — shares the visual language of the about modal. */
+.update-modal {
+  position: relative;
+  width: min(520px, calc(100vw - 32px));
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-bg-1);
+}
+
+.update-modal .arco-modal-body {
+  padding: 0;
+}
+
+/* Keep the header mounted so Arco's close button survives, but collapse its chrome
+   and let it overlay the custom banner. */
+.update-modal .arco-modal-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.update-modal .arco-modal-header .arco-modal-title {
+  display: none;
+}
+
+.update-modal .arco-modal-close-btn {
+  top: 14px;
+  right: 14px;
+  color: var(--color-text-2);
+  pointer-events: auto;
+}
+
+.update-modal .arco-modal-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.update-modal .arco-modal-footer {
+  margin-top: 0;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-border-2);
+  background: var(--color-bg-1);
+}
+
+.update-modal-content {
+  color: var(--color-text-1);
+  background: var(--color-bg-1);
+}
+
+.update-modal-header {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 28px 28px 24px;
+  background:
+    linear-gradient(135deg, rgba(var(--primary-6), 0.12), transparent 56%),
+    linear-gradient(180deg, var(--color-bg-2), var(--color-bg-1));
+  border-bottom: 1px solid var(--color-border-2);
+}
+
+.update-modal-logo {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--color-text-1);
+  box-shadow: var(--shadow);
+}
+
+.update-modal-logo svg {
+  color: var(--color-bg-1);
+  font-size: 38px;
+}
+
+.update-modal-heading {
+  min-width: 0;
+}
+
+.update-modal-kicker {
+  margin-bottom: 4px;
+  color: rgb(var(--primary-6));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.update-modal-heading h2 {
+  margin: 0;
+  color: var(--color-text-1);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.update-modal-heading p {
+  margin: 8px 0 0;
+  color: var(--color-text-2);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.update-modal-details {
+  display: grid;
+  gap: 1px;
+  margin: 18px 24px 24px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-2);
+  border-radius: 8px;
+  background: var(--color-border-2);
+}
+
+.update-modal-detail {
+  display: grid;
+  grid-template-columns: 18px minmax(88px, auto) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--color-bg-1);
+}
+
+.update-modal-detail svg {
+  color: var(--color-text-3);
+  font-size: 16px;
+}
+
+.update-modal-detail span {
+  color: var(--color-text-2);
+  font-size: 13px;
+}
+
+.update-modal-detail strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-1);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The remote build is the reason the dialog is open, so it carries the accent. */
+.update-modal-detail-highlight svg,
+.update-modal-detail-highlight strong {
+  color: rgb(var(--primary-6));
+}
+
+body[arco-theme="dark"] .update-modal-logo {
+  box-shadow: none;
+}
+
+@media screen and (max-width: 520px) {
+  .update-modal-header {
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    padding: 22px 20px 20px;
+  }
+
+  .update-modal-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+  .update-modal-logo svg {
+    font-size: 30px;
+  }
+
+  .update-modal-heading h2 {
+    font-size: 21px;
+  }
+
+  .update-modal-details {
+    margin: 16px 18px 18px;
+  }
+
+  .update-modal-detail {
+    grid-template-columns: 18px 1fr;
+    gap: 6px 10px;
+  }
+
+  .update-modal-detail strong {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .update-modal .arco-modal-footer {
+    padding: 14px 18px 18px;
+  }
+}

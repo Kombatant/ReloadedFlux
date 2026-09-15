@@ -49,6 +49,15 @@ export const formatBuildVersion = (buildDate, buildSequence) => {
   return `${compactDate}.${String(buildSequence).padStart(2, "0")}`
 }
 
+// `git log --date=iso-strict` emits the committer's local offset, so the date has
+// to be shifted to UTC before slicing or a late-evening commit lands on the wrong day.
+export const toUtcBuildDate = (isoDate) => {
+  const parsedDate = new Date(isoDate)
+  return Number.isNaN(parsedDate.getTime())
+    ? null
+    : normalizeBuildDate(parsedDate.toISOString().slice(0, 10))
+}
+
 const getCurrentUtcBuildDate = () => {
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: DEFAULT_BUILD_TIMEZONE,
@@ -70,20 +79,15 @@ const getGitCommitDate = () =>
 
 const getGitBranch = () => safeExec("git rev-parse --abbrev-ref HEAD") ?? "unknown"
 
-const getBuildSequenceFromGitHistory = (buildDate) => {
+export const getBuildSequenceFromGitHistory = (buildDate) => {
   if (!normalizeBuildDate(buildDate)) {
     return 0
   }
 
-  const commitDateIso = safeExec("git log -1 --format=%cI")
-  if (!commitDateIso) {
-    return 0
-  }
-
-  const commitDate = new Date(commitDateIso)
-  const dayStart = new Date(`${buildDate}T00:00:00Z`)
-  const elapsedMinutes = Math.floor((commitDate.getTime() - dayStart.getTime()) / 60_000)
-  return Math.max(0, elapsedMinutes)
+  // Must match the workflow's `git rev-list --count --since=...` so local and CI
+  // builds report the same sequence for the same commit.
+  const commitCount = safeExec(`git rev-list --count --since="${buildDate}T00:00:00Z" HEAD`)
+  return toInteger(commitCount) ?? 0
 }
 
 export const createVersionInfo = (environment = process.env) => {
@@ -97,7 +101,7 @@ export const createVersionInfo = (environment = process.env) => {
 
   const configuredBuildDate = normalizeBuildDate(environment.VERSION_BUILD_DATE)
   const fallbackBuildDate =
-    normalizeBuildDate(gitCommitDate.slice(0, 10)) ?? getCurrentUtcBuildDate() ?? "1970-01-01"
+    toUtcBuildDate(gitCommitDate) ?? getCurrentUtcBuildDate() ?? "1970-01-01"
   const buildDate = configuredBuildDate ?? fallbackBuildDate
 
   const configuredBuildSequence = toInteger(environment.VERSION_BUILD_SEQUENCE)
