@@ -17,6 +17,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --trust-lockfile
 
+      - name: Generate version metadata
+        run: node src/scripts/version-info.js
+
       - name: Run ESLint check
         run: pnpm lint
 
