@@ -1,6 +1,5 @@
 import { Button, Divider, Dropdown, Menu, Modal, Radio } from "@arco-design/web-react"
 import {
-  IconBook,
   IconBranch,
   IconCalendarClock,
   IconCode,
@@ -19,6 +18,7 @@ import {
 import { useStore } from "@nanostores/react"
 import { useNavigate } from "react-router"
 
+import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
 import { authState, resetAuth } from "@/store/authState"
@@ -83,7 +83,7 @@ export default function Profile() {
         <div className="about-modal-content">
           <div className="about-modal-header">
             <div aria-hidden="true" className="about-modal-logo">
-              <IconBook />
+              <ReloadedFluxIcon />
             </div>
             <div className="about-modal-heading">
               <div className="about-modal-kicker">About</div>

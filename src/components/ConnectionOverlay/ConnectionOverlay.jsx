@@ -1,10 +1,11 @@
 import { Avatar, Button } from "@arco-design/web-react"
-import { IconBook, IconExclamation, IconRefresh } from "@arco-design/web-react/icon"
+import { IconExclamation, IconRefresh } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useState } from "react"
 
 import "./ConnectionOverlay.css"
 
+import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import useAppData from "@/hooks/useAppData"
 import { polyglotState } from "@/hooks/useLanguage"
 import { authState } from "@/store/authState"
@@ -38,7 +39,7 @@ const ConnectionOverlay = () => {
       <div aria-modal="true" className="connection-overlay-card" role="alertdialog">
         <div className="connection-overlay-icon-wrapper">
           <Avatar className="connection-overlay-icon" size={56}>
-            <IconBook style={{ color: "var(--color-bg-1)" }} />
+            <ReloadedFluxIcon />
           </Avatar>
           <span className="connection-overlay-badge">
             <IconExclamation />

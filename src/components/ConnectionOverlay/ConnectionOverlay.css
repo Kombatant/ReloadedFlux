@@ -47,7 +47,7 @@
 }
 
 .connection-overlay-icon {
-  background-color: var(--color-text-1);
+  background-color: var(--brand-icon-background);
 }
 
 /* 品牌图标右下角的状态徽标：实心圆 + 白色感叹号 */

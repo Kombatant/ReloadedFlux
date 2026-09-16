@@ -69,12 +69,12 @@
   height: 72px;
   border: 1px solid transparent;
   border-radius: 8px;
-  background: var(--color-text-1);
+  background: var(--brand-icon-background);
   box-shadow: var(--shadow);
 }
 
 .about-modal-logo svg {
-  color: var(--color-bg-1);
+  color: var(--brand-icon-foreground);
   font-size: 38px;
 }
 

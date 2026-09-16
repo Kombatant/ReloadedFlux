@@ -4,3 +4,4 @@ node_modules/
 .gitignore
 src/version-info.json
 public/version-info.json
+output/*

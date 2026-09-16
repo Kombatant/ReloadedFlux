@@ -55,7 +55,7 @@
 
 .menu-header .avatar {
   margin-right: 10px;
-  background-color: var(--color-text-1);
+  background-color: var(--brand-icon-background);
 }
 
 .section-title {

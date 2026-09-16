@@ -1,5 +1,4 @@
 import { Avatar, Button, Typography } from "@arco-design/web-react"
-import { IconBook } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { throttle } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
@@ -10,6 +9,7 @@ import { Virtualizer } from "virtua"
 import LoadingCards from "@/components/Article/LoadingCards"
 import StreamArticleCard from "@/components/Article/StreamArticleCard"
 import StreamSearchBar from "@/components/Article/StreamSearchBar"
+import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
@@ -254,7 +254,7 @@ const StoryStream = ({
       )}
       <div className="story-stream-end-brandblock">
         <Avatar className="story-stream-end-icon" size={64}>
-          <IconBook style={{ color: "var(--color-bg-1)" }} />
+          <ReloadedFluxIcon />
         </Avatar>
         <Typography.Text className="story-stream-end-brand">ReloadedFlux</Typography.Text>
       </div>
@@ -284,7 +284,7 @@ const StoryStream = ({
         {isArticleListReady && hasEntries && !streamSettled ? (
           <div aria-busy="true" aria-live="polite" className="story-stream-settling">
             <Avatar className="story-stream-settling-icon" size={48}>
-              <IconBook style={{ color: "var(--color-bg-1)" }} />
+              <ReloadedFluxIcon />
             </Avatar>
           </div>
         ) : null}

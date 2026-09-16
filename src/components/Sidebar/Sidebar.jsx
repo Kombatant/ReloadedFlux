@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@arco-design/web-react"
 import {
-  IconBook,
   IconCalendar,
   IconDelete,
   IconDesktop,
@@ -33,6 +32,7 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
+import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import EditCategoryModal from "@/components/ui/EditCategoryModal"
 import EditFeedModal from "@/components/ui/EditFeedModal"
@@ -615,7 +615,7 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
         <div className="menu-header">
           <span style={{ display: "flex", alignItems: "center" }}>
             <Avatar className="avatar" size={32}>
-              <IconBook style={{ color: "var(--color-bg-1)" }} />
+              <ReloadedFluxIcon />
             </Avatar>
             <Typography.Title heading={6} style={{ margin: 0, fontWeight: 300 }}>
               ::<span style={{ fontWeight: 700 }}>Reloaded</span>Flux
