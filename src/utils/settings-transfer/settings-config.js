@@ -141,7 +141,7 @@ export const createDefaultSettings = (language = "en-CA") => ({
   },
   aiModel: "",
   aiProvider: "none",
-  aiSummaryLanguage: "en-CA",
+  aiSummaryLanguage: "auto",
   aiSummaryExcludedLanguage: "",
   animationsEnabled: true,
   articleWidth: 75,

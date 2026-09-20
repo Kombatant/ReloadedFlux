@@ -15,7 +15,12 @@ import {
   setUnreadTodayCount,
 } from "@/store/dataState"
 import { getSettings } from "@/store/settingsState"
-import { AI_PROVIDERS, formatSummaryHtml, summarizeWithProvider } from "@/utils/ai"
+import {
+  AI_PROVIDERS,
+  AI_SUMMARY_LANGUAGE_AUTO,
+  formatSummaryHtml,
+  summarizeWithProvider,
+} from "@/utils/ai"
 import { checkIsInLast24Hours } from "@/utils/date"
 import { extractTextFromHtml } from "@/utils/dom"
 import { Message, Notification } from "@/utils/feedback"
@@ -196,7 +201,7 @@ const handleSummarizeContent = async (entry = contentState.get().activeContent) 
   const aiApiKey = aiApiKeys?.[aiProvider] || ""
   const aiModels = getSettings("aiModels") || {}
   const aiModel = aiModels?.[aiProvider] || ""
-  const aiSummaryLanguage = getSettings("aiSummaryLanguage") || "en-CA"
+  const aiSummaryLanguage = getSettings("aiSummaryLanguage") || AI_SUMMARY_LANGUAGE_AUTO
   const aiSummaryExcludedLanguage = getSettings("aiSummaryExcludedLanguage") || ""
   const { polyglot } = polyglotState.get()
 

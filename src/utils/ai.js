@@ -186,21 +186,82 @@ const LANGUAGE_NAMES = {
 
 const getLanguageName = (code) => LANGUAGE_NAMES[code] || code
 
-const buildSummaryPrompt = (title, content, { targetLanguage, excludedLanguage } = {}) => {
+export const AI_SUMMARY_LANGUAGE_AUTO = "auto"
+
+// Providers that take a system role get the language rule twice: some models
+// weight the system prompt more heavily than an instruction buried in the user turn.
+const SUMMARY_SYSTEM_PROMPT =
+  "You are a summarization assistant. Follow the LANGUAGE instruction in the user " +
+  "message exactly, and never translate the summary into a language it does not ask for."
+
+// Small multilingual models (observed with a 3B Mistral build) correctly detect the
+// article's language, then drift back to their own dominant language part-way through
+// generation. Naming the language once is not enough: the instruction has to repeat
+// the constraint at the point of writing, and per bullet, so every line re-anchors.
+const buildLanguageRules = (languageName) => [
+  `LANGUAGE: Write the summary in ${languageName}.`,
+  `Every single bullet point must be written in ${languageName}.`,
+  `This is required even if ${languageName} is not the language you would normally use.`,
+  `Do not translate the summary into any other language. Do not mix languages.`,
+]
+
+const LANGUAGE_LINE_PREFIX = "DETECTED LANGUAGE:"
+
+export const buildSummaryPrompt = (title, content, { targetLanguage, excludedLanguage } = {}) => {
   const trimmedTitle = title?.trim()
   const titleLine = trimmedTitle ? `Title: ${trimmedTitle}\n` : ""
-  const targetName = getLanguageName(targetLanguage || "en-CA")
-  let languageInstruction = `Write the summary in ${targetName}.`
-  if (excludedLanguage) {
-    const excludedName = getLanguageName(excludedLanguage)
-    languageInstruction += ` However, if the article is written in ${excludedName}, keep the summary in ${excludedName} instead of translating it.`
+  let languageInstruction
+  if (targetLanguage === AI_SUMMARY_LANGUAGE_AUTO) {
+    // Forcing the detected language onto its own first line makes the model commit to a
+    // concrete name it must then match, rather than tracking a vague "same language as
+    // the article" back-reference across several bullets. The line is stripped before render.
+    languageInstruction = [
+      "LANGUAGE: Identify the language the article below is written in, judging only",
+      "from the article's own text.",
+      `Begin your reply with a single line in exactly this form: ${LANGUAGE_LINE_PREFIX} <language name in English>`,
+      "Then write the bullet points in that identified language, and in no other language.",
+      "Every single bullet point must be written in that same identified language.",
+      "This is required even if it is not the language you would normally use.",
+      "Do not translate the summary. Do not mix languages.",
+      "Example: for an article written in English, the first line is",
+      `\`${LANGUAGE_LINE_PREFIX} English\` and all bullet points that follow are in English.`,
+    ].join(" ")
+  } else {
+    const targetName = getLanguageName(targetLanguage || "en-CA")
+    languageInstruction = buildLanguageRules(targetName).join(" ")
+    if (excludedLanguage) {
+      const excludedName = getLanguageName(excludedLanguage)
+      languageInstruction += ` However, if the article is written in ${excludedName}, keep the summary in ${excludedName} instead of translating it.`
+    }
   }
   return (
     "Summarize the following article in 5-7 concise bullet points. " +
-    "Focus on key facts and outcomes. " +
+    "Focus on key facts and outcomes.\n\n" +
     `${languageInstruction}\n\n` +
     `${titleLine}Content:\n${content}`
   )
+}
+
+// The detected-language line is scaffolding for the model, not content for the reader.
+// Models wrap or bold it inconsistently, so match leniently and only at the very start.
+const DETECTED_LANGUAGE_PATTERNS = [
+  // The requested form, however the model decorated it: **DETECTED LANGUAGE: English**
+  /^\s*[*_`#>\s-]*detected\s+language\s*:[^\n]*\n?/i,
+  // Free-form preambles a model writes instead, in any language it picked, e.g.
+  // "**Le texte est écrit en anglais.**" or "The article is written in English."
+  /^\s*[*_`#>\s-]*(?:the\s+(?:text|article)\s+is\s+written\s+in|le\s+texte\s+est\s+écrit\s+en|l['’]article\s+est\s+écrit\s+en)[^\n]*\n?/i,
+]
+
+export const stripDetectedLanguageLine = (summaryText) => {
+  if (typeof summaryText !== "string") {
+    return ""
+  }
+
+  let nextValue = summaryText
+  for (const pattern of DETECTED_LANGUAGE_PATTERNS) {
+    nextValue = nextValue.replace(pattern, "")
+  }
+  return nextValue
 }
 
 const extractAnthropicText = (data) => {
@@ -293,7 +354,7 @@ export const summarizeWithProvider = async ({
         model,
         max_tokens: 1800,
         messages: [
-          { role: "system", content: "You are a helpful assistant." },
+          { role: "system", content: SUMMARY_SYSTEM_PROMPT },
           { role: "user", content: buildSummaryPrompt(title, content, promptOptions) },
         ],
       }),
@@ -334,7 +395,7 @@ export const summarizeWithProvider = async ({
         model,
         max_tokens: 1800,
         messages: [
-          { role: "system", content: "You are a helpful assistant." },
+          { role: "system", content: SUMMARY_SYSTEM_PROMPT },
           { role: "user", content: buildSummaryPrompt(title, content, promptOptions) },
         ],
       }),
@@ -377,7 +438,7 @@ const buildParagraphs = (text) =>
     .join("")
 
 export const formatSummaryHtml = (summaryText, heading) => {
-  const normalized = summaryText.trim()
+  const normalized = stripDetectedLanguageLine(summaryText).trim()
   if (!normalized) {
     return ""
   }

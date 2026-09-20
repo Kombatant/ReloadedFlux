@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
-import { AI_PROVIDERS, fetchProviderModels } from "@/utils/ai"
+import { AI_PROVIDERS, AI_SUMMARY_LANGUAGE_AUTO, fetchProviderModels } from "@/utils/ai"
 
 import SettingItem from "./SettingItem"
 
@@ -28,6 +28,7 @@ const Ai = () => {
   const isProviderNone = settings.aiProvider === AI_PROVIDERS.NONE
   const isOllamaProvider = settings.aiProvider === AI_PROVIDERS.OLLAMA
   const isLmStudioProvider = settings.aiProvider === AI_PROVIDERS.LM_STUDIO
+  const isAutoSummaryLanguage = settings.aiSummaryLanguage === AI_SUMMARY_LANGUAGE_AUTO
   const currentApiKey = settings.aiApiKeys?.[settings.aiProvider] ?? ""
   const currentModel = settings.aiModels?.[settings.aiProvider] ?? ""
   const normalizedModelOptions = modelOptions.map((model) =>
@@ -245,8 +246,17 @@ const Ai = () => {
           getPopupContainer={() => document.body}
           style={{ width: "30ch" }}
           value={settings.aiSummaryLanguage}
-          onChange={(value) => updateSettings({ aiSummaryLanguage: value })}
+          onChange={(value) =>
+            updateSettings(
+              value === AI_SUMMARY_LANGUAGE_AUTO
+                ? { aiSummaryLanguage: value, aiSummaryExcludedLanguage: "" }
+                : { aiSummaryLanguage: value },
+            )
+          }
         >
+          <Select.Option value={AI_SUMMARY_LANGUAGE_AUTO}>
+            {polyglot.t("settings.content.ai_summary_language_auto")}
+          </Select.Option>
           {summaryLanguageOptions.map((option) => (
             <Select.Option key={option.value} value={option.value}>
               {option.label}
@@ -259,15 +269,19 @@ const Ai = () => {
 
       <SettingItem
         description={polyglot.t("settings.content.ai_summary_excluded_language_description")}
+        disabled={isAutoSummaryLanguage}
+        disabledLabel={polyglot.t("settings.disabled_label")}
+        disabledReason={polyglot.t("settings.ai_summary_excluded_language_disabled_reason")}
         title={polyglot.t("settings.content.ai_summary_excluded_language_label")}
       >
         <Select
           allowClear
           className="input-select"
+          disabled={isAutoSummaryLanguage}
           getPopupContainer={() => document.body}
           placeholder={polyglot.t("settings.content.ai_summary_excluded_language_none")}
           style={{ width: "30ch" }}
-          value={settings.aiSummaryExcludedLanguage || undefined}
+          value={(isAutoSummaryLanguage ? "" : settings.aiSummaryExcludedLanguage) || undefined}
           onChange={(value) => updateSettings({ aiSummaryExcludedLanguage: value || "" })}
         >
           {summaryLanguageOptions.map((option) => (
