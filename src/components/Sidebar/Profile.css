@@ -4,6 +4,54 @@
   align-items: center;
 }
 
+/* Theme / layout preference block at the top of the profile menu. Labels sit
+   left, icon-only segmented controls right, so the block never sets the
+   menu's width. */
+.profile-menu-pref-row {
+  display: flex;
+  padding: 6px 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.profile-menu-pref-label {
+  color: var(--color-text-3);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.profile-menu-pref-group.arco-radio-group-button {
+  flex: 0 0 auto;
+}
+
+/* Move the button's padding onto the inner span so the tooltip trigger covers
+   the whole segment, not just the icon. */
+.profile-menu-pref-group .arco-radio-button-inner {
+  padding: 0;
+}
+
+.profile-menu-pref-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 22px;
+  font-size: 14px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .icon-right {
   margin-right: 8px;
   font-size: 16px;

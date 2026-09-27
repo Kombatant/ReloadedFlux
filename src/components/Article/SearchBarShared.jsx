@@ -17,7 +17,7 @@ import { polyglotState } from "@/hooks/useLanguage"
 import { contentState, setEntries, setFilterType } from "@/store/contentState"
 import { dataState, setUnreadInfo, setUnreadTodayCount } from "@/store/dataState"
 import draftFilterTypeState from "@/store/searchBarState"
-import { settingsState, updateSettings } from "@/store/settingsState"
+import { settingsState } from "@/store/settingsState"
 import { get24HoursAgoTimestamp } from "@/utils/date"
 import { Notification } from "@/utils/feedback"
 
@@ -257,28 +257,6 @@ export const ToolbarMenuButton = ({
       </Button>
     </CustomTooltip>
   </Dropdown>
-)
-
-export const LayoutModeSelect = ({ layoutMode, layoutOptions }) => (
-  <Select
-    className="layout-mode-select"
-    value={layoutMode}
-    triggerProps={{
-      autoAlignPopupMinWidth: true,
-      autoAlignPopupWidth: false,
-      position: "bl",
-    }}
-    onChange={(value) => updateSettings({ layoutMode: value })}
-  >
-    {layoutOptions.map((option) => (
-      <Select.Option key={option.value} value={option.value}>
-        <span className="layout-mode-option">
-          {option.icon}
-          <span>{option.label}</span>
-        </span>
-      </Select.Option>
-    ))}
-  </Select>
 )
 
 export const MarkReadControl = ({ info, markAllAsRead, variant = "classic" }) => {

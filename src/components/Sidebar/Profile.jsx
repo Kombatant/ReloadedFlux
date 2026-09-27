@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu, Modal, Radio } from "@arco-design/web-react"
+import { Button, Divider, Dropdown, Menu, Modal, Radio, Tooltip } from "@arco-design/web-react"
 import {
   IconBranch,
   IconCalendarClock,
@@ -18,9 +18,11 @@ import {
 import { useStore } from "@nanostores/react"
 import { useNavigate } from "react-router"
 
+import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
+import useScreenWidth from "@/hooks/useScreenWidth"
 import { authState, resetAuth } from "@/store/authState"
 import { resetContent } from "@/store/contentState"
 import { resetData } from "@/store/dataState"
@@ -31,14 +33,46 @@ import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
 import "./Profile.css"
 
+/**
+ * One labelled row of the profile menu's preference block: a muted label on
+ * the left and an icon-only segmented control on the right. Each option's name
+ * shows as a tooltip and is kept in the DOM (visually hidden) so the radio
+ * still has an accessible name.
+ */
+const PreferenceRow = ({ label, name, value, options, onChange }) => (
+  <div className="profile-menu-pref-row">
+    <span className="profile-menu-pref-label">{label}</span>
+    <Radio.Group
+      className="profile-menu-pref-group"
+      name={name}
+      size="small"
+      type="button"
+      value={value}
+      onChange={onChange}
+    >
+      {options.map((option) => (
+        <Radio key={option.value} value={option.value}>
+          <Tooltip mini content={option.label}>
+            <span className="profile-menu-pref-option">
+              {option.icon}
+              <span className="visually-hidden">{option.label}</span>
+            </span>
+          </Tooltip>
+        </Radio>
+      ))}
+    </Radio.Group>
+  </div>
+)
+
 export default function Profile() {
   const navigate = useNavigate()
   const { server } = useStore(authState)
   const { polyglot } = useStore(polyglotState)
 
-  const { themeMode } = useStore(settingsState)
+  const { layoutMode, themeMode } = useStore(settingsState)
 
   const { setSettingsModalVisible } = useModalToggle()
+  const { isBelowMedium } = useScreenWidth()
 
   const buildVersion = buildInfo.buildVersion ?? buildInfo.gitHash ?? "local"
   const buildChannel = buildInfo.channel ?? "local"
@@ -154,28 +188,55 @@ export default function Profile() {
           trigger="click"
           droplist={
             <Menu>
-              <Radio.Group
+              <PreferenceRow
+                label={polyglot.t("sidebar.theme_label")}
                 name="theme"
-                size="small"
-                type="button"
                 value={themeMode}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "8px",
-                }}
+                options={[
+                  {
+                    value: "system",
+                    icon: <IconDesktop />,
+                    label: polyglot.t("sidebar.theme_system"),
+                  },
+                  {
+                    value: "light",
+                    icon: <IconSunFill />,
+                    label: polyglot.t("sidebar.theme_light"),
+                  },
+                  {
+                    value: "dark",
+                    icon: <IconMoonFill />,
+                    label: polyglot.t("sidebar.theme_dark"),
+                  },
+                ]}
                 onChange={(value) => updateSettings({ themeMode: value })}
-              >
-                <Radio value="system">
-                  <IconDesktop />
-                </Radio>
-                <Radio value="light">
-                  <IconSunFill />
-                </Radio>
-                <Radio value="dark">
-                  <IconMoonFill />
-                </Radio>
-              </Radio.Group>
+              />
+              {/* The combined layout is desktop-only (Content falls back to
+                  columns below the medium breakpoint), so the picker would
+                  do nothing there. */}
+              {isBelowMedium ? null : (
+                <>
+                  <Divider style={{ margin: "4px 0" }} />
+                  <PreferenceRow
+                    label={polyglot.t("sidebar.layout_label")}
+                    name="layout"
+                    value={layoutMode}
+                    options={[
+                      {
+                        value: "stream",
+                        icon: <LayoutCombinedIcon />,
+                        label: polyglot.t("appearance.layout_mode_stream"),
+                      },
+                      {
+                        value: "classic",
+                        icon: <LayoutColumnIcon />,
+                        label: polyglot.t("appearance.layout_mode_classic"),
+                      },
+                    ]}
+                    onChange={(value) => updateSettings({ layoutMode: value })}
+                  />
+                </>
+              )}
               <Divider style={{ margin: "4px 0" }} />
               <Menu.Item key="0" onClick={() => setSettingsModalVisible(true)}>
                 <IconSettings className="icon-right" />

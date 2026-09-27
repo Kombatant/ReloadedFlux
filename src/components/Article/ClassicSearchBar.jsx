@@ -9,7 +9,6 @@ import { useStore } from "@nanostores/react"
 import { useMemo, useState } from "react"
 import { useParams } from "react-router"
 
-import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
@@ -25,7 +24,7 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { getStartOfToday } from "@/utils/date"
 import createSetter from "@/utils/nanostores"
 
-import { ActiveButton, SearchForm, ToolbarToggleButton } from "./SearchBarShared"
+import { ActiveButton, SearchForm } from "./SearchBarShared"
 import SidebarTrigger from "./SidebarTrigger"
 
 import "./ClassicSearchBar.css"
@@ -35,7 +34,7 @@ const setDraftFilterType = createSetter(draftFilterTypeState)
 const ClassicSearchBar = () => {
   const { filterDate, filterString, filterType, infoFrom, isArticleListReady } =
     useStore(contentState)
-  const { layoutMode, orderDirection } = useStore(settingsState)
+  const { orderDirection } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const feeds = useStore(feedsState)
   const categories = useStore(categoriesState)
@@ -100,13 +99,6 @@ const ClassicSearchBar = () => {
     setCalendarVisible(false)
   }
 
-  const isStreamLayout = layoutMode === "stream"
-  const viewToggleTooltip = isStreamLayout
-    ? polyglot.t("article_list.view_toggle_to_classic")
-    : polyglot.t("article_list.view_toggle_to_stream")
-  const toggleLayoutMode = () =>
-    updateSettings({ layoutMode: isStreamLayout ? "classic" : "stream" })
-
   return (
     <div className="search-and-sort-bar classic-toolbar" style={{ width: "100%" }}>
       <SidebarTrigger />
@@ -128,18 +120,6 @@ const ClassicSearchBar = () => {
           <Typography.Text className="count-label">({count})</Typography.Text>
         )}
       </div>
-      {isBelowMedium ? null : (
-        <div className="layout-selector-slot">
-          <ToolbarToggleButton
-            active={isStreamLayout}
-            activeLabel={polyglot.t("appearance.layout_mode_stream")}
-            icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
-            inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
-            tooltip={viewToggleTooltip}
-            onClick={toggleLayoutMode}
-          />
-        </div>
-      )}
       <div className="button-group">
         <Dropdown
           popupVisible={searchDropdownVisible}

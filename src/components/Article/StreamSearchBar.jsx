@@ -12,7 +12,6 @@ import { useStore } from "@nanostores/react"
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router"
 
-import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
@@ -69,7 +68,7 @@ const getInlineControlsWidth = (buttonGroup) =>
 
 const StreamSearchBar = ({ info, markAllAsRead, streamVirtualizerRef }) => {
   const { filterString, filterType, infoFrom, isArticleListReady } = useStore(contentState)
-  const { layoutMode, orderDirection, showStatus } = useStore(settingsState)
+  const { orderDirection, showStatus } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const feeds = useStore(feedsState)
   const categories = useStore(categoriesState)
@@ -146,13 +145,6 @@ const StreamSearchBar = ({ info, markAllAsRead, streamVirtualizerRef }) => {
     : polyglot.t("article_list.filter_status_toggle_to_unread")
   const toggleShowStatus = () => updateSettings({ showStatus: isUnreadOnly ? "all" : "unread" })
   const sortControlLabel = `${polyglot.t("article_list.sort_label")}: ${sortDirectionLabel}`
-
-  const isStreamLayout = layoutMode === "stream"
-  const viewToggleTooltip = isStreamLayout
-    ? polyglot.t("article_list.view_toggle_to_classic")
-    : polyglot.t("article_list.view_toggle_to_stream")
-  const toggleLayoutMode = () =>
-    updateSettings({ layoutMode: isStreamLayout ? "classic" : "stream" })
 
   // The stream toolbar only exposes a two-state unread/all toggle, so a
   // "starred" status carried over from the classic layout would filter the
@@ -328,32 +320,8 @@ const StreamSearchBar = ({ info, markAllAsRead, streamVirtualizerRef }) => {
           <div className="stream-mark-read-control">
             <MarkReadControl info={info} markAllAsRead={markAllAsRead} variant="stream" />
           </div>
-          {isBelowMedium ? null : (
-            <div className="stream-view-control mobile-only-view-control">
-              <ToolbarToggleButton
-                active={isStreamLayout}
-                activeLabel={polyglot.t("appearance.layout_mode_stream")}
-                icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
-                inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
-                tooltip={viewToggleTooltip}
-                onClick={toggleLayoutMode}
-              />
-            </div>
-          )}
         </div>
         <div className="stream-secondary-controls">
-          {isBelowMedium ? null : (
-            <div className="stream-view-control desktop-view-control">
-              <ToolbarToggleButton
-                active={isStreamLayout}
-                activeLabel={polyglot.t("appearance.layout_mode_stream")}
-                icon={isStreamLayout ? <LayoutCombinedIcon /> : <LayoutColumnIcon />}
-                inactiveLabel={polyglot.t("appearance.layout_mode_classic")}
-                tooltip={viewToggleTooltip}
-                onClick={toggleLayoutMode}
-              />
-            </div>
-          )}
           {infoFrom === "history" ? null : (
             <ToolbarToggleButton
               active={isUnreadOnly}

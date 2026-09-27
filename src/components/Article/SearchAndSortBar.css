@@ -7,9 +7,6 @@
 }
 
 .search-and-sort-bar.classic-toolbar {
-  /* Sized for the view toggle, whose switch track makes it wider than the
-     menu button that used to sit here. Also reserves the title's padding. */
-  --classic-layout-selector-width: 190px;
   justify-content: space-between;
   background-color: rgb(var(--color-bg-1));
   min-height: 44px;
@@ -54,7 +51,6 @@
   overflow: hidden;
   flex: 1;
   min-width: 0;
-  padding-right: calc(var(--classic-layout-selector-width) + 20px);
 }
 
 .search-and-sort-bar.stream-toolbar .page-info {
@@ -148,33 +144,13 @@
   transform: translateY(-50%);
 }
 
-.search-and-sort-bar .stream-view-control {
-  position: relative;
-  padding-right: 16px;
-  margin-right: 2px;
-}
-
-.search-and-sort-bar .mobile-only-view-control {
-  display: none;
-}
-
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-mark-read-control,
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-view-control {
+.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-mark-read-control {
   padding-right: 0;
   margin-right: 0;
 }
 
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-mark-read-control::after,
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-view-control::after {
+.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .stream-mark-read-control::after {
   display: none;
-}
-
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .desktop-view-control {
-  display: none;
-}
-
-.search-and-sort-bar.stream-toolbar.stream-toolbar--compact .mobile-only-view-control {
-  display: block;
 }
 
 .search-and-sort-bar.stream-toolbar.stream-toolbar--compact .button-group {
@@ -225,95 +201,6 @@
   line-height: 1.15;
 }
 
-.search-and-sort-bar .layout-selector-slot {
-  display: flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  margin-left: 16px;
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot {
-  position: absolute;
-  top: 0;
-  bottom: 8px;
-  left: 50%;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  width: var(--classic-layout-selector-width);
-  max-width: var(--classic-layout-selector-width);
-  margin-left: 0;
-  transform: translateX(-50%);
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-menu-button {
-  width: 100%;
-  max-width: none;
-}
-
-/* The view toggle is wider than the menu button it replaced (the switch track
-   adds to the label), so let it size to its content and stay centred in the
-   slot rather than being squeezed into the fixed slot width. */
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-toggle-button {
-  width: auto;
-  max-width: none;
-  margin: 0 auto;
-}
-
-.layout-mode-option {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.layout-mode-option svg {
-  flex: 0 0 auto;
-  font-size: 1rem;
-}
-
-.search-and-sort-bar .layout-mode-select {
-  width: 100%;
-}
-
-.search-and-sort-bar.stream-toolbar .layout-mode-select {
-  width: 156px;
-  flex: 0 0 156px;
-}
-
-.search-and-sort-bar .layout-mode-select .arco-select-view {
-  min-height: 34px;
-  border-radius: 14px;
-  padding: 0 12px;
-  background-color: rgb(var(--color-fill-2));
-  color: var(--color-text-2);
-}
-
-.search-and-sort-bar.classic-toolbar .layout-mode-select .arco-select-view {
-  border-color: transparent;
-  min-height: 28px;
-  height: 28px;
-  border-radius: 999px;
-  padding: 0 10px;
-}
-
-.search-and-sort-bar.stream-toolbar .layout-mode-select .arco-select-view {
-  border-color: transparent;
-}
-
-.search-and-sort-bar .layout-mode-select .arco-select-view-value {
-  display: inline-flex;
-  align-items: center;
-}
-
-.search-and-sort-bar .layout-mode-select .arco-select-view-value .layout-mode-option svg,
-.search-and-sort-bar .layout-mode-select .arco-select-view-suffix {
-  color: var(--color-text-3);
-}
-
-.search-and-sort-bar .layout-mode-select .arco-select-view-suffix {
-  padding-left: 8px;
-}
-
 .search-and-sort-bar .toolbar-menu-button {
   max-width: 220px;
   padding: 2px 8px !important;
@@ -330,32 +217,6 @@
   padding: 0 12px !important;
   background-color: rgb(var(--color-fill-2));
   color: var(--color-text-2);
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-action-button {
-  min-height: 32px;
-  border: 1px solid var(--color-border-2);
-  border-radius: 999px;
-  padding: 0 12px !important;
-  background-color: rgb(var(--color-fill-2));
-  color: var(--color-text-2);
-  font-size: 0.875rem;
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-button-label {
-  gap: 8px;
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-button-label svg {
-  font-size: 0.875rem;
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-button-caret {
-  font-size: 11px;
-}
-
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-button-label > span:last-child {
-  white-space: nowrap;
 }
 
 .search-and-sort-bar.stream-toolbar .toolbar-action-button.is-active {
@@ -473,15 +334,6 @@
   opacity: 0.72;
 }
 
-.search-and-sort-bar.classic-toolbar .layout-selector-slot .toolbar-button-caret-wrap {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 2px;
-  padding-left: 8px;
-  border-left: 1px solid currentColor;
-  opacity: 0.72;
-}
-
 .toolbar-dropdown-menu .toolbar-menu-item-label,
 .search-and-sort-bar .toolbar-menu-item-label {
   display: inline-flex;
@@ -567,16 +419,6 @@
    Keyboard focus still gets the same treatment. */
 .search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):hover,
 .search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):focus-visible {
-  border-color: var(--color-border-3);
-  background-color: rgb(var(--color-fill-3)) !important;
-}
-
-.search-and-sort-bar.classic-toolbar
-  .layout-selector-slot
-  .toolbar-action-button:not(.arco-btn-disabled):hover,
-.search-and-sort-bar.classic-toolbar
-  .layout-selector-slot
-  .toolbar-action-button:not(.arco-btn-disabled):focus-visible {
   border-color: var(--color-border-3);
   background-color: rgb(var(--color-fill-3)) !important;
 }
@@ -710,15 +552,6 @@
     display: none;
   }
 
-  .search-and-sort-bar .stream-view-control {
-    padding-right: 0;
-    margin-right: 0;
-  }
-
-  .search-and-sort-bar .stream-view-control::after {
-    display: none;
-  }
-
   .search-and-sort-bar.classic-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -727,16 +560,6 @@
 
   .search-and-sort-bar.classic-toolbar .page-info {
     min-width: 0;
-  }
-
-  .search-and-sort-bar.classic-toolbar .layout-selector-slot {
-    position: static;
-    order: 3;
-    width: 100%;
-    max-width: none;
-    margin: 0 8px;
-    transform: none;
-    justify-content: flex-start;
   }
 
   .search-and-sort-bar .toolbar-menu-button {
