@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Collapse,
   Divider,
@@ -32,7 +31,6 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
-import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import EditCategoryModal from "@/components/ui/EditCategoryModal"
 import EditFeedModal from "@/components/ui/EditFeedModal"
@@ -614,9 +612,7 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
       <div className="sidebar-pinned-header">
         <div className="menu-header">
           <span style={{ display: "flex", alignItems: "center" }}>
-            <Avatar className="avatar" size={32}>
-              <ReloadedFluxIcon />
-            </Avatar>
+            <Profile />
             <Typography.Title heading={6} style={{ margin: 0, fontWeight: 300 }}>
               ::<span style={{ fontWeight: 700 }}>Reloaded</span>Flux
             </Typography.Title>
@@ -641,7 +637,6 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
                 onClick={handleRefreshCurrentView}
               />
             </CustomTooltip>
-            <Profile />
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@
     "miniflux_official_website": "前往 Miniflux 官网"
   },
   "sidebar": {
+    "profile_menu": "ReloadedFlux 菜单",
     "all": "全部",
     "today": "今天",
     "starred": "收藏",

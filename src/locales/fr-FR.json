@@ -24,6 +24,7 @@
     "miniflux_official_website": "Aller sur le site officiel de Miniflux"
   },
   "sidebar": {
+    "profile_menu": "Menu ReloadedFlux",
     "all": "Tout",
     "today": "Aujourd'hui",
     "starred": "Favoris",

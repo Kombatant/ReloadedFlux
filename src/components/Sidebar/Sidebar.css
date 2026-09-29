@@ -53,9 +53,8 @@
   color: var(--color-danger-6);
 }
 
-.menu-header .avatar {
+.menu-header .profile-menu-trigger {
   margin-right: 10px;
-  background-color: var(--brand-icon-background);
 }
 
 .section-title {

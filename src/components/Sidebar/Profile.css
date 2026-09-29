@@ -1,43 +1,209 @@
-.theme-menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.profile-menu.arco-dropdown-menu {
+  width: min(300px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 7px;
+  border: 1px solid var(--color-border-2);
+  border-radius: 12px;
+  /* Match the sidebar surface, including the active color palette and OLED mode. */
+  background: var(--color-neutral-2);
+  color: var(--color-text-1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
 }
 
-/* Theme / layout preference block at the top of the profile menu. Labels sit
-   left, icon-only segmented controls right, so the block never sets the
-   menu's width. */
-.profile-menu-pref-row {
-  display: flex;
-  padding: 6px 12px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.profile-menu-appearance {
+  padding: 9px 9px 10px;
 }
 
-.profile-menu-pref-label {
-  color: var(--color-text-3);
+.profile-menu-heading {
+  margin-bottom: 14px;
+  color: var(--color-text-1);
   font-size: 13px;
-  white-space: nowrap;
+  font-weight: 600;
 }
 
-.profile-menu-pref-group.arco-radio-group-button {
-  flex: 0 0 auto;
-}
-
-/* Move the button's padding onto the inner span so the tooltip trigger covers
-   the whole segment, not just the icon. */
-.profile-menu-pref-group .arco-radio-button-inner {
+.profile-menu-preference {
+  min-width: 0;
+  margin: 0;
   padding: 0;
+  border: 0;
 }
 
-.profile-menu-pref-option {
+.profile-menu-preference + .profile-menu-preference {
+  margin-top: 14px;
+}
+
+.profile-menu-preference legend {
+  margin-bottom: 7px;
+  padding: 0;
+  color: var(--color-text-2);
+  font-size: 12px;
+}
+
+.profile-menu-theme-options,
+.profile-menu-layout-options {
+  display: grid;
+  gap: 4px;
+}
+
+.profile-menu-theme-options {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 3px;
+  border: 1px solid var(--color-border-2);
+  border-radius: 8px;
+  background: var(--color-bg-1);
+}
+
+.profile-menu-layout-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.profile-menu-option {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.profile-menu-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.profile-menu-option-content {
+  box-sizing: border-box;
   display: flex;
+  height: 100%;
+  min-height: 32px;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 22px;
+  gap: 5px;
+  padding: 5px 3px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--color-text-2);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.profile-menu-option-content > svg {
+  flex-shrink: 0;
   font-size: 14px;
+}
+
+.profile-menu-option:hover .profile-menu-option-content {
+  background: var(--color-neutral-3);
+}
+
+.profile-menu-option input:checked + .profile-menu-option-content {
+  color: rgb(var(--primary-6));
+  background: rgba(var(--primary-6), 0.12);
+}
+
+.profile-menu-option input:focus-visible + .profile-menu-option-content {
+  outline: 2px solid rgb(var(--primary-6));
+  outline-offset: 2px;
+}
+
+.profile-menu-layout-options .profile-menu-option-content {
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px;
+  border-color: var(--color-border-2);
+  border-radius: 8px;
+}
+
+.profile-menu-layout-options input:checked + .profile-menu-option-content {
+  border-color: rgb(var(--primary-6));
+}
+
+.profile-menu-layout-preview {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  height: 42px;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.8;
+}
+
+.profile-menu-layout-preview > span {
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.profile-menu-layout-preview-classic > span:first-child {
+  width: 30%;
+}
+
+.profile-menu-layout-preview-classic > span:nth-child(2) {
+  flex: 1;
+  opacity: 0.16;
+}
+
+.profile-menu-layout-preview-classic > span:last-child {
+  display: none;
+}
+
+.profile-menu-layout-preview-stream {
+  flex-direction: column;
+}
+
+.profile-menu-layout-preview-stream > span {
+  flex: 1;
+}
+
+.profile-menu .arco-divider-horizontal {
+  margin: 6px 0;
+  border-color: var(--color-border-2);
+}
+
+.profile-menu .arco-dropdown-menu-item {
+  display: flex;
+  min-height: 38px;
+  height: auto;
+  align-items: center;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 20px;
+  white-space: normal;
+  color: var(--color-text-1);
+}
+
+.profile-menu .arco-dropdown-menu-item:hover {
+  background: var(--color-neutral-3);
+}
+
+.profile-menu .icon-right {
+  flex-shrink: 0;
+  margin-right: 10px;
+  color: var(--color-text-3);
+  font-size: 16px;
+  transform: none;
+}
+
+.profile-menu .profile-menu-external-icon {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 8px;
+  color: var(--color-text-3);
+  font-size: 13px;
+}
+
+.profile-menu .profile-menu-reset {
+  color: var(--color-text-2);
+}
+
+.profile-menu .profile-menu-logout:hover,
+.profile-menu .profile-menu-logout:hover .icon-right {
+  color: rgb(var(--danger-6));
 }
 
 .visually-hidden {
@@ -188,6 +354,19 @@
     color 0.16s ease;
 }
 
+.about-modal-report-issue {
+  grid-column: 1 / -1;
+}
+
+.about-modal-external-icon {
+  margin-left: auto;
+}
+
+.about-modal-action:focus-visible {
+  outline: 2px solid rgb(var(--primary-6));
+  outline-offset: 2px;
+}
+
 .about-modal-action:hover {
   border-color: rgba(var(--primary-6), 0.4);
   color: rgb(var(--primary-6));
@@ -285,11 +464,25 @@ body[arco-theme="dark"] .about-modal-logo {
   }
 }
 
-/* Make profile/menu button transparent but show background on hover/focus */
-.user-profile-container .arco-btn:not(.arco-btn-disabled) {
-  background-color: transparent;
+.profile-menu-trigger.arco-btn.arco-btn-secondary:not(.arco-btn-disabled) {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--brand-icon-foreground);
+  background-color: var(--brand-icon-background);
 }
-.user-profile-container .arco-btn:not(.arco-btn-disabled):hover,
-.user-profile-container .arco-btn:not(.arco-btn-disabled):focus {
-  background-color: var(--color-bg-1);
+
+.profile-menu-trigger.arco-btn:not(.arco-btn-disabled):hover,
+.profile-menu-trigger.arco-btn[aria-expanded="true"] {
+  box-shadow: 0 0 0 2px var(--color-border-3);
+}
+
+.profile-menu-trigger.arco-btn:focus-visible {
+  outline: 2px solid rgb(var(--primary-6));
+  outline-offset: 3px;
+}
+
+.profile-menu-trigger .reloadedflux-icon {
+  font-size: 16px;
 }

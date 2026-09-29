@@ -24,6 +24,7 @@
     "miniflux_official_website": "Μετάβαση στην επίσημη ιστοσελίδα Miniflux"
   },
   "sidebar": {
+    "profile_menu": "Μενού ReloadedFlux",
     "all": "Όλα",
     "today": "Σήμερα",
     "starred": "Αγαπημένα",

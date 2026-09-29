@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu, Modal, Radio, Tooltip } from "@arco-design/web-react"
+import { Button, Divider, Dropdown, Menu, Modal } from "@arco-design/web-react"
 import {
   IconBranch,
   IconCalendarClock,
@@ -7,18 +7,18 @@ import {
   IconExclamationCircle,
   IconGithub,
   IconInfoCircleFill,
+  IconLaunch,
   IconLink,
   IconMoonFill,
   IconPoweroff,
   IconRefresh,
   IconSettings,
   IconSunFill,
-  IconUser,
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
+import { useState } from "react"
 import { useNavigate } from "react-router"
 
-import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
@@ -33,39 +33,43 @@ import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
 import "./Profile.css"
 
-/**
- * One labelled row of the profile menu's preference block: a muted label on
- * the left and an icon-only segmented control on the right. Each option's name
- * shows as a tooltip and is kept in the DOM (visually hidden) so the radio
- * still has an accessible name.
- */
-const PreferenceRow = ({ label, name, value, options, onChange }) => (
-  <div className="profile-menu-pref-row">
-    <span className="profile-menu-pref-label">{label}</span>
-    <Radio.Group
-      className="profile-menu-pref-group"
-      name={name}
-      size="small"
-      type="button"
-      value={value}
-      onChange={onChange}
-    >
+const PreferenceGroup = ({ label, name, value, options, onChange, layout = false }) => (
+  <fieldset className="profile-menu-preference">
+    <legend>{label}</legend>
+    <div className={layout ? "profile-menu-layout-options" : "profile-menu-theme-options"}>
       {options.map((option) => (
-        <Radio key={option.value} value={option.value}>
-          <Tooltip mini content={option.label}>
-            <span className="profile-menu-pref-option">
-              {option.icon}
-              <span className="visually-hidden">{option.label}</span>
-            </span>
-          </Tooltip>
-        </Radio>
+        <label key={option.value} className="profile-menu-option">
+          <input
+            checked={value === option.value}
+            name={`profile-${name}`}
+            type="radio"
+            value={option.value}
+            onChange={() => onChange(option.value)}
+          />
+          <span className="profile-menu-option-content">
+            {layout ? (
+              <span
+                aria-hidden="true"
+                className={`profile-menu-layout-preview profile-menu-layout-preview-${option.value}`}
+              >
+                <span />
+                <span />
+                <span />
+              </span>
+            ) : (
+              option.icon
+            )}
+            <span>{option.label}</span>
+          </span>
+        </label>
       ))}
-    </Radio.Group>
-  </div>
+    </div>
+  </fieldset>
 )
 
 export default function Profile() {
   const navigate = useNavigate()
+  const [menuVisible, setMenuVisible] = useState(false)
   const { server } = useStore(authState)
   const { polyglot } = useStore(polyglotState)
 
@@ -150,6 +154,16 @@ export default function Profile() {
               <IconLink />
               ReactFlux lineage
             </a>
+            <a
+              className="about-modal-action about-modal-report-issue"
+              href={`https://github.com/${GITHUB_REPO_PATH}/issues`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <IconExclamationCircle />
+              {polyglot.t("sidebar.report_issue")}
+              <IconLaunch className="about-modal-external-icon" />
+            </a>
           </div>
 
           <div aria-label="Build information" className="about-modal-details">
@@ -181,100 +195,95 @@ export default function Profile() {
   }
 
   return (
-    <div className="user-profile-container">
-      <div>
-        <Dropdown
-          position="br"
-          trigger="click"
-          droplist={
-            <Menu>
-              <PreferenceRow
-                label={polyglot.t("sidebar.theme_label")}
-                name="theme"
-                value={themeMode}
+    <Dropdown
+      // The mobile drawer clips popups mounted inside its content area.
+      getPopupContainer={() => document.body}
+      position="bl"
+      trigger="click"
+      droplist={
+        <Menu className="profile-menu">
+          <div className="profile-menu-appearance">
+            <div className="profile-menu-heading">{polyglot.t("settings.appearance")}</div>
+            <PreferenceGroup
+              label={polyglot.t("sidebar.theme_label")}
+              name="theme"
+              value={themeMode}
+              options={[
+                {
+                  value: "system",
+                  icon: <IconDesktop />,
+                  label: polyglot.t("sidebar.theme_system"),
+                },
+                {
+                  value: "light",
+                  icon: <IconSunFill />,
+                  label: polyglot.t("sidebar.theme_light"),
+                },
+                {
+                  value: "dark",
+                  icon: <IconMoonFill />,
+                  label: polyglot.t("sidebar.theme_dark"),
+                },
+              ]}
+              onChange={(value) => updateSettings({ themeMode: value })}
+            />
+            {/* Combined view is desktop-only; Content uses columns on smaller screens. */}
+            {isBelowMedium ? null : (
+              <PreferenceGroup
+                layout
+                label={polyglot.t("sidebar.layout_label")}
+                name="layout"
+                value={layoutMode}
                 options={[
                   {
-                    value: "system",
-                    icon: <IconDesktop />,
-                    label: polyglot.t("sidebar.theme_system"),
+                    value: "classic",
+                    label: polyglot.t("appearance.layout_mode_classic"),
                   },
                   {
-                    value: "light",
-                    icon: <IconSunFill />,
-                    label: polyglot.t("sidebar.theme_light"),
-                  },
-                  {
-                    value: "dark",
-                    icon: <IconMoonFill />,
-                    label: polyglot.t("sidebar.theme_dark"),
+                    value: "stream",
+                    label: polyglot.t("appearance.layout_mode_stream"),
                   },
                 ]}
-                onChange={(value) => updateSettings({ themeMode: value })}
+                onChange={(value) => updateSettings({ layoutMode: value })}
               />
-              {/* The combined layout is desktop-only (Content falls back to
-                  columns below the medium breakpoint), so the picker would
-                  do nothing there. */}
-              {isBelowMedium ? null : (
-                <>
-                  <Divider style={{ margin: "4px 0" }} />
-                  <PreferenceRow
-                    label={polyglot.t("sidebar.layout_label")}
-                    name="layout"
-                    value={layoutMode}
-                    options={[
-                      {
-                        value: "stream",
-                        icon: <LayoutCombinedIcon />,
-                        label: polyglot.t("appearance.layout_mode_stream"),
-                      },
-                      {
-                        value: "classic",
-                        icon: <LayoutColumnIcon />,
-                        label: polyglot.t("appearance.layout_mode_classic"),
-                      },
-                    ]}
-                    onChange={(value) => updateSettings({ layoutMode: value })}
-                  />
-                </>
-              )}
-              <Divider style={{ margin: "4px 0" }} />
-              <Menu.Item key="0" onClick={() => setSettingsModalVisible(true)}>
-                <IconSettings className="icon-right" />
-                {polyglot.t("sidebar.settings")}
-              </Menu.Item>
-              <Menu.Item key="1" onClick={() => window.open(`${server}/settings`, "_blank")}>
-                <IconLink className="icon-right" />
-                {polyglot.t("sidebar.miniflux_settings")}
-              </Menu.Item>
-              <Menu.Item
-                key="2"
-                onClick={() =>
-                  window.open(`https://github.com/${GITHUB_REPO_PATH}/issues`, "_blank")
-                }
-              >
-                <IconExclamationCircle className="icon-right" />
-                {polyglot.t("sidebar.report_issue")}
-              </Menu.Item>
-              <Divider style={{ margin: "4px 0" }} />
-              <Menu.Item key="3" onClick={handleAbout}>
-                <IconInfoCircleFill className="icon-right" />
-                {polyglot.t("sidebar.about")}
-              </Menu.Item>
-              <Divider style={{ margin: "4px 0" }} />
-              <Menu.Item key="4" onClick={handleResetSettings}>
-                <IconRefresh className="icon-right" />
-                {polyglot.t("sidebar.reset_settings")}
-              </Menu.Item>
-              <Menu.Item key="5" onClick={handleLogout}>
-                <IconPoweroff className="icon-right" />
-                {polyglot.t("sidebar.logout")}
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          <Button icon={<IconUser />} shape="circle" size="small" />
-        </Dropdown>
-      </div>
-    </div>
+            )}
+          </div>
+          <Divider />
+          <Menu.Item key="0" onClick={() => setSettingsModalVisible(true)}>
+            <IconSettings className="icon-right" />
+            {polyglot.t("sidebar.settings")}
+          </Menu.Item>
+          <Menu.Item key="1" onClick={() => window.open(`${server}/settings`, "_blank")}>
+            <IconLink className="icon-right" />
+            {polyglot.t("sidebar.miniflux_settings")}
+            <IconLaunch className="profile-menu-external-icon" />
+          </Menu.Item>
+          <Menu.Item key="3" onClick={handleAbout}>
+            <IconInfoCircleFill className="icon-right" />
+            {polyglot.t("sidebar.about")}
+          </Menu.Item>
+          <Divider />
+          <Menu.Item key="4" className="profile-menu-reset" onClick={handleResetSettings}>
+            <IconRefresh className="icon-right" />
+            {polyglot.t("sidebar.reset_settings")}
+          </Menu.Item>
+          <Menu.Item key="5" className="profile-menu-logout" onClick={handleLogout}>
+            <IconPoweroff className="icon-right" />
+            {polyglot.t("sidebar.logout")}
+          </Menu.Item>
+        </Menu>
+      }
+      onVisibleChange={setMenuVisible}
+    >
+      <Button
+        aria-expanded={menuVisible}
+        aria-haspopup="menu"
+        aria-label={polyglot.t("sidebar.profile_menu")}
+        className="profile-menu-trigger"
+        icon={<ReloadedFluxIcon />}
+        shape="circle"
+        title={polyglot.t("sidebar.profile_menu")}
+      />
+    </Dropdown>
   )
 }
