@@ -77,6 +77,7 @@
     "current_build_label": "Current deployment",
     "github_build_label": "GitHub build",
     "view_on_github": "Open GitHub",
+    "refresh_app": "Refresh",
     "unknown_build": "Unknown"
   },
   "actions": {

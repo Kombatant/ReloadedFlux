@@ -93,6 +93,7 @@
     "current_build_label": "Despliegue actual",
     "github_build_label": "Compilación de GitHub",
     "view_on_github": "Abrir GitHub",
+    "refresh_app": "Actualizar",
     "unknown_build": "Desconocida"
   },
   "actions": {

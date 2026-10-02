@@ -77,6 +77,7 @@
     "current_build_label": "Τρέχουσα εγκατάσταση",
     "github_build_label": "Build GitHub",
     "view_on_github": "Άνοιγμα GitHub",
+    "refresh_app": "Ανανέωση",
     "unknown_build": "Άγνωστο"
   },
   "actions": {

@@ -50,6 +50,7 @@ import {
 } from "@/store/dataState"
 import { settingsState } from "@/store/settingsState"
 import { expandedCategoriesState, setExpandedCategories } from "@/store/sidebarState"
+import reloadToLatestBuild from "@/utils/app-refresh"
 import { GITHUB_REPO_PATH } from "@/utils/constants"
 import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
@@ -482,6 +483,7 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
   const [categoryModalVisible, setCategoryModalVisible] = useState(false)
   const [feedModalVisible, setFeedModalVisible] = useState(false)
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false)
+  const [isRefreshingApp, setIsRefreshingApp] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedFeed, setSelectedFeed] = useState(null)
   const [categoryForm] = Form.useForm()
@@ -607,6 +609,12 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
     setIsUpdateModalVisible(false)
   }
 
+  // The page reloads on success, so the loading state is never cleared
+  const handleRefreshApp = () => {
+    setIsRefreshingApp(true)
+    reloadToLatestBuild()
+  }
+
   return (
     <div className="sidebar-container">
       <div className="sidebar-pinned-header">
@@ -720,10 +728,12 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
           </Button>,
           <Button
             key="github"
-            type="primary"
             onClick={() => globalThis.open(`https://github.com/${GITHUB_REPO_PATH}`, "_blank")}
           >
             {polyglot.t("sidebar.view_on_github")}
+          </Button>,
+          <Button key="refresh" loading={isRefreshingApp} type="primary" onClick={handleRefreshApp}>
+            {polyglot.t("sidebar.refresh_app")}
           </Button>,
         ]}
         onCancel={handleCloseUpdateDialog}
