@@ -21,6 +21,9 @@ export const getOriginalContent = async (entryId) => {
   return apiClient.get(`/v1/entries/${entryId}/fetch-content${queryParams}`)
 }
 
+export const saveEntryContent = async (entryId, content) =>
+  apiClient.put(`/v1/entries/${entryId}`, { content })
+
 export const saveToThirdPartyServices = async (entryId) =>
   apiClient.raw(`/v1/entries/${entryId}/save`, { method: "POST" })
 

@@ -191,3 +191,18 @@ test("parseSettingsImportXml ignores unknown and AI keys and rejects unsupported
     /Unsupported settings file version/,
   )
 })
+
+test("sanitizeSettings validates the content fetcher settings", () => {
+  const defaults = createDefaultSettings("en-CA")
+
+  const invalid = sanitizeSettings({ contentFetcher: "mercury", fullTextRssUrl: 42 }, defaults)
+  assert.equal(invalid.contentFetcher, "miniflux")
+  assert.equal(invalid.fullTextRssUrl, "")
+
+  const valid = sanitizeSettings(
+    { contentFetcher: "fulltextrss", fullTextRssUrl: "  https://ftr.example.com  " },
+    defaults,
+  )
+  assert.equal(valid.contentFetcher, "fulltextrss")
+  assert.equal(valid.fullTextRssUrl, "https://ftr.example.com")
+})

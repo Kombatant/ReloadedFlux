@@ -1,4 +1,4 @@
-import { Divider, InputNumber, Select, Slider, Switch } from "@arco-design/web-react"
+import { Divider, Input, InputNumber, Select, Slider, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 
 import { polyglotState } from "@/hooks/useLanguage"
@@ -7,10 +7,14 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 
 import SettingItem from "./SettingItem"
 
+const commitFullTextRssUrl = (value) => updateSettings({ fullTextRssUrl: value.trim() })
+
 const Reading = () => {
   const {
+    contentFetcher,
     enableContextMenu,
     enableSwipeGesture,
+    fullTextRssUrl,
     layoutMode,
     markReadAfterSeconds,
     markReadBy,
@@ -30,6 +34,11 @@ const Reading = () => {
     { label: polyglot.t("settings.remove_duplicates_option_hash"), value: "hash" },
     { label: polyglot.t("settings.remove_duplicates_option_title"), value: "title" },
     { label: polyglot.t("settings.remove_duplicates_option_url"), value: "url" },
+  ]
+
+  const contentFetcherOptions = [
+    { label: polyglot.t("settings.content_fetcher_option_miniflux"), value: "miniflux" },
+    { label: polyglot.t("settings.content_fetcher_option_fulltextrss"), value: "fulltextrss" },
   ]
 
   return (
@@ -182,6 +191,49 @@ const Reading = () => {
           onChange={(value) => updateSettings({ streamRenderSelectedOnly: value })}
         />
       </SettingItem>
+
+      <Divider />
+
+      <SettingItem
+        description={polyglot.t("settings.content_fetcher_description")}
+        title={polyglot.t("settings.content_fetcher_label")}
+      >
+        <Select
+          className="input-wide"
+          getPopupContainer={() => document.body}
+          value={contentFetcher}
+          onChange={(value) => updateSettings({ contentFetcher: value })}
+        >
+          {contentFetcherOptions.map(({ label, value }) => (
+            <Select.Option key={value} value={value}>
+              {label}
+            </Select.Option>
+          ))}
+        </Select>
+      </SettingItem>
+
+      {contentFetcher === "fulltextrss" && (
+        <>
+          <Divider />
+
+          <SettingItem
+            description={polyglot.t("settings.full_text_rss_url_description")}
+            title={polyglot.t("settings.full_text_rss_url_label")}
+          >
+            {/* Keyed on the stored value so it resyncs after a commit or settings import */}
+            <Input
+              key={fullTextRssUrl}
+              allowClear
+              className="input-wide"
+              defaultValue={fullTextRssUrl}
+              placeholder={polyglot.t("settings.full_text_rss_url_placeholder")}
+              onBlur={(event) => commitFullTextRssUrl(event.target.value)}
+              onClear={() => commitFullTextRssUrl("")}
+              onPressEnter={(event) => commitFullTextRssUrl(event.target.value)}
+            />
+          </SettingItem>
+        </>
+      )}
 
       {isBelowMedium && (
         <>

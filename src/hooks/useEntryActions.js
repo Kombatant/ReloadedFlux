@@ -2,6 +2,7 @@ import Confetti from "canvas-confetti"
 
 import {
   getOriginalContent,
+  saveEntryContent,
   saveToThirdPartyServices,
   toggleEntryStarred,
   updateEntriesStatus,
@@ -24,6 +25,12 @@ import {
 import { checkIsInLast24Hours } from "@/utils/date"
 import { extractTextFromHtml } from "@/utils/dom"
 import { Message, Notification } from "@/utils/feedback"
+import {
+  buildFullTextRssExtractUrl,
+  estimateReadingTime,
+  fetchFullTextContent,
+  sanitizeArticleHtml,
+} from "@/utils/full-text-rss"
 import { parseCoverImage } from "@/utils/images"
 
 const updateEntries = (entries, updatedEntries) => {
@@ -175,12 +182,58 @@ const updateEntryContent = (entry, updates) => {
   return updatedEntry
 }
 
+// Resolves the entry's new content and reading time from Full-Text RSS. With
+// auto-save on, the content goes through Miniflux, which sanitizes it and
+// recomputes the reading time; otherwise (or if that save fails) it is
+// sanitized locally and only replaces the in-memory entry.
+const fetchContentFromFullTextRss = async (entry) => {
+  const serverUrl = getSettings("fullTextRssUrl")
+  console.info(
+    "[fetch-content] Using Full-Text RSS:",
+    buildFullTextRssExtractUrl(serverUrl, entry.url),
+  )
+  const { content, wordCount } = await fetchFullTextContent(serverUrl, entry.url)
+
+  if (getSettings("updateContentOnFetch")) {
+    try {
+      const savedEntry = await saveEntryContent(entry.id, content)
+      console.info(`[fetch-content] Full-Text RSS content saved to Miniflux entry ${entry.id}`)
+      return {
+        content: savedEntry.content,
+        reading_time: savedEntry.reading_time ?? entry.reading_time,
+      }
+    } catch (error) {
+      console.error("Failed to save Full-Text RSS content:", error)
+    }
+  }
+
+  console.info("[fetch-content] Full-Text RSS content applied locally (not saved)")
+  return {
+    content: sanitizeArticleHtml(content),
+    reading_time: estimateReadingTime(wordCount) ?? entry.reading_time,
+  }
+}
+
 const handleFetchContent = async (entry = contentState.get().activeContent) => {
   if (!entry) {
     return null
   }
 
+  if (getSettings("contentFetcher") === "fulltextrss" && getSettings("fullTextRssUrl")) {
+    try {
+      const updates = await fetchContentFromFullTextRss(entry)
+      const { polyglot } = polyglotState.get()
+      Message.success(polyglot.t("actions.fetched_content_success"))
+      return updateEntryContent(entry, updates)
+    } catch (error) {
+      console.error("Failed to fetch content from Full-Text RSS:", error)
+      const { polyglot } = polyglotState.get()
+      Message.warning(polyglot.t("actions.full_text_rss_fallback"))
+    }
+  }
+
   try {
+    console.info(`[fetch-content] Using Miniflux built-in fetcher for entry ${entry.id}`)
     const response = await getOriginalContent(entry.id)
     const { polyglot } = polyglotState.get()
     Message.success(polyglot.t("actions.fetched_content_success"))

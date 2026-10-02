@@ -27,6 +27,7 @@ export const SUPPORTED_LANGUAGES = ["en-CA", "de-DE", "es-ES", "fr-FR", "zh-CN",
 
 const ENUM_VALUES = {
   aiProvider: ["none", ...AI_PROVIDER_KEYS],
+  contentFetcher: ["miniflux", "fulltextrss"],
   coverDisplayMode: ["auto", "banner", "thumbnail"],
   homePage: ["all", "today", "starred", "history"],
   language: SUPPORTED_LANGUAGES,
@@ -148,12 +149,14 @@ export const createDefaultSettings = (language = "en-CA") => ({
   sidebarWidth: 240,
   entryListWidth: 420,
   compactSidebarGroups: true,
+  contentFetcher: "miniflux",
   coverDisplayMode: "auto",
   edgeToEdgeImages: false,
   enableContextMenu: true,
   enableSwipeGesture: true,
   fontFamily: "system-ui",
   fontSize: 1.05,
+  fullTextRssUrl: "",
   homePage: "all",
   language,
   layoutMode: "classic",
@@ -283,6 +286,11 @@ export const sanitizeSettings = (value, defaultSettings = createDefaultSettings(
     { decimals: 2 },
   )
 
+  sanitizedSettings.contentFetcher = sanitizeEnum(
+    storedValue.contentFetcher,
+    defaultSettings.contentFetcher,
+    ENUM_VALUES.contentFetcher,
+  )
   sanitizedSettings.coverDisplayMode = sanitizeEnum(
     storedValue.coverDisplayMode,
     defaultSettings.coverDisplayMode,
@@ -340,6 +348,11 @@ export const sanitizeSettings = (value, defaultSettings = createDefaultSettings(
   )
 
   sanitizedSettings.fontFamily = sanitizeString(storedValue.fontFamily, defaultSettings.fontFamily)
+  sanitizedSettings.fullTextRssUrl = sanitizeString(
+    storedValue.fullTextRssUrl,
+    defaultSettings.fullTextRssUrl,
+    { trim: true },
+  )
   sanitizedSettings.language = sanitizeEnum(
     typeof storedValue.language === "string" ? storedValue.language.trim() : storedValue.language,
     defaultSettings.language,
