@@ -162,6 +162,7 @@ const AddFeedModal = () => {
           label={polyglot.t("main.add_feed_modal_crawler_label")}
           rules={crawlerRule}
           style={{ marginBottom: 0 }}
+          tooltip={<div>{polyglot.t("main.add_feed_modal_crawler_tooltip")}</div>}
           triggerPropName="checked"
         >
           <Switch />

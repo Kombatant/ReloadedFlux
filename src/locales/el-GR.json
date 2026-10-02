@@ -93,6 +93,7 @@
     "fetched_content_success": "Το περιεχόμενο ανακτήθηκε επιτυχώς",
     "fetched_content_error": "Αποτυχία ανάκτησης περιεχομένου, δοκιμάστε ξανά αργότερα",
     "full_text_rss_fallback": "Το Full-Text RSS απέτυχε, το περιεχόμενο ανακτάται μέσω Miniflux",
+    "full_text_rss_save_error": "Το περιεχόμενο ανακτήθηκε αλλά δεν αποθηκεύτηκε στο Miniflux· θα χαθεί με την επαναφόρτωση",
     "ai_summary_success": "Το άρθρο συνοψίστηκε από το %{model} σε %{seconds} δευτερόλεπτα",
     "ai_summary_error": "Αποτυχία σύνοψης άρθρου, δοκιμάστε ξανά αργότερα",
     "ai_summary_provider_missing": "Ο πάροχος AI δεν έχει ρυθμιστεί",
@@ -121,7 +122,7 @@
     "open_link_externally_tooltip": "Άνοιγμα πηγής σε νέα σελίδα",
     "star_tooltip": "Προσθήκη σε αγαπημένα",
     "unstar_tooltip": "Αφαίρεση από αγαπημένα",
-    "fetch_original_tooltip": "Ανάκτηση πρωτότυπου περιεχομένου",
+    "fetch_original_tooltip": "Ανάκτηση πρωτότυπου περιεχομένου (%{fetcher})",
     "summarize_tooltip": "Σύνοψη άρθρου",
     "ai_summary_heading": "Σύνοψη άρθρου από %{model}",
     "save_to_third_party_services_tooltip": "Αποθήκευση σε τρίτες υπηρεσίες",
@@ -225,7 +226,8 @@
     "add_feed_modal_feed_url_placeholder": "Εισάγετε τη διεύθυνση της ροής",
     "add_feed_modal_category_label": "Κατηγορία",
     "add_feed_modal_category_placeholder": "Επιλέξτε κατηγορία",
-    "add_feed_modal_crawler_label": "Ανάκτηση πρωτότυπου περιεχομένου"
+    "add_feed_modal_crawler_label": "Ανάκτηση πρωτότυπου περιεχομένου (Miniflux)",
+    "add_feed_modal_crawler_tooltip": "Χρησιμοποιεί τον ενσωματωμένο μηχανισμό ανάκτησης του Miniflux κατά την ανανέωση της ροής, ακόμη κι αν έχει επιλεγεί το Full-Text RSS στην Ανάκτηση περιεχομένου. Επηρεάζει μόνο νέα ανακτημένα άρθρα"
   },
   "feed_table": {
     "refresh_success": "Ανανέωση επιτυχής",
@@ -271,8 +273,8 @@
     "modal_edit_feed_feed_url_placeholder": "Εισάγετε διεύθυνση ροής",
     "modal_edit_feed_hidden_label": "Κρυφή",
     "modal_edit_feed_disabled_label": "Απενεργοποιημένη",
-    "modal_edit_feed_crawler_label": "Ανάκτηση πρωτότυπου περιεχομένου",
-    "modal_edit_feed_crawler_tooltip": "Επηρεάζει μόνο νέα ανακτημένα άρθρα",
+    "modal_edit_feed_crawler_label": "Ανάκτηση πρωτότυπου περιεχομένου (Miniflux)",
+    "modal_edit_feed_crawler_tooltip": "Χρησιμοποιεί τον ενσωματωμένο μηχανισμό ανάκτησης του Miniflux κατά την ανανέωση της ροής, ακόμη κι αν έχει επιλεγεί το Full-Text RSS στην Ανάκτηση περιεχομένου. Επηρεάζει μόνο νέα ανακτημένα άρθρα",
     "bulk_operations": "Μαζικές ενέργειες",
     "bulk_operations_tooltip": "Εκτέλεση μαζικών ενεργειών στις επιλεγμένες ροές",
     "bulk_operations_title": "Μαζικές ενέργειες",

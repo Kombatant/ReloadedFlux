@@ -1,4 +1,4 @@
-import { computed, map } from "nanostores"
+import { atom, computed, map } from "nanostores"
 
 import removeDuplicateEntries from "@/utils/deduplicate"
 import { extractHeadings } from "@/utils/dom"
@@ -29,6 +29,20 @@ const defaultValue = {
 }
 
 export const contentState = map(defaultValue)
+
+// Ids of entries with a content fetch in flight. Kept outside contentState so
+// list resets don't drop it while a request is still running.
+export const fetchingContentIdsState = atom(new Set())
+
+export const setContentFetching = (entryId, isFetching) => {
+  const ids = new Set(fetchingContentIdsState.get())
+  if (isFetching) {
+    ids.add(entryId)
+  } else {
+    ids.delete(entryId)
+  }
+  fetchingContentIdsState.set(ids)
+}
 
 export const articleHeadingsState = computed([contentState], (content) => {
   const { activeContent } = content

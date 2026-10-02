@@ -93,6 +93,7 @@
     "fetched_content_success": "Inhalt erfolgreich heruntergeladen",
     "fetched_content_error": "Inhalt herunterladen fehlgeschlagen, bitte später erneut versuchen",
     "full_text_rss_fallback": "Full-Text RSS fehlgeschlagen, Inhalt wird stattdessen über Miniflux abgerufen",
+    "full_text_rss_save_error": "Inhalt abgerufen, konnte aber nicht in Miniflux gespeichert werden; er geht beim Neuladen verloren",
     "ai_summary_success": "Artikel von %{model} in %{seconds} Sekunden zusammengefasst",
     "ai_summary_error": "Artikel konnte nicht zusammengefasst werden, bitte später erneut versuchen",
     "ai_summary_provider_missing": "KI-Anbieter ist nicht konfiguriert",
@@ -121,7 +122,7 @@
     "open_link_externally_tooltip": "Quelllink in neuer Seite öffnen",
     "star_tooltip": "Lesezeichen hinzufügen",
     "unstar_tooltip": "Lesezeichen entfernen",
-    "fetch_original_tooltip": "Originalinhalt herunterladen",
+    "fetch_original_tooltip": "Originalinhalt herunterladen (%{fetcher})",
     "summarize_tooltip": "Artikel zusammenfassen",
     "ai_summary_heading": "Artikelzusammenfassung erstellt von %{model}",
     "save_to_third_party_services_tooltip": "Bei Drittanbieter speichern",
@@ -225,7 +226,8 @@
     "add_feed_modal_feed_url_placeholder": "Bitte eine Feed-URL eingeben",
     "add_feed_modal_category_label": "Kategorie",
     "add_feed_modal_category_placeholder": "Bitte eine Kategorie auswählen",
-    "add_feed_modal_crawler_label": "Originalinhalt herunterladen"
+    "add_feed_modal_crawler_label": "Originalinhalt herunterladen (Miniflux)",
+    "add_feed_modal_crawler_tooltip": "Verwendet beim Aktualisieren des Feeds den integrierten Abruf von Miniflux, auch wenn Full-Text RSS als Inhaltsabruf ausgewählt ist. Betrifft nur neu abgerufene Artikel"
   },
   "feed_table": {
     "refresh_success": "Neu geladen",
@@ -271,8 +273,8 @@
     "modal_edit_feed_feed_url_placeholder": "Bitte URL des Feeds eingeben",
     "modal_edit_feed_hidden_label": "Versteckt",
     "modal_edit_feed_disabled_label": "Deaktiviert",
-    "modal_edit_feed_crawler_label": "Originalinhalt herunterladen",
-    "modal_edit_feed_crawler_tooltip": "Betrifft nur neu abgerufene Artikel",
+    "modal_edit_feed_crawler_label": "Originalinhalt herunterladen (Miniflux)",
+    "modal_edit_feed_crawler_tooltip": "Verwendet beim Aktualisieren des Feeds den integrierten Abruf von Miniflux, auch wenn Full-Text RSS als Inhaltsabruf ausgewählt ist. Betrifft nur neu abgerufene Artikel",
     "modal_edit_feed_miniflux_link": "Weitere Optionen in Miniflux",
     "bulk_operations": "Massenvorgänge",
     "bulk_operations_tooltip": "Massenvorgänge für ausgewählte Feeds durchführen",

@@ -109,6 +109,7 @@
     "fetched_content_success": "Contenido obtenido con éxito",
     "fetched_content_error": "Error al obtener el contenido, por favor intente de nuevo más tarde",
     "full_text_rss_fallback": "Full-Text RSS ha fallado, se usará Miniflux para obtener el contenido",
+    "full_text_rss_save_error": "Contenido obtenido, pero no se pudo guardar en Miniflux; se perderá al recargar",
     "ai_summary_success": "Artículo resumido por %{model} en %{seconds} segundos",
     "ai_summary_error": "No se pudo resumir el artículo, inténtalo más tarde",
     "ai_summary_provider_missing": "El proveedor de IA no está configurado",
@@ -137,7 +138,7 @@
     "open_link_externally_tooltip": "Abrir enlace fuente en página nueva",
     "star_tooltip": "Marcar como favorito",
     "unstar_tooltip": "Desmarcar como favorito",
-    "fetch_original_tooltip": "Obtener contenido original",
+    "fetch_original_tooltip": "Obtener contenido original (%{fetcher})",
     "summarize_tooltip": "Resumir artículo",
     "ai_summary_heading": "Resumen de artículo creado por %{model}",
     "save_to_third_party_services_tooltip": "Guardar en servicios de terceros",
@@ -241,7 +242,8 @@
     "add_feed_modal_feed_url_placeholder": "Por favor, introduzca una URL del feed",
     "add_feed_modal_category_label": "Categoría",
     "add_feed_modal_category_placeholder": "Por favor, seleccione una categoría",
-    "add_feed_modal_crawler_label": "Obtener contenido original"
+    "add_feed_modal_crawler_label": "Obtener contenido original (Miniflux)",
+    "add_feed_modal_crawler_tooltip": "Usa el extractor integrado de Miniflux al actualizar el feed, aunque Full-Text RSS esté seleccionado en Obtención de contenido. Sólo afecta a los artículos recién recuperados"
   },
   "feed_table": {
     "refresh_success": "Actualizar",
@@ -287,8 +289,8 @@
     "modal_edit_feed_feed_url_placeholder": "Por favor, introduzca la URL del feed",
     "modal_edit_feed_hidden_label": "Ocultado",
     "modal_edit_feed_disabled_label": "Desactivado",
-    "modal_edit_feed_crawler_label": "Obtener contenido original",
-    "modal_edit_feed_crawler_tooltip": "Sólo afecta a los artículos recién recuperados",
+    "modal_edit_feed_crawler_label": "Obtener contenido original (Miniflux)",
+    "modal_edit_feed_crawler_tooltip": "Usa el extractor integrado de Miniflux al actualizar el feed, aunque Full-Text RSS esté seleccionado en Obtención de contenido. Sólo afecta a los artículos recién recuperados",
     "modal_edit_feed_miniflux_link": "Más opciones en Miniflux",
     "bulk_operations": "Operaciones masivas",
     "bulk_operations_tooltip": "Realizar operaciones masivas en feeds seleccionados",

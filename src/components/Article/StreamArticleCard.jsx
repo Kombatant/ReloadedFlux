@@ -18,9 +18,15 @@ import CustomLink from "@/components/ui/CustomLink"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import FeedIcon from "@/components/ui/FeedIcon"
 import useEntryActions from "@/hooks/useEntryActions"
+import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import { setActiveContent, setFilterString, setFilterType } from "@/store/contentState"
+import {
+  fetchingContentIdsState,
+  setActiveContent,
+  setFilterString,
+  setFilterType,
+} from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { settingsState } from "@/store/settingsState"
 import {
@@ -75,7 +81,9 @@ const StreamArticleCard = ({
     titleAlignment,
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
+  const fetchingContentIds = useStore(fetchingContentIdsState)
   const { isBelowMedium } = useScreenWidth()
+  const fetchOriginalTooltip = useFetchOriginalTooltip()
 
   const {
     handleEntryStatusUpdate,
@@ -92,9 +100,8 @@ const StreamArticleCard = ({
   const isStarred = currentEntry.starred
   const hasAiSummary = currentEntry.content?.includes("ai-summary")
 
-  const [fetchingEntryId, setFetchingEntryId] = useState(null)
   const [summarizingEntryId, setSummarizingEntryId] = useState(null)
-  const isFetchingOriginal = fetchingEntryId === currentEntry.id
+  const isFetchingOriginal = fetchingContentIds.has(currentEntry.id)
   const isSummarizing = summarizingEntryId === currentEntry.id
   const contentMaxWidth = isBelowMedium ? "100%" : `${articleWidth}%`
   const previewText = useMemo(() => currentEntry.previewText || "", [currentEntry.previewText])
@@ -299,17 +306,13 @@ const StreamArticleCard = ({
               onClick={withStopPropagation(() => handleToggleStarred(currentEntry))}
             />
           </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("article_card.fetch_original_tooltip")}>
+          <CustomTooltip mini content={fetchOriginalTooltip}>
             <Button
               icon={<IconCloudDownload />}
               loading={isFetchingOriginal}
               shape="circle"
               size="small"
-              onClick={withStopPropagation(async () => {
-                setFetchingEntryId(currentEntry.id)
-                await handleFetchContent(currentEntry)
-                setFetchingEntryId(null)
-              })}
+              onClick={withStopPropagation(() => handleFetchContent(currentEntry))}
             />
           </CustomTooltip>
           <CustomTooltip mini content={polyglot.t("article_card.summarize_tooltip")}>

@@ -21,11 +21,13 @@ import AiSpark from "@/components/icons/AiSpark"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import useClassicKeyHandlers from "@/hooks/useClassicKeyHandlers"
 import useEntryActions from "@/hooks/useEntryActions"
+import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import {
   articleHeadingsState,
   contentState,
+  fetchingContentIdsState,
   nextContentState,
   prevContentState,
 } from "@/store/contentState"
@@ -84,6 +86,7 @@ const ActionButtons = () => {
   const { hasIntegrations } = useStore(dataState)
   const { polyglot } = useStore(polyglotState)
   const headings = useStore(articleHeadingsState)
+  const fetchingContentIds = useStore(fetchingContentIdsState)
 
   const { aiProvider, enableSwipeGesture } = useStore(settingsState)
 
@@ -91,17 +94,21 @@ const ActionButtons = () => {
   const prevContent = useStore(prevContentState)
 
   const [dropdownVisible, setDropdownVisible] = useState(false)
-  const [isFetchedOriginal, setIsFetchedOriginal] = useState(false)
+  // Keyed by entry id so a fetch that resolves after navigating away can't
+  // disable the button on the article now shown
+  const [fetchedOriginalId, setFetchedOriginalId] = useState(null)
   const [lastActiveContentId, setLastActiveContentId] = useState(activeContent?.id)
   const [isSummarizing, setIsSummarizing] = useState(false)
 
   if (activeContent?.id !== lastActiveContentId) {
     setLastActiveContentId(activeContent?.id)
-    setIsFetchedOriginal(false)
+    setFetchedOriginalId(null)
     setIsSummarizing(false)
   }
 
   const hasHeadings = headings.length > 0
+  const isFetchingOriginal = fetchingContentIds.has(activeContent.id)
+  const isFetchedOriginal = fetchedOriginalId === activeContent.id
 
   const {
     handleFetchContent,
@@ -116,6 +123,7 @@ const ActionButtons = () => {
     useClassicKeyHandlers()
 
   const { isBelowMedium } = useScreenWidth()
+  const fetchOriginalTooltip = useFetchOriginalTooltip()
 
   const isUnread = activeContent.status === "unread"
   const isStarred = activeContent.starred
@@ -148,6 +156,15 @@ const ActionButtons = () => {
   }
 
   const handleViewComments = () => window.open(activeContent.comments_url, "_blank")
+
+  // Only a successful fetch disables the button, so a failed one can be retried
+  const handleFetchOriginal = async () => {
+    const entryId = activeContent.id
+    const updatedEntry = await handleFetchContent(activeContent)
+    if (updatedEntry) {
+      setFetchedOriginalId(entryId)
+    }
+  }
 
   const commonButtons = {
     prev:
@@ -210,15 +227,13 @@ const ActionButtons = () => {
       </CustomTooltip>
     ),
     fetch: (
-      <CustomTooltip mini content={polyglot.t("article_card.fetch_original_tooltip")}>
+      <CustomTooltip mini content={fetchOriginalTooltip}>
         <Button
           disabled={isFetchedOriginal}
           icon={<IconCloudDownload />}
+          loading={isFetchingOriginal}
           shape="circle"
-          onClick={async () => {
-            await handleFetchContent()
-            setIsFetchedOriginal(true)
-          }}
+          onClick={handleFetchOriginal}
         />
       </CustomTooltip>
     ),
@@ -258,14 +273,11 @@ const ActionButtons = () => {
             {isBelowMedium && hasHeadings && (
               <Menu.Item
                 key="fetch_original"
-                disabled={isFetchedOriginal}
-                onClick={async () => {
-                  await handleFetchContent()
-                  setIsFetchedOriginal(true)
-                }}
+                disabled={isFetchedOriginal || isFetchingOriginal}
+                onClick={handleFetchOriginal}
               >
                 <div className="settings-menu-item">
-                  <span>{polyglot.t("article_card.fetch_original_tooltip")}</span>
+                  <span>{fetchOriginalTooltip}</span>
                   <IconCloudDownload />
                 </div>
               </Menu.Item>

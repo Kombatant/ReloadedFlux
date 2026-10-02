@@ -93,6 +93,7 @@
     "fetched_content_success": "原文获取成功",
     "fetched_content_error": "原文获取失败，请稍后再试",
     "full_text_rss_fallback": "Full-Text RSS 获取失败，已改用 Miniflux 获取内容",
+    "full_text_rss_save_error": "已获取内容，但未能保存到 Miniflux，刷新后将丢失",
     "ai_summary_success": "文章已由 %{model} 在 %{seconds} 秒内完成摘要",
     "ai_summary_error": "摘要失败，请稍后再试",
     "ai_summary_provider_missing": "AI 提供商未配置",
@@ -121,7 +122,7 @@
     "open_link_externally_tooltip": "在新页面打开源网页",
     "star_tooltip": "收藏",
     "unstar_tooltip": "取消收藏",
-    "fetch_original_tooltip": "获取原文",
+    "fetch_original_tooltip": "获取原文（%{fetcher}）",
     "summarize_tooltip": "AI 摘要",
     "ai_summary_heading": "由 %{model} 创建的文章摘要",
     "save_to_third_party_services_tooltip": "保存到第三方服务",
@@ -225,7 +226,8 @@
     "add_feed_modal_feed_url_placeholder": "请输入订阅源 URL",
     "add_feed_modal_category_label": "分类",
     "add_feed_modal_category_placeholder": "请选择一个分类",
-    "add_feed_modal_crawler_label": "获取原文"
+    "add_feed_modal_crawler_label": "获取原文（Miniflux）",
+    "add_feed_modal_crawler_tooltip": "刷新订阅源时使用 Miniflux 内置的抓取器，即使内容获取方式选择了 Full-Text RSS。仅影响新获取的文章"
   },
   "feed_table": {
     "refresh_success": "刷新成功",
@@ -271,8 +273,8 @@
     "modal_edit_feed_feed_url_placeholder": "请输入订阅源 URL",
     "modal_edit_feed_hidden_label": "隐藏",
     "modal_edit_feed_disabled_label": "禁用",
-    "modal_edit_feed_crawler_label": "获取原文",
-    "modal_edit_feed_crawler_tooltip": "仅影响新获取的文章",
+    "modal_edit_feed_crawler_label": "获取原文（Miniflux）",
+    "modal_edit_feed_crawler_tooltip": "刷新订阅源时使用 Miniflux 内置的抓取器，即使内容获取方式选择了 Full-Text RSS。仅影响新获取的文章",
     "modal_edit_feed_miniflux_link": "在 Miniflux 中查看更多选项",
     "bulk_operations": "批量操作",
     "bulk_operations_tooltip": "对选定的订阅源执行批量操作",

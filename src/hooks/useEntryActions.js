@@ -8,7 +8,13 @@ import {
   updateEntriesStatus,
 } from "@/apis"
 import { polyglotState } from "@/hooks/useLanguage"
-import { contentState, setActiveContent, setEntries } from "@/store/contentState"
+import {
+  contentState,
+  fetchingContentIdsState,
+  setActiveContent,
+  setContentFetching,
+  setEntries,
+} from "@/store/contentState"
 import {
   setHistoryCount,
   setStarredCount,
@@ -29,6 +35,8 @@ import {
   buildFullTextRssExtractUrl,
   estimateReadingTime,
   fetchFullTextContent,
+  hasExtractedContent,
+  isFullTextRssActive,
   sanitizeArticleHtml,
 } from "@/utils/full-text-rss"
 import { parseCoverImage } from "@/utils/images"
@@ -170,8 +178,19 @@ const handleToggleStarred = async (entry) => {
   })
 }
 
+// Fetches and summaries can take a while, so merge onto the entry as it is
+// now rather than the snapshot taken when the request started; otherwise a
+// star or status change made in the meantime would be reverted.
+const getLatestEntry = (entry) => {
+  const { activeContent, entries } = contentState.get()
+  if (activeContent?.id === entry.id) {
+    return activeContent
+  }
+  return entries.find((e) => e.id === entry.id) ?? entry
+}
+
 const updateEntryContent = (entry, updates) => {
-  const updatedEntry = parseCoverImage({ ...entry, ...updates })
+  const updatedEntry = parseCoverImage({ ...getLatestEntry(entry), ...updates })
   const { activeContent } = contentState.get()
 
   if (activeContent?.id === entry.id) {
@@ -183,47 +202,68 @@ const updateEntryContent = (entry, updates) => {
 }
 
 // Resolves the entry's new content and reading time from Full-Text RSS. With
-// auto-save on, the content goes through Miniflux, which sanitizes it and
-// recomputes the reading time; otherwise (or if that save fails) it is
-// sanitized locally and only replaces the in-memory entry.
+// auto-save on, the content is saved through Miniflux, which recomputes the
+// reading time; otherwise (or if that save fails) it only replaces the
+// in-memory entry. It is sanitized before saving and again before display,
+// since Miniflux before 2.2.16 stores entry updates unsanitized. saveFailed
+// tells the caller the user asked for a save that did not happen.
 const fetchContentFromFullTextRss = async (entry) => {
   const serverUrl = getSettings("fullTextRssUrl")
   console.info(
     "[fetch-content] Using Full-Text RSS:",
     buildFullTextRssExtractUrl(serverUrl, entry.url),
   )
-  const { content, wordCount } = await fetchFullTextContent(serverUrl, entry.url)
+  const {
+    content: rawContent,
+    wordCount,
+    baseUrl,
+  } = await fetchFullTextContent(serverUrl, entry.url)
+  const content = sanitizeArticleHtml(rawContent, baseUrl)
+  if (!hasExtractedContent(content)) {
+    throw new Error("Full-Text RSS content was empty after sanitizing")
+  }
+  const localUpdates = {
+    content,
+    reading_time: estimateReadingTime(wordCount) ?? entry.reading_time,
+  }
 
   if (getSettings("updateContentOnFetch")) {
     try {
       const savedEntry = await saveEntryContent(entry.id, content)
       console.info(`[fetch-content] Full-Text RSS content saved to Miniflux entry ${entry.id}`)
       return {
-        content: savedEntry.content,
-        reading_time: savedEntry.reading_time ?? entry.reading_time,
+        updates: {
+          content: sanitizeArticleHtml(savedEntry.content),
+          reading_time: savedEntry.reading_time ?? entry.reading_time,
+        },
+        saveFailed: false,
       }
     } catch (error) {
       console.error("Failed to save Full-Text RSS content:", error)
+      console.info("[fetch-content] Full-Text RSS content applied locally (save failed)")
+      return { updates: localUpdates, saveFailed: true }
     }
   }
 
   console.info("[fetch-content] Full-Text RSS content applied locally (not saved)")
-  return {
-    content: sanitizeArticleHtml(content),
-    reading_time: estimateReadingTime(wordCount) ?? entry.reading_time,
-  }
+  return { updates: localUpdates, saveFailed: false }
 }
 
-const handleFetchContent = async (entry = contentState.get().activeContent) => {
-  if (!entry) {
-    return null
-  }
-
-  if (getSettings("contentFetcher") === "fulltextrss" && getSettings("fullTextRssUrl")) {
+const fetchEntryContent = async (entry) => {
+  if (
+    isFullTextRssActive({
+      contentFetcher: getSettings("contentFetcher"),
+      fullTextRssUrl: getSettings("fullTextRssUrl"),
+    })
+  ) {
     try {
-      const updates = await fetchContentFromFullTextRss(entry)
+      const { updates, saveFailed } = await fetchContentFromFullTextRss(entry)
       const { polyglot } = polyglotState.get()
-      Message.success(polyglot.t("actions.fetched_content_success"))
+      if (saveFailed) {
+        Message.warning(polyglot.t("actions.full_text_rss_save_error"))
+      } else {
+        Message.success(polyglot.t("actions.fetched_content_success"))
+      }
       return updateEntryContent(entry, updates)
     } catch (error) {
       console.error("Failed to fetch content from Full-Text RSS:", error)
@@ -245,6 +285,21 @@ const handleFetchContent = async (entry = contentState.get().activeContent) => {
     const { polyglot } = polyglotState.get()
     Message.error(polyglot.t("actions.fetched_content_error"))
     return null
+  }
+}
+
+// Resolves to the updated entry, or null when the fetch failed or one for the
+// same entry is already running (hotkeys and buttons can fire repeatedly).
+const handleFetchContent = async (entry = contentState.get().activeContent) => {
+  if (!entry || fetchingContentIdsState.get().has(entry.id)) {
+    return null
+  }
+
+  setContentFetching(entry.id, true)
+  try {
+    return await fetchEntryContent(entry)
+  } finally {
+    setContentFetching(entry.id, false)
   }
 }
 
