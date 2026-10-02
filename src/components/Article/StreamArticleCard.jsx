@@ -354,22 +354,24 @@ const StreamArticleCard = ({
         heading={4}
         style={{ maxWidth: contentMaxWidth, textAlign: titleAlignment }}
       >
-        <button
+        {/* Real anchor so middle-click, Ctrl/Cmd-click and "Open in new tab" work natively;
+            a <button> here made middle-click trigger the browser's autoscroll instead. */}
+        <a
           className="stream-story-title-link"
-          type="button"
+          href={currentEntry.url}
+          rel="noopener noreferrer"
+          target="_blank"
           onClick={(event) => {
             event.stopPropagation()
 
             if (hasCombinedSelection()) {
-              return
+              event.preventDefault()
             }
-
-            handleOpenLinkExternally(currentEntry)
           }}
         >
           {showFeedIcon && <FeedIcon className="feed-icon-topline" feed={currentEntry.feed} />}
           <span className="stream-story-title-text">{currentEntry.title}</span>
-        </button>
+        </a>
       </Typography.Title>
       <div
         style={showFeedIcon && titleAlignment !== "center" ? { paddingLeft: 34 } : undefined}

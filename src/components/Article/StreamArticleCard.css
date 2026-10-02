@@ -110,6 +110,7 @@
   line-height: 1.25;
   padding: 0;
   text-align: left;
+  text-decoration: none;
   user-select: text;
   -webkit-user-select: text;
 }
@@ -126,8 +127,8 @@
   font-weight: 700;
 }
 
-.stream-story-title-link:hover,
-.stream-story-title-link:focus-visible {
+.card-wrapper.stream-story-card .stream-story-title-link:hover,
+.card-wrapper.stream-story-card .stream-story-title-link:focus-visible {
   text-decoration: underline;
 }
 
