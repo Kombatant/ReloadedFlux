@@ -276,12 +276,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
           }
         }}
       >
-        <div
-          className="card-content"
-          style={{
-            opacity: isUnread ? 1 : 0.5,
-          }}
-        >
+        <div className={isUnread ? "card-content" : "card-content card-content-read"}>
           <div className="card-header">
             <div className="card-meta">
               <div className="card-source">
