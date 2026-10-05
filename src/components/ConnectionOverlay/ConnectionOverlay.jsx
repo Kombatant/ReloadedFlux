@@ -12,7 +12,7 @@ import { authState } from "@/store/authState"
 import { connectionState, setServerUnreachable } from "@/store/connectionState"
 
 const ConnectionOverlay = () => {
-  const { isServerUnreachable } = useStore(connectionState)
+  const { isServerUnreachable, error } = useStore(connectionState)
   const { polyglot } = useStore(polyglotState)
   const { server } = useStore(authState)
   const { fetchAppData } = useAppData()
@@ -47,6 +47,16 @@ const ConnectionOverlay = () => {
         </div>
         <div className="connection-overlay-title">{polyglot.t("connection.title")}</div>
         <div className="connection-overlay-description">{polyglot.t("connection.description")}</div>
+        {error && (
+          <div className="connection-overlay-error">
+            {error.status
+              ? polyglot.t("connection.error_http", {
+                  status: error.status,
+                  statusText: error.statusText,
+                })
+              : polyglot.t("connection.error_network", { message: error.message })}
+          </div>
+        )}
         <div className="connection-overlay-server" title={server}>
           {server}
         </div>

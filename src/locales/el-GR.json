@@ -486,6 +486,8 @@
   "connection": {
     "title": "Η σύνδεση χάθηκε",
     "description": "Δεν μπορούμε να συνδεθούμε με τον διακομιστή Miniflux. Δοκιμάστε ξανά αργότερα.",
-    "refresh": "Ανανέωση"
+    "refresh": "Ανανέωση",
+    "error_network": "Σφάλμα δικτύου: %{message}",
+    "error_http": "Σφάλμα διακομιστή: HTTP %{status} %{statusText}"
   }
 }

@@ -487,6 +487,8 @@
   "connection": {
     "title": "Verbindung verloren",
     "description": "Wir können deinen Miniflux-Server nicht erreichen. Bitte versuche es später erneut.",
-    "refresh": "Aktualisieren"
+    "refresh": "Aktualisieren",
+    "error_network": "Netzwerkfehler: %{message}",
+    "error_http": "Serverfehler: HTTP %{status} %{statusText}"
   }
 }

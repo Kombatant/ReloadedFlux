@@ -501,6 +501,8 @@
   "connection": {
     "title": "Conexión perdida",
     "description": "No podemos conectar con tu servidor Miniflux. Inténtalo de nuevo más tarde.",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "error_network": "Error de red: %{message}",
+    "error_http": "Error del servidor: HTTP %{status} %{statusText}"
   }
 }

@@ -85,6 +85,14 @@
   color: var(--color-text-3);
 }
 
+.connection-overlay-error {
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgb(var(--danger-6));
+}
+
 /* 服务器地址作为独立的等宽芯片 */
 .connection-overlay-server {
   max-width: 100%;

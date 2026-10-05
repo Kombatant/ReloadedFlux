@@ -5,6 +5,13 @@ import { authState } from "@/store/authState"
 import { setServerUnreachable } from "@/store/connectionState"
 import isValidAuth from "@/utils/auth"
 
+// Reason phrases spelled out because HTTP/2 responses carry an empty statusText.
+const GATEWAY_ERROR_STATUSES = new Map([
+  [502, "Bad Gateway"],
+  [503, "Service Unavailable"],
+  [504, "Gateway Timeout"],
+])
+
 // 创建 ofetch 实例并设置默认配置
 const createApiClient = () => {
   return ofetch.create({
@@ -26,7 +33,7 @@ const createApiClient = () => {
     },
     onRequestError({ _request, _options, error }) {
       // 网络层错误（连接失败/超时/DNS），视为服务器不可达
-      setServerUnreachable(true)
+      setServerUnreachable(true, { status: null, message: error?.message ?? "" })
       console.error("Request error:", error)
     },
     async onResponseError({ _request, response, _options }) {
@@ -35,9 +42,15 @@ const createApiClient = () => {
         localStorage.removeItem("auth")
         await router.navigate("/login")
       }
-      // 5xx 表示服务器自身故障，视为通信中断
-      if (statusCode >= 500) {
-        setServerUnreachable(true)
+      // Only gateway errors mean Miniflux itself is unreachable. A plain 500 is
+      // Miniflux answering, often to relay a failure from a third-party site
+      // (fetch-content, discover, create/refresh feed), so the caller's own
+      // error handling covers it.
+      if (GATEWAY_ERROR_STATUSES.has(statusCode)) {
+        setServerUnreachable(true, {
+          status: statusCode,
+          statusText: GATEWAY_ERROR_STATUSES.get(statusCode),
+        })
       }
       // 处理响应错误
       const errorMessage = response._data?.error_message ?? response.statusText

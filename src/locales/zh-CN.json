@@ -487,6 +487,8 @@
   "connection": {
     "title": "连接已断开",
     "description": "无法连接到你的 Miniflux 服务器，请稍后重试。",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "error_network": "网络错误：%{message}",
+    "error_http": "服务器错误：HTTP %{status} %{statusText}"
   }
 }
