@@ -11,8 +11,8 @@ body {
   --article-card-meta-color: var(--color-text-2);
   --article-card-subtle-color: var(--color-text-3);
 
-  /* Article list selection (stream and column views): other cards fade back. */
-  --card-unselected-opacity: 0.55;
+  /* Read articles fade in the stream and column views (the selected one never does). */
+  --card-read-opacity: 0.5;
 
   /* Right pane background (article + empty states)
      Light theme: subtle fade using theme surface color.

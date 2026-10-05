@@ -40,7 +40,7 @@ const LoadMoreComponent = ({ getEntries }) => {
 
 const ArticleList = forwardRef(
   ({ getEntries, handleEntryClick, cardsRef, virtualizerRef }, ref) => {
-    const { activeContent, isArticleListReady, loadMoreVisible } = useStore(contentState)
+    const { isArticleListReady, loadMoreVisible } = useStore(contentState)
     const filteredEntries = useStore(filteredEntriesState)
 
     const { loadingMore, handleLoadMore } = useLoadMore()
@@ -63,11 +63,7 @@ const ArticleList = forwardRef(
     )
 
     return (
-      <SimpleBar
-        ref={ref}
-        className={activeContent ? "entry-list has-selection" : "entry-list"}
-        scrollableNodeProps={{ ref: cardsRef }}
-      >
+      <SimpleBar ref={ref} className="entry-list" scrollableNodeProps={{ ref: cardsRef }}>
         <LoadingCards />
         {isArticleListReady && (
           <FadeTransition y={20}>

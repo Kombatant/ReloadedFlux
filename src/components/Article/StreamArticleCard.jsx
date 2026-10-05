@@ -259,9 +259,13 @@ const StreamArticleCard = ({
       ref={cardRef}
       data-entry-id={entry.id}
       tabIndex={isSelected ? -1 : 0}
-      className={
-        isSelected ? "card-wrapper stream-story-card selected" : "card-wrapper stream-story-card"
-      }
+      className={[
+        "card-wrapper stream-story-card",
+        isSelected && "selected",
+        !isUnread && "stream-story-card-read",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onClick={handleCardClick}
       onKeyDown={(event) => {
         if (isSelected) {

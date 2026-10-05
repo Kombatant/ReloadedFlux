@@ -272,7 +272,7 @@ const StoryStream = ({
       </div>
       <SimpleBar
         ref={entryListRef}
-        className={`entry-list story-stream-list ${animationsEnabled ? "animations-enabled" : ""} ${activeContent ? "has-selection" : ""}`}
+        className={`entry-list story-stream-list ${animationsEnabled ? "animations-enabled" : ""}`}
         scrollableNodeProps={{
           ref: cardsRef,
           tabIndex: -1,
