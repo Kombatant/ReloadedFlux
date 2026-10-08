@@ -1,4 +1,5 @@
 import { Avatar, Button, Typography } from "@arco-design/web-react"
+import { IconArrowRight, IconCheck, IconEye, IconRefresh } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { throttle } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
@@ -13,6 +14,7 @@ import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
+import { categoriesState, feedsState } from "@/store/dataState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { streamAlignmentActiveState } from "@/store/streamAlignmentState"
 import { streamDebug } from "@/utils/stream-debug"
@@ -34,6 +36,8 @@ const StoryStream = ({
 }) => {
   const { activeContent, infoFrom, isArticleListReady, loadMoreVisible } = useStore(contentState)
   const filteredEntries = useStore(filteredEntriesState)
+  const feeds = useStore(feedsState)
+  const categories = useStore(categoriesState)
   const { animationsEnabled, showStatus } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const navigate = useNavigate()
@@ -227,46 +231,71 @@ const StoryStream = ({
     )
   }, [activeEntryIndex, filteredEntries.length])
 
-  // End-of-feed content: brand icon + caption + actions. Shown both when the feed
+  // Name the feed/category in the end-of-feed subtitle; other views stay generic.
+  const sourceTitle = useMemo(() => {
+    if (infoFrom === "feed") {
+      return feeds.find((feed) => feed.id === Number(info.id))?.title
+    }
+    if (infoFrom === "category") {
+      return categories.find((category) => category.id === Number(info.id))?.title
+    }
+    return null
+  }, [categories, feeds, info.id, infoFrom])
+
+  // End-of-feed content: "all caught up" state + actions. Shown both when the feed
   // is empty (no unread at all) and when scrolling past the last loaded card.
+  const isUnreadOnly = showStatus === "unread"
+  const canShowRead = isUnreadOnly && (infoFrom === "feed" || infoFrom === "category")
+  const refreshFeed = () =>
+    globalThis.dispatchEvent(
+      new CustomEvent("reloadedflux:refresh", {
+        detail: { from: info.from, id: info.id },
+      }),
+    )
+
   const streamEndContent = (
     <div className="story-stream-end-inner">
-      <Typography.Text className="story-stream-end-label">
-        {polyglot.t("article_list.stream_end_label")}
+      <div className="story-stream-end-check">
+        <IconCheck />
+      </div>
+      <Typography.Text className="story-stream-end-title">
+        {polyglot.t(
+          isUnreadOnly
+            ? "article_list.stream_end_caught_up"
+            : "article_list.stream_end_reached_end",
+        )}
       </Typography.Text>
-      <Button
-        long
-        type="primary"
-        onClick={() =>
-          globalThis.dispatchEvent(
-            new CustomEvent("reloadedflux:refresh", {
-              detail: { from: info.from, id: info.id },
-            }),
-          )
-        }
-      >
-        {polyglot.t("article_list.stream_end_refresh")}
-      </Button>
-      {showStatus === "unread" && (infoFrom === "feed" || infoFrom === "category") ? (
-        <Button long type="outline" onClick={() => updateSettings({ showStatus: "all" })}>
-          {polyglot.t(
-            infoFrom === "feed"
-              ? "article_list.stream_end_show_read_feed"
-              : "article_list.stream_end_show_read_category",
-          )}
-        </Button>
+      {isUnreadOnly ? (
+        <Typography.Text className="story-stream-end-subtitle">
+          {sourceTitle
+            ? polyglot.t("article_list.stream_end_read_everything_in", { title: sourceTitle })
+            : polyglot.t("article_list.stream_end_read_everything")}
+        </Typography.Text>
       ) : null}
+      <div className="story-stream-end-actions">
+        {canShowRead ? (
+          <Button
+            icon={<IconEye />}
+            type="primary"
+            onClick={() => updateSettings({ showStatus: "all" })}
+          >
+            {polyglot.t("article_list.stream_end_show_read")}
+          </Button>
+        ) : null}
+        <Button
+          icon={<IconRefresh />}
+          type={canShowRead ? "secondary" : "primary"}
+          onClick={refreshFeed}
+        >
+          {polyglot.t("article_list.stream_end_refresh")}
+        </Button>
+      </div>
       {infoFrom === "all" ? null : (
-        <Button long type="outline" onClick={() => navigate("/all")}>
+        <Button className="story-stream-end-link" type="text" onClick={() => navigate("/all")}>
           {polyglot.t("article_list.stream_end_see_all")}
+          <IconArrowRight />
         </Button>
       )}
-      <div className="story-stream-end-brandblock">
-        <Avatar className="story-stream-end-icon" size={64}>
-          <ReloadedFluxIcon />
-        </Avatar>
-        <Typography.Text className="story-stream-end-brand">ReloadedFlux</Typography.Text>
-      </div>
     </div>
   )
 

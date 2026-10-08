@@ -163,11 +163,13 @@
     "mark_older_than_week_confirm": "将一周前的文章标记为已读？",
     "mark_older_than_two_weeks_confirm": "将两周前的文章标记为已读？",
     "refresh_tooltip": "刷新",
-    "stream_end_label": "这里没有更多未读文章了。",
-    "stream_end_refresh": "刷新订阅源",
-    "stream_end_show_read_feed": "查看此订阅源的所有文章",
-    "stream_end_show_read_category": "查看此分类的所有文章",
-    "stream_end_see_all": "查看所有文章"
+    "stream_end_caught_up": "全部读完了",
+    "stream_end_reached_end": "已经到底了",
+    "stream_end_read_everything_in": "你已读完 %{title} 中的所有文章。",
+    "stream_end_read_everything": "你已读完这里的所有文章。",
+    "stream_end_show_read": "显示已读文章",
+    "stream_end_refresh": "刷新",
+    "stream_end_see_all": "前往全部文章"
   },
   "article_toc": {
     "tooltip": "目录大纲",

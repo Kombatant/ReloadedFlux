@@ -163,11 +163,13 @@
     "mark_older_than_week_confirm": "Mark articles older than a week as read?",
     "mark_older_than_two_weeks_confirm": "Mark articles older than two weeks as read?",
     "refresh_tooltip": "Refresh",
-    "stream_end_label": "No more unread articles here.",
-    "stream_end_refresh": "Refresh feed",
-    "stream_end_show_read_feed": "See all articles in this feed",
-    "stream_end_show_read_category": "See all articles in this category",
-    "stream_end_see_all": "See all articles"
+    "stream_end_caught_up": "You're all caught up",
+    "stream_end_reached_end": "You've reached the end",
+    "stream_end_read_everything_in": "You've read everything in %{title}.",
+    "stream_end_read_everything": "You've read everything here.",
+    "stream_end_show_read": "Show read articles",
+    "stream_end_refresh": "Refresh",
+    "stream_end_see_all": "Go to All articles"
   },
   "article_toc": {
     "tooltip": "Table of Contents",

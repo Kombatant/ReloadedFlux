@@ -163,11 +163,13 @@
     "mark_older_than_week_confirm": "Artikel, die älter als eine Woche sind, als gelesen markieren?",
     "mark_older_than_two_weeks_confirm": "Artikel, die älter als zwei Wochen sind, als gelesen markieren?",
     "refresh_tooltip": "Neu laden",
-    "stream_end_label": "Keine weiteren ungelesenen Artikel hier.",
-    "stream_end_refresh": "Feed aktualisieren",
-    "stream_end_show_read_feed": "Alle Artikel in diesem Feed anzeigen",
-    "stream_end_show_read_category": "Alle Artikel in dieser Kategorie anzeigen",
-    "stream_end_see_all": "Alle Artikel anzeigen"
+    "stream_end_caught_up": "Du bist auf dem neuesten Stand",
+    "stream_end_reached_end": "Du hast das Ende erreicht",
+    "stream_end_read_everything_in": "Du hast alles in %{title} gelesen.",
+    "stream_end_read_everything": "Du hast hier alles gelesen.",
+    "stream_end_show_read": "Gelesene Artikel anzeigen",
+    "stream_end_refresh": "Aktualisieren",
+    "stream_end_see_all": "Zu allen Artikeln"
   },
   "article_toc": {
     "tooltip": "Inhaltsverzeichnis",

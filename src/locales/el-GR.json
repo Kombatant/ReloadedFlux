@@ -163,11 +163,13 @@
     "mark_older_than_week_confirm": "Σημειώστε τα άρθρα παλαιότερα της εβδομάδας ως αναγνωσμένα;",
     "mark_older_than_two_weeks_confirm": "Σημειώστε τα άρθρα παλαιότερα των δύο εβδομάδων ως αναγνωσμένα;",
     "refresh_tooltip": "Ανανέωση",
-    "stream_end_label": "Δεν υπάρχουν άλλα μη αναγνωσμένα άρθρα εδώ.",
-    "stream_end_refresh": "Ανανέωση ροής",
-    "stream_end_show_read_feed": "Προβολή όλων των άρθρων αυτής της ροής",
-    "stream_end_show_read_category": "Προβολή όλων των άρθρων αυτής της κατηγορίας",
-    "stream_end_see_all": "Προβολή όλων των άρθρων"
+    "stream_end_caught_up": "Είστε πλήρως ενημερωμένοι",
+    "stream_end_reached_end": "Φτάσατε στο τέλος",
+    "stream_end_read_everything_in": "Διαβάσατε όλα τα άρθρα στο %{title}.",
+    "stream_end_read_everything": "Διαβάσατε όλα τα άρθρα εδώ.",
+    "stream_end_show_read": "Εμφάνιση αναγνωσμένων άρθρων",
+    "stream_end_refresh": "Ανανέωση",
+    "stream_end_see_all": "Μετάβαση σε όλα τα άρθρα"
   },
   "article_toc": {
     "tooltip": "Πίνακας περιεχομένων",

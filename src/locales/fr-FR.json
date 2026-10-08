@@ -163,11 +163,13 @@
     "mark_older_than_week_confirm": "Marquer comme lus les articles datant de plus d’une semaine ?",
     "mark_older_than_two_weeks_confirm": "Marquer comme lus les articles datant de plus de deux semaines ?",
     "refresh_tooltip": "Rafraîchir",
-    "stream_end_label": "Plus aucun article non lu ici.",
-    "stream_end_refresh": "Rafraîchir le flux",
-    "stream_end_show_read_feed": "Voir tous les articles de ce flux",
-    "stream_end_show_read_category": "Voir tous les articles de cette catégorie",
-    "stream_end_see_all": "Voir tous les articles"
+    "stream_end_caught_up": "Vous êtes à jour",
+    "stream_end_reached_end": "Vous êtes arrivé à la fin",
+    "stream_end_read_everything_in": "Vous avez tout lu dans %{title}.",
+    "stream_end_read_everything": "Vous avez tout lu ici.",
+    "stream_end_show_read": "Afficher les articles lus",
+    "stream_end_refresh": "Rafraîchir",
+    "stream_end_see_all": "Aller à Tous les articles"
   },
   "article_toc": {
     "tooltip": "Table des matières",

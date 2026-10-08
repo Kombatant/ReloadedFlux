@@ -80,33 +80,64 @@
 .story-stream-end-inner {
   display: flex;
   width: 100%;
-  max-width: 340px;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 12px;
-}
-
-.story-stream-end-label {
-  margin-bottom: 8px;
-  color: var(--color-text-3);
-  text-align: center;
-}
-
-.story-stream-end-brandblock {
-  display: flex;
+  max-width: 420px;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-top: 28px;
-}
-
-.story-stream-end-icon {
-  background: var(--brand-icon-background);
-}
-
-.story-stream-end-brand {
-  font-weight: 600;
+  gap: 6px;
   text-align: center;
+}
+
+.story-stream-end-check {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 8px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(var(--success-6), 0.12);
+  color: rgb(var(--success-6));
+  font-size: 22px;
+}
+
+.story-stream-end-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.story-stream-end-subtitle {
+  color: var(--color-text-3);
+}
+
+.story-stream-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* App.css makes icon-bearing secondary buttons transparent; restore a filled
+   look with hover/active steps. Use the fill tokens, not --color-secondary*:
+   Arco builds those as rgba(var(--gray-N), a), which is invalid with the
+   space-separated --gray-N values in theme.css, so they resolve to transparent. */
+.story-stream-end-actions .arco-btn-secondary:not(.arco-btn-disabled) {
+  background-color: var(--color-fill-2);
+}
+
+.story-stream-end-actions .arco-btn-secondary:not(.arco-btn-disabled):hover {
+  background-color: var(--color-fill-3);
+}
+
+.story-stream-end-actions .arco-btn-secondary:not(.arco-btn-disabled):active {
+  background-color: var(--color-fill-4);
+}
+
+.story-stream-end-link {
+  margin-top: 6px;
+}
+
+.story-stream-end-link .arco-icon {
+  margin-left: 6px;
 }
 
 @media screen and (max-width: 768px) {
