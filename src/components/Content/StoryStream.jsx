@@ -13,7 +13,7 @@ import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
-import { settingsState } from "@/store/settingsState"
+import { settingsState, updateSettings } from "@/store/settingsState"
 import { streamAlignmentActiveState } from "@/store/streamAlignmentState"
 import { streamDebug } from "@/utils/stream-debug"
 
@@ -34,7 +34,7 @@ const StoryStream = ({
 }) => {
   const { activeContent, infoFrom, isArticleListReady, loadMoreVisible } = useStore(contentState)
   const filteredEntries = useStore(filteredEntriesState)
-  const { animationsEnabled } = useStore(settingsState)
+  const { animationsEnabled, showStatus } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const navigate = useNavigate()
   const { loadingMore, handleLoadMore } = useLoadMore()
@@ -247,6 +247,15 @@ const StoryStream = ({
       >
         {polyglot.t("article_list.stream_end_refresh")}
       </Button>
+      {showStatus === "unread" && (infoFrom === "feed" || infoFrom === "category") ? (
+        <Button long type="outline" onClick={() => updateSettings({ showStatus: "all" })}>
+          {polyglot.t(
+            infoFrom === "feed"
+              ? "article_list.stream_end_show_read_feed"
+              : "article_list.stream_end_show_read_category",
+          )}
+        </Button>
+      ) : null}
       {infoFrom === "all" ? null : (
         <Button long type="outline" onClick={() => navigate("/all")}>
           {polyglot.t("article_list.stream_end_see_all")}

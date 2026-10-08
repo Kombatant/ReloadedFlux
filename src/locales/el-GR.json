@@ -165,6 +165,8 @@
     "refresh_tooltip": "Ανανέωση",
     "stream_end_label": "Δεν υπάρχουν άλλα μη αναγνωσμένα άρθρα εδώ.",
     "stream_end_refresh": "Ανανέωση ροής",
+    "stream_end_show_read_feed": "Προβολή όλων των άρθρων αυτής της ροής",
+    "stream_end_show_read_category": "Προβολή όλων των άρθρων αυτής της κατηγορίας",
     "stream_end_see_all": "Προβολή όλων των άρθρων"
   },
   "article_toc": {

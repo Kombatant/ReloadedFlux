@@ -165,6 +165,8 @@
     "refresh_tooltip": "Neu laden",
     "stream_end_label": "Keine weiteren ungelesenen Artikel hier.",
     "stream_end_refresh": "Feed aktualisieren",
+    "stream_end_show_read_feed": "Alle Artikel in diesem Feed anzeigen",
+    "stream_end_show_read_category": "Alle Artikel in dieser Kategorie anzeigen",
     "stream_end_see_all": "Alle Artikel anzeigen"
   },
   "article_toc": {

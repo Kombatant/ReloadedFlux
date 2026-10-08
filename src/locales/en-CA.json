@@ -165,6 +165,8 @@
     "refresh_tooltip": "Refresh",
     "stream_end_label": "No more unread articles here.",
     "stream_end_refresh": "Refresh feed",
+    "stream_end_show_read_feed": "See all articles in this feed",
+    "stream_end_show_read_category": "See all articles in this category",
     "stream_end_see_all": "See all articles"
   },
   "article_toc": {

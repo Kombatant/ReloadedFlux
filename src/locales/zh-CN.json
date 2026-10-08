@@ -165,6 +165,8 @@
     "refresh_tooltip": "刷新",
     "stream_end_label": "这里没有更多未读文章了。",
     "stream_end_refresh": "刷新订阅源",
+    "stream_end_show_read_feed": "查看此订阅源的所有文章",
+    "stream_end_show_read_category": "查看此分类的所有文章",
     "stream_end_see_all": "查看所有文章"
   },
   "article_toc": {

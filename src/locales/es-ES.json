@@ -181,6 +181,8 @@
     "refresh_tooltip": "Actualizar",
     "stream_end_label": "No hay más artículos sin leer aquí.",
     "stream_end_refresh": "Actualizar feed",
+    "stream_end_show_read_feed": "Ver todos los artículos de este feed",
+    "stream_end_show_read_category": "Ver todos los artículos de esta categoría",
     "stream_end_see_all": "Ver todos los artículos"
   },
   "article_toc": {

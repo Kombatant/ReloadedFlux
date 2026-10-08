@@ -165,6 +165,8 @@
     "refresh_tooltip": "Rafraîchir",
     "stream_end_label": "Plus aucun article non lu ici.",
     "stream_end_refresh": "Rafraîchir le flux",
+    "stream_end_show_read_feed": "Voir tous les articles de ce flux",
+    "stream_end_show_read_category": "Voir tous les articles de cette catégorie",
     "stream_end_see_all": "Voir tous les articles"
   },
   "article_toc": {
