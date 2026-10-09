@@ -35,7 +35,7 @@
     "nanostores": "^1.5.4",
     "node-polyglot": "^2.6.0",
     "ofetch": "^1.5.1",
-    "plyr": "^3.8.4",
+    "plyr": "^3.8.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hotkeys-hook": "^5.3.3",
