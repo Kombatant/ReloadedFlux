@@ -25,6 +25,7 @@
   },
   "sidebar": {
     "profile_menu": "ReloadedFlux-Menü",
+    "open_menu": "Menü öffnen",
     "all": "Alle",
     "today": "Heute",
     "starred": "Lesezeichen",
@@ -133,6 +134,8 @@
     "sort_direction_desc": "Neueste zuerst",
     "sort_direction_asc": "Älteste zuerst",
     "sort_label": "Sortierung",
+    "view_options": "Ansichtsoptionen",
+    "view_show": "Anzeigen",
     "filter_status_all": "Alles",
     "filter_status_all_items": "Alle Artikel",
     "filter_status_starred": "Lesezeichen",

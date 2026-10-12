@@ -25,6 +25,7 @@
   },
   "sidebar": {
     "profile_menu": "Menu ReloadedFlux",
+    "open_menu": "Ouvrir le menu",
     "all": "Tout",
     "today": "Aujourd'hui",
     "starred": "Favoris",
@@ -133,6 +134,8 @@
     "sort_direction_desc": "Les plus récents en premier",
     "sort_direction_asc": "Les plus anciens en premier",
     "sort_label": "Tri",
+    "view_options": "Options d'affichage",
+    "view_show": "Afficher",
     "filter_status_all": "Tout",
     "filter_status_all_items": "Tous les articles",
     "filter_status_starred": "Favoris",

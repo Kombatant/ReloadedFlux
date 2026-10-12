@@ -25,6 +25,7 @@
   },
   "sidebar": {
     "profile_menu": "ReloadedFlux menu",
+    "open_menu": "Open menu",
     "all": "All",
     "today": "Today",
     "starred": "Starred",
@@ -133,6 +134,8 @@
     "sort_direction_desc": "Newest first",
     "sort_direction_asc": "Oldest first",
     "sort_label": "Sort",
+    "view_options": "View options",
+    "view_show": "Show",
     "filter_status_all": "All",
     "filter_status_all_items": "All items",
     "filter_status_starred": "Starred",

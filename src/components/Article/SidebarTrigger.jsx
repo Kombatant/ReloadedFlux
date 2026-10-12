@@ -1,4 +1,4 @@
-import { Button, Drawer } from "@arco-design/web-react"
+import { Drawer } from "@arco-design/web-react"
 import { IconMenu } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { atom } from "nanostores"
@@ -6,6 +6,8 @@ import { useEffect } from "react"
 import { useLocation } from "react-router"
 
 import Sidebar from "@/components/Sidebar/Sidebar"
+import IconButton from "@/components/ui/IconButton"
+import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import "./SidebarTrigger.css"
 import createSetter from "@/utils/nanostores"
@@ -18,6 +20,7 @@ export default function SidebarTrigger() {
   const { isBelowLarge } = useScreenWidth()
 
   const sidebarVisible = useStore(sidebarVisibleState)
+  const { polyglot } = useStore(polyglotState)
 
   useEffect(() => {
     if (!isBelowLarge) {
@@ -36,17 +39,13 @@ export default function SidebarTrigger() {
   }
 
   return (
-    <div>
-      <div className="brand">
-        <Button
-          className="trigger"
-          shape="circle"
-          size="small"
-          onClick={() => setSidebarVisible(!sidebarVisible)}
-        >
-          <IconMenu />
-        </Button>
-      </div>
+    <div className="sidebar-trigger">
+      <IconButton
+        icon={<IconMenu />}
+        label={polyglot.t("sidebar.open_menu")}
+        tooltip={null}
+        onClick={() => setSidebarVisible(!sidebarVisible)}
+      />
       <Drawer
         className="sidebar-drawer"
         closable={false}

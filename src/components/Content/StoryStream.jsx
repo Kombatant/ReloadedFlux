@@ -7,9 +7,9 @@ import { useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
+import ContentToolbar, { StreamNavButtons } from "@/components/Article/ContentToolbar"
 import LoadingCards from "@/components/Article/LoadingCards"
 import StreamArticleCard from "@/components/Article/StreamArticleCard"
-import StreamSearchBar from "@/components/Article/StreamSearchBar"
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
@@ -302,10 +302,11 @@ const StoryStream = ({
   return (
     <div className="article-container story-stream-layout">
       <div className="story-stream-toolbar">
-        <StreamSearchBar
+        <ContentToolbar
           info={info}
           markAllAsRead={markAllAsRead}
-          streamVirtualizerRef={streamVirtualizerRef}
+          navigation={<StreamNavButtons streamVirtualizerRef={streamVirtualizerRef} />}
+          variant="stream"
         />
       </div>
       <SimpleBar

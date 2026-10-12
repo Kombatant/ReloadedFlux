@@ -7,9 +7,8 @@
     linear-gradient(180deg, rgba(var(--primary-6), 0.08) 0%, transparent 45%), var(--color-bg-1);
 }
 
-.story-stream-toolbar .search-and-sort-bar {
+.story-stream-toolbar .content-toolbar {
   padding: 0;
-  margin-bottom: 0;
   background: transparent;
 }
 

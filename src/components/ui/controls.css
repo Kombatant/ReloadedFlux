@@ -1,0 +1,275 @@
+/* ---------------------------------------------------------------------------
+   Shared control skins (direction A, "ghost circles"). Every action button,
+   segmented control and menu in the app renders through these classes, so
+   Classic, Stream, Settings and the sidebar look and behave the same.
+   --------------------------------------------------------------------------- */
+
+/* IconButton: borderless 32px circle, neutral until hovered. */
+.app-icon-button.arco-btn-text:not(.arco-btn-disabled) {
+  color: var(--color-text-2);
+}
+
+.app-icon-button.arco-btn-text:not(.arco-btn-disabled):not(.arco-btn-loading):hover,
+.app-icon-button.arco-btn-text.is-open:not(.arco-btn-disabled) {
+  background-color: var(--color-fill-2);
+  color: var(--color-text-1);
+}
+
+.app-icon-button.arco-btn-text:not(.arco-btn-disabled):not(.arco-btn-loading):active {
+  background-color: var(--color-fill-3);
+  color: var(--color-text-1);
+}
+
+.app-icon-button.arco-btn-text.is-active:not(.arco-btn-disabled),
+.app-icon-button.arco-btn-text.is-active:not(.arco-btn-disabled):not(.arco-btn-loading):hover {
+  color: rgb(var(--primary-6));
+}
+
+.app-icon-button.arco-btn-text.is-starred:not(.arco-btn-disabled),
+.app-icon-button.arco-btn-text.is-starred:not(.arco-btn-disabled):not(.arco-btn-loading):hover {
+  color: var(--color-star);
+}
+
+.app-icon-button.arco-btn-text.is-danger:not(.arco-btn-disabled),
+.app-icon-button.arco-btn-text.is-danger:not(.arco-btn-disabled):not(.arco-btn-loading):hover {
+  color: rgb(var(--danger-6));
+}
+
+.app-icon-button.arco-btn-text.arco-btn-disabled {
+  color: var(--color-text-4);
+}
+
+.app-icon-button.arco-btn {
+  flex: 0 0 auto;
+  width: var(--control-h-md);
+  height: var(--control-h-md);
+  padding: 0;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.app-icon-button.arco-btn > svg,
+.app-icon-button.arco-btn > .arco-icon {
+  font-size: var(--icon-md);
+}
+
+.app-icon-button--sm.arco-btn {
+  width: var(--control-h-sm);
+  height: var(--control-h-sm);
+}
+
+/* ToolbarButton: ghost 8px-radius button with icon, optional label and caret. */
+.app-toolbar-button.arco-btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  max-width: 240px;
+  height: var(--control-h-md);
+  padding: 0 10px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.app-toolbar-button.app-toolbar-button--icon-only.arco-btn {
+  gap: 2px;
+  padding: 0 6px 0 8px;
+}
+
+.app-toolbar-button.arco-btn-text:not(.arco-btn-disabled) {
+  color: var(--color-text-2);
+}
+
+.app-toolbar-button.arco-btn-text:not(.arco-btn-disabled):not(.arco-btn-loading):hover,
+.app-toolbar-button.arco-btn-text.is-open:not(.arco-btn-disabled) {
+  background-color: var(--color-fill-2);
+  color: var(--color-text-1);
+}
+
+.app-toolbar-button.arco-btn-text.is-active:not(.arco-btn-disabled) {
+  color: rgb(var(--primary-6));
+}
+
+.app-toolbar-button.arco-btn-text.arco-btn-disabled {
+  color: var(--color-text-4);
+}
+
+.app-toolbar-button > svg,
+.app-toolbar-button > .arco-icon {
+  flex: 0 0 auto;
+  font-size: var(--icon-md);
+}
+
+.app-toolbar-button-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-toolbar-button > .app-toolbar-button-caret {
+  font-size: var(--icon-sm);
+  opacity: 0.7;
+}
+
+/* SegmentedControl: fill-2 track, the selected segment raised on bg-1. */
+.app-segmented {
+  display: inline-grid;
+  flex: 0 0 auto;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 2px;
+  box-sizing: border-box;
+  height: var(--control-h-md);
+  padding: 3px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-fill-2);
+}
+
+/* CustomTooltip wraps each segment in a span; that span is the grid item. */
+.app-segmented > span {
+  display: flex;
+  min-width: 0;
+}
+
+.app-segment {
+  display: inline-flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-2);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+
+.app-segment:hover {
+  color: var(--color-text-1);
+}
+
+.app-segment.is-selected {
+  background-color: var(--color-bg-1);
+  box-shadow: var(--elev-raised);
+  color: rgb(var(--primary-6));
+  cursor: default;
+}
+
+body[arco-theme="dark"] .app-segment.is-selected {
+  background-color: var(--color-fill-3);
+}
+
+.app-segment:focus-visible {
+  outline: 2px solid rgb(var(--primary-5));
+  outline-offset: 1px;
+}
+
+.app-segment > svg,
+.app-segment > .arco-icon {
+  flex: 0 0 auto;
+  font-size: var(--icon-md);
+}
+
+.app-segmented--icon-only .app-segment {
+  width: 30px;
+  padding: 0;
+}
+
+/* Menus: icon first, 34px rows, destructive items in the danger colour. */
+.app-menu.arco-dropdown-menu {
+  min-width: 200px;
+  padding: 4px;
+  border-radius: var(--radius-md);
+}
+
+.app-menu .arco-dropdown-menu-item,
+.app-menu .arco-dropdown-menu-pop-header {
+  height: 34px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  line-height: 34px;
+}
+
+.app-menu .arco-dropdown-menu-item:not(.arco-dropdown-menu-item-disabled):hover {
+  background-color: var(--color-fill-2);
+}
+
+.app-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.app-menu-item-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  width: var(--icon-md);
+  color: var(--color-text-2);
+  font-size: var(--icon-md);
+}
+
+.app-menu-item-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-menu-item.is-checked,
+.app-menu-item.is-checked .app-menu-item-icon {
+  color: rgb(var(--primary-6));
+  font-weight: 500;
+}
+
+.app-menu-item.is-danger,
+.app-menu-item.is-danger .app-menu-item-icon {
+  color: rgb(var(--danger-6));
+}
+
+.app-menu .arco-dropdown-menu-item:has(.app-menu-item.is-danger):hover {
+  background-color: var(--color-danger-light-1);
+}
+
+.app-menu .arco-dropdown-menu-group-title {
+  padding: 6px 10px 2px;
+  color: var(--color-text-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.app-menu-divider {
+  height: 1px;
+  margin: 4px 6px;
+  background-color: var(--color-border-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-icon-button.arco-btn,
+  .app-toolbar-button.arco-btn,
+  .app-segment {
+    transition: none;
+  }
+}

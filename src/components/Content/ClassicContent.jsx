@@ -10,7 +10,7 @@ import { getEntry } from "@/apis"
 import ActionButtons from "@/components/Article/ActionButtons"
 import ArticleDetail from "@/components/Article/ArticleDetail"
 import ArticleList from "@/components/Article/ArticleList"
-import ClassicSearchBar from "@/components/Article/ClassicSearchBar"
+import ContentToolbar from "@/components/Article/ContentToolbar"
 import FadeTransition from "@/components/ui/FadeTransition"
 import useAppData from "@/hooks/useAppData"
 import useArticleList from "@/hooks/useArticleList"
@@ -34,8 +34,6 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { Notification } from "@/utils/feedback"
 import { parseCoverImage } from "@/utils/images"
 import { extractEntryIdFromPath } from "@/utils/url"
-
-import FooterPanel from "./FooterPanel"
 
 import "./Content.css"
 
@@ -401,7 +399,7 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
           width: isBelowMedium ? undefined : entryListWidth,
         }}
       >
-        <ClassicSearchBar />
+        <ContentToolbar info={info} markAllAsRead={markAllAsRead} variant="classic" />
         <ArticleList
           ref={entryListRef}
           cardsRef={cardsRef}
@@ -409,7 +407,6 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
           handleEntryClick={handleEntryClick}
           virtualizerRef={classicVirtualizerRef}
         />
-        <FooterPanel info={info} markAllAsRead={markAllAsRead} />
       </div>
       {isBelowMedium ? null : (
         <div

@@ -36,7 +36,8 @@ const ENUM_VALUES = {
   orderBy: ["created_at", "published_at"],
   orderDirection: ["desc", "asc"],
   removeDuplicates: ["none", "hash", "title", "url"],
-  showStatus: ["unread", "all", "starred"],
+  // "starred" was retired as a list filter; stored values sanitize back to "unread".
+  showStatus: ["unread", "all"],
   themeColor: THEME_COLOR_NAMES,
   themeMode: ["system", "light", "dark"],
   titleAlignment: ["left", "center"],

@@ -80,10 +80,6 @@
     grid-template-areas: "sidebar splitter main";
     height: 100%;
   }
-
-  .trigger {
-    display: block !important;
-  }
 }
 
 @media screen and (max-width: 768px) {

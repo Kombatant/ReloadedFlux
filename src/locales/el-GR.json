@@ -25,6 +25,7 @@
   },
   "sidebar": {
     "profile_menu": "Μενού ReloadedFlux",
+    "open_menu": "Άνοιγμα μενού",
     "all": "Όλα",
     "today": "Σήμερα",
     "starred": "Αγαπημένα",
@@ -133,6 +134,8 @@
     "sort_direction_desc": "Πρώτα τα νεότερα",
     "sort_direction_asc": "Πρώτα τα παλαιότερα",
     "sort_label": "Ταξινόμηση",
+    "view_options": "Επιλογές προβολής",
+    "view_show": "Εμφάνιση",
     "filter_status_all": "Όλα",
     "filter_status_all_items": "Όλα τα άρθρα",
     "filter_status_starred": "Αγαπημένα",

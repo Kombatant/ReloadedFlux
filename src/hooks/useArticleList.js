@@ -54,20 +54,7 @@ const useArticleList = (info) => {
         filterParams.search = basicSearchTerms
       }
 
-      switch (showStatus) {
-        case "starred": {
-          response = await getEntries(null, true, filterParams)
-          break
-        }
-        case "unread": {
-          response = await getEntries("unread", false, filterParams)
-          break
-        }
-        default: {
-          response = await getEntries(null, false, filterParams)
-          break
-        }
-      }
+      response = await getEntries(showStatus === "unread" ? "unread" : null, false, filterParams)
 
       if (!filterDate) {
         switch (info.from) {

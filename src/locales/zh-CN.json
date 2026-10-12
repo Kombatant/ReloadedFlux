@@ -25,6 +25,7 @@
   },
   "sidebar": {
     "profile_menu": "ReloadedFlux 菜单",
+    "open_menu": "打开菜单",
     "all": "全部",
     "today": "今天",
     "starred": "收藏",
@@ -133,6 +134,8 @@
     "sort_direction_desc": "最新优先",
     "sort_direction_asc": "最旧优先",
     "sort_label": "排序",
+    "view_options": "视图选项",
+    "view_show": "显示",
     "filter_status_all": "全部",
     "filter_status_all_items": "全部文章",
     "filter_status_starred": "收藏",

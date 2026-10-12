@@ -1,0 +1,136 @@
+/* Content toolbar shared by the Classic and Stream layouts. Control skins come
+   from components/ui/controls.css; this file only lays them out. */
+
+.content-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  container-type: inline-size;
+  background-color: var(--color-bg-1);
+}
+
+.content-toolbar--classic {
+  padding: 0 var(--space-1) var(--space-2) 0;
+}
+
+.content-toolbar--stream {
+  padding: var(--space-2) 0;
+}
+
+.content-toolbar-heading {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  padding-left: var(--space-1);
+}
+
+.content-toolbar-title.arco-typography,
+.content-toolbar-title {
+  min-width: 0;
+  margin: 0;
+  color: var(--color-text-1);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.content-toolbar-title-placeholder {
+  flex: 1 1 auto;
+}
+
+.content-toolbar-count {
+  flex: 0 0 auto;
+  color: var(--color-text-3);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.content-toolbar-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.content-toolbar--stream .content-toolbar-actions {
+  gap: var(--space-2);
+}
+
+.content-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 var(--space-1);
+  background-color: var(--color-border-2);
+}
+
+/* Stream collapses labels to icons when the toolbar runs out of room; the
+   labels stay as accessible names on the buttons. */
+@container (max-width: 760px) {
+  .content-toolbar--stream .app-toolbar-button-label,
+  .content-toolbar--stream .app-segment-label {
+    display: none;
+  }
+
+  .content-toolbar--stream .app-toolbar-button.arco-btn {
+    gap: 2px;
+    padding: 0 6px 0 8px;
+  }
+
+  .content-toolbar--stream .app-segment {
+    width: 30px;
+    padding: 0;
+  }
+}
+
+/* Search dropdown panel */
+.toolbar-search-dropdown {
+  box-sizing: border-box;
+  width: min(420px, calc(100vw - 32px));
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-popup);
+  box-shadow: var(--elev-2);
+  color: var(--color-text-1);
+}
+
+.toolbar-search-dropdown-header {
+  margin-bottom: 10px;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+.toolbar-search-dropdown-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.search-modal-content .arco-input-group-addbefore .arco-select .arco-select-view {
+  border-radius: var(--radius-md);
+}
+
+.calendar-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--color-text-1);
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media screen and (display-mode: fullscreen), screen and (display-mode: standalone) {
+    @media screen and (max-width: 992px) {
+      .content-toolbar {
+        padding-top: calc(env(safe-area-inset-top) + 8px);
+      }
+    }
+  }
+}
