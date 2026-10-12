@@ -1,6 +1,6 @@
 # UI conventions
 
-ReloadedFlux uses one control language everywhere ("ghost circles"): quiet,
+ReloadedFlux uses one control language everywhere ("ghost buttons"): quiet,
 borderless controls that pick up the active colour palette. Reach for the
 shared pieces below instead of styling Arco components per screen.
 

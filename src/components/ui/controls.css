@@ -1,10 +1,10 @@
 /* ---------------------------------------------------------------------------
-   Shared control skins (direction A, "ghost circles"). Every action button,
+   Shared control skins (direction A, "ghost buttons"). Every action button,
    segmented control and menu in the app renders through these classes, so
    Classic, Stream, Settings and the sidebar look and behave the same.
    --------------------------------------------------------------------------- */
 
-/* IconButton: borderless 32px circle, neutral until hovered. */
+/* IconButton: borderless 32px 8px-radius square, neutral until hovered. */
 .app-icon-button.arco-btn-text:not(.arco-btn-disabled) {
   color: var(--color-text-2);
 }
@@ -44,6 +44,7 @@
   width: var(--control-h-md);
   height: var(--control-h-md);
   padding: 0;
+  border-radius: var(--radius-md);
   transition:
     background-color var(--motion-fast) ease,
     color var(--motion-fast) ease;

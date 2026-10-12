@@ -7,9 +7,9 @@ import CustomTooltip from "./CustomTooltip"
 import "./controls.css"
 
 /**
- * The single icon-only action button: a borderless 32px circle (28px with
- * `size="sm"`). `label` is both the accessible name and, unless `tooltip`
- * overrides it, the hover tooltip.
+ * The single icon-only action button: a borderless 32px rounded square (28px
+ * with `size="sm"`), the same shape as ToolbarButton. `label` is both the
+ * accessible name and, unless `tooltip` overrides it, the hover tooltip.
  *
  * The forwarded ref lands on the outermost element, so it works as the
  * trigger child of Dropdown, Popconfirm and DatePicker.
@@ -35,7 +35,6 @@ const IconButton = forwardRef(
         ref={tooltip ? undefined : ref}
         aria-label={label}
         icon={icon}
-        shape="circle"
         type="text"
         className={classNames(
           "app-icon-button",
