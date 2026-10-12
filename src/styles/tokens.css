@@ -77,6 +77,12 @@ body {
   --elev-1: var(--shadow);
   --elev-2: 0 6px 16px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.3);
   --elev-3: 0 12px 32px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.3);
+
+  /* Content panes (reading pane, Stream column): a real border so the edge
+     reads the same on every side, plus a soft shadow with no hairline ring
+     (a ring drawn outside the box gets clipped where the pane sits flush). */
+  --pane-border: var(--color-border-2);
+  --pane-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
 }
 
 body[arco-theme="dark"] {
@@ -92,6 +98,7 @@ body[arco-theme="dark"] {
   --elev-raised: 0 1px 2px rgba(0, 0, 0, 0.5);
   --elev-2: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
   --elev-3: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --pane-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* The in-app animation toggle is mirrored onto <body data-animations="on|off">
