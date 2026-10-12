@@ -9,15 +9,19 @@ export const AppMenu = ({ className, ...props }) => (
   <Menu className={classNames("app-menu", className)} {...props} />
 )
 
+// Arco's Dropdown only renders its content as a dropdown menu (prefix, item
+// click handling, styles) when it recognises Arco's Menu by this flag.
+AppMenu.__ARCO_MENU__ = true
+
 /**
- * Row content for an AppMenu item: icon first, then the label. `checked`
- * turns the icon slot into a check mark (radio-style sections); `danger`
+ * Row content for an AppMenu item: icon first, then the label, so every row
+ * lines up. In radio-style sections pass `checked`; the selected row turns
+ * the accent colour and shows a check mark at the trailing edge. `danger`
  * paints destructive actions; `suffix` adds a trailing hint such as an
  * external-link icon.
  */
 export const AppMenuItemContent = ({ icon, checked, danger = false, suffix, children }) => {
-  const isCheckable = checked !== undefined
-  const slot = isCheckable ? checked ? <IconCheck /> : null : icon
+  const trailing = checked ? <IconCheck /> : suffix
 
   return (
     <span
@@ -26,15 +30,15 @@ export const AppMenuItemContent = ({ icon, checked, danger = false, suffix, chil
         "is-danger": danger,
       })}
     >
-      {slot || isCheckable ? (
+      {icon ? (
         <span aria-hidden="true" className="app-menu-item-icon">
-          {slot}
+          {icon}
         </span>
       ) : null}
       <span className="app-menu-item-label">{children}</span>
-      {suffix ? (
+      {trailing ? (
         <span aria-hidden="true" className="app-menu-item-suffix">
-          {suffix}
+          {trailing}
         </span>
       ) : null}
     </span>

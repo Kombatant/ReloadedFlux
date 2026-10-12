@@ -94,8 +94,16 @@ const useSortOptions = () => {
   const { polyglot } = useStore(polyglotState)
 
   return [
-    { value: "desc", label: polyglot.t("article_list.sort_direction_desc") },
-    { value: "asc", label: polyglot.t("article_list.sort_direction_asc") },
+    {
+      value: "desc",
+      label: polyglot.t("article_list.sort_direction_desc"),
+      icon: <IconSortDescending />,
+    },
+    {
+      value: "asc",
+      label: polyglot.t("article_list.sort_direction_asc"),
+      icon: <IconSortAscending />,
+    },
   ]
 }
 
@@ -107,7 +115,7 @@ const renderSortMenuItems = (orderDirection, sortOptions) =>
       key={`sort-${option.value}`}
       onClick={() => updateSettings({ orderDirection: option.value })}
     >
-      <AppMenuItemContent checked={orderDirection === option.value}>
+      <AppMenuItemContent checked={orderDirection === option.value} icon={option.icon}>
         {option.label}
       </AppMenuItemContent>
     </Menu.Item>
@@ -135,7 +143,7 @@ const ViewMenu = ({ showStatusSection }) => {
                   key={`show-${option.value}`}
                   onClick={() => updateSettings({ showStatus: option.value })}
                 >
-                  <AppMenuItemContent checked={showStatus === option.value}>
+                  <AppMenuItemContent checked={showStatus === option.value} icon={option.icon}>
                     {option.label}
                   </AppMenuItemContent>
                 </Menu.Item>

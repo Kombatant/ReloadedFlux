@@ -255,7 +255,8 @@ body[arco-theme="dark"] .app-segment.is-selected {
 }
 
 .app-menu-item.is-checked,
-.app-menu-item.is-checked .app-menu-item-icon {
+.app-menu-item.is-checked .app-menu-item-icon,
+.app-menu-item.is-checked .app-menu-item-suffix {
   color: rgb(var(--primary-6));
   font-weight: 500;
 }
