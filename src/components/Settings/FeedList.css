@@ -33,3 +33,9 @@
     width: 95%;
   }
 }
+
+.feed-table .arco-pagination {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}

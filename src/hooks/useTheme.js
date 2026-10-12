@@ -5,7 +5,7 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { applyColor, getModeFallbackColor, isModeRestrictedColor } from "@/utils/colors"
 
 const useTheme = () => {
-  const { themeColor, themeMode } = useStore(settingsState)
+  const { animationsEnabled, themeColor, themeMode } = useStore(settingsState)
   const [isSystemDark, setIsSystemDark] = useState(
     globalThis.matchMedia("(prefers-color-scheme: dark)").matches,
   )
@@ -19,6 +19,10 @@ const useTheme = () => {
     // 在组件卸载时清除监听器
     return () => mediaQuery.removeEventListener("change", updateSystemDarkMode)
   }, [])
+
+  useEffect(() => {
+    document.body.dataset.animations = animationsEnabled === false ? "off" : "on"
+  }, [animationsEnabled])
 
   useEffect(() => {
     const applyColorScheme = (isDarkMode) => {

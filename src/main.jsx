@@ -8,6 +8,8 @@ import { registerSW } from "virtual:pwa-register"
 import "simplebar-react/dist/simplebar.min.css"
 
 import "./index.css"
+import "./styles/tokens.css"
+import "./styles/arco-overrides.css"
 import router from "./routes"
 import { registerLanguages } from "./utils/highlighter"
 import "./theme.css"

@@ -45,19 +45,19 @@
 }
 
 .article-content h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-b,
-strong {
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6,
+.article-content b,
+.article-content strong {
   color: var(--color-text-1);
   font-weight: var(--font-weight-500);
 }
 
 .article-content li,
-p {
+.article-content p {
   margin-block-start: 1em;
   margin-block-end: 1em;
 }

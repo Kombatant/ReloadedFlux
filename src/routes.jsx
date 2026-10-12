@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router"
 
 import App from "./App"
+import AppConfigProvider from "./components/ui/AppConfigProvider"
 import All from "./pages/All"
 import Category from "./pages/Category"
 import ErrorPage from "./pages/ErrorPage"
@@ -30,11 +31,22 @@ const routes = Object.entries(pageRoutes).flatMap(([path, element]) => [
 
 const router = createBrowserRouter(
   [
-    { path: "/login", element: <Login /> },
+    {
+      path: "/login",
+      element: (
+        <AppConfigProvider>
+          <Login />
+        </AppConfigProvider>
+      ),
+    },
     {
       path: "/",
       element: <App />,
-      errorElement: <ErrorPage />,
+      errorElement: (
+        <AppConfigProvider>
+          <ErrorPage />
+        </AppConfigProvider>
+      ),
       children: [
         {
           element: <RouterProtect />,

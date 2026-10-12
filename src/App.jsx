@@ -1,9 +1,4 @@
-import { ConfigProvider, Layout } from "@arco-design/web-react"
-import deDE from "@arco-design/web-react/es/locale/de-DE"
-import enUS from "@arco-design/web-react/es/locale/en-US"
-import esES from "@arco-design/web-react/es/locale/es-ES"
-import frFR from "@arco-design/web-react/es/locale/fr-FR"
-import zhCN from "@arco-design/web-react/es/locale/zh-CN"
+import { Layout } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
@@ -11,6 +6,7 @@ import "./App.css"
 import ConnectionOverlay from "./components/ConnectionOverlay/ConnectionOverlay"
 import Main from "./components/Main/Main"
 import Sidebar from "./components/Sidebar/Sidebar"
+import AppConfigProvider from "./components/ui/AppConfigProvider"
 import useFeedIconsSync from "./hooks/useFeedIconsSync"
 import useLanguage, { polyglotState } from "./hooks/useLanguage"
 import useScreenWidth from "./hooks/useScreenWidth"
@@ -18,16 +14,6 @@ import useTheme from "./hooks/useTheme"
 import useVersionCheck from "./hooks/useVersionCheck"
 import { settingsState, updateSettings } from "./store/settingsState"
 import hideSpinner from "./utils/loading"
-
-const localMap = {
-  "de-DE": deDE,
-  "en-CA": enUS,
-  "es-ES": esES,
-  "fr-FR": frFR,
-  "zh-CN": zhCN,
-}
-
-const getLocale = (language) => localMap[language] || enUS
 
 const clampNumber = (value, min, max) => Math.min(max, Math.max(min, value))
 
@@ -41,8 +27,7 @@ const App = () => {
   const { isBelowLarge } = useScreenWidth()
 
   const { polyglot } = useStore(polyglotState)
-  const { fontFamily, language, sidebarWidth: storedSidebarWidth } = useStore(settingsState)
-  const locale = getLocale(language)
+  const { fontFamily, sidebarWidth: storedSidebarWidth } = useStore(settingsState)
 
   const [sidebarWidth, setSidebarWidth] = useState(storedSidebarWidth ?? 240)
   const [isResizingSidebar, setIsResizingSidebar] = useState(false)
@@ -102,7 +87,7 @@ const App = () => {
 
   return (
     polyglot && (
-      <ConfigProvider locale={locale}>
+      <AppConfigProvider>
         <div
           className="app"
           style={
@@ -144,7 +129,7 @@ const App = () => {
           <Main />
         </div>
         <ConnectionOverlay />
-      </ConfigProvider>
+      </AppConfigProvider>
     )
   )
 }

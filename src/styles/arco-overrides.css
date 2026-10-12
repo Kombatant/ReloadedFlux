@@ -1,0 +1,48 @@
+/* ---------------------------------------------------------------------------
+   App-wide Arco overrides. Everything here intentionally applies to every
+   instance of the component; rules for one surface belong in that surface's
+   CSS, scoped under its own class.
+   --------------------------------------------------------------------------- */
+
+/* Icon-bearing secondary buttons render as quiet ghost buttons by default. */
+.arco-btn-secondary:not(.arco-btn-disabled):has(svg) {
+  background-color: transparent;
+}
+
+.arco-layout-sider-light {
+  box-shadow: none !important;
+}
+
+.arco-menu-collapse {
+  width: 0 !important;
+}
+
+.arco-menu-collapse-button {
+  display: none;
+}
+
+@media screen and (max-width: 992px) {
+  .arco-menu-collapse-button {
+    display: flex !important;
+    top: 12px;
+  }
+}
+
+/* Let long dropdown menus (context menus, mark-read) grow to the viewport. */
+.arco-dropdown-menu {
+  max-height: 100%;
+}
+
+/* Modal.confirm / Modal.info: left-aligned title, right-aligned actions. */
+.arco-modal-simple .arco-modal-title {
+  text-align: left;
+}
+
+.arco-modal-simple .arco-modal-footer {
+  text-align: right;
+}
+
+/* Button-style radio groups sit flush. */
+.arco-radio {
+  padding-left: 0;
+}

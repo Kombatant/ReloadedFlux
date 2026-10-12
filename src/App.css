@@ -34,28 +34,6 @@
   opacity: 1;
 }
 
-.arco-btn-secondary:not(.arco-btn-disabled):has(svg) {
-  background-color: transparent;
-}
-
-.arco-layout-sider-light {
-  box-shadow: none !important;
-}
-
-.arco-menu-collapse {
-  width: 0 !important;
-}
-
-.arco-menu-collapse-button {
-  display: none;
-}
-
-.arco-pagination {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-}
-
 .simplebar-scrollbar::before {
   transition-delay: 1s;
   background-color: #959595;
@@ -103,10 +81,6 @@
     height: 100%;
   }
 
-  .arco-menu-collapse-button {
-    display: flex !important;
-    top: 12px;
-  }
   .trigger {
     display: block !important;
   }

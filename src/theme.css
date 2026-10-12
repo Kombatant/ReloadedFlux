@@ -1,8 +1,10 @@
 body {
   --brand-icon-foreground: #1d2129;
   --brand-icon-background: #e9ebef;
-  --border-radius-small: 8px;
-  --border-radius-medium: 8px;
+  /* Arco's radius tokens follow the shared scale in styles/tokens.css. */
+  --border-radius-small: var(--radius-md);
+  --border-radius-medium: var(--radius-md);
+  --border-radius-large: var(--radius-lg);
   --shadow:
     0 0 5px 0 rgba(0, 0, 0, 0.02), 0 2px 10px 0 rgba(0, 0, 0, 0.07), 0 0 1px 0 rgba(0, 0, 0, 0.3);
   --article-card-title-color: var(--color-text-1);
@@ -59,16 +61,16 @@ body[arco-theme="dark"] {
 }
 
 body[color-name="Red"] {
-  --gray-1: 253 248 248;
-  --gray-2: 249 240 240;
-  --gray-3: 242 225 226;
-  --gray-4: 225 197 199;
-  --gray-5: 201 163 166;
-  --gray-6: 173 126 131;
-  --gray-7: 140 93 99;
-  --gray-8: 109 63 70;
-  --gray-9: 78 39 45;
-  --gray-10: 47 19 23;
+  --gray-1: 253, 248, 248;
+  --gray-2: 249, 240, 240;
+  --gray-3: 242, 225, 226;
+  --gray-4: 225, 197, 199;
+  --gray-5: 201, 163, 166;
+  --gray-6: 173, 126, 131;
+  --gray-7: 140, 93, 99;
+  --gray-8: 109, 63, 70;
+  --gray-9: 78, 39, 45;
+  --gray-10: 47, 19, 23;
   --color-bg-1: rgb(255 251 251);
   --color-bg-2: rgb(252 246 246);
   --color-bg-3: rgb(246 236 236);
@@ -78,16 +80,16 @@ body[color-name="Red"] {
 }
 
 body[arco-theme="dark"][color-name="Red"] {
-  --gray-1: 16 10 10;
-  --gray-2: 24 14 14;
-  --gray-3: 39 21 22;
-  --gray-4: 61 33 35;
-  --gray-5: 86 49 51;
-  --gray-6: 119 76 79;
-  --gray-7: 160 113 117;
-  --gray-8: 197 154 158;
-  --gray-9: 228 203 205;
-  --gray-10: 245 236 237;
+  --gray-1: 16, 10, 10;
+  --gray-2: 24, 14, 14;
+  --gray-3: 39, 21, 22;
+  --gray-4: 61, 33, 35;
+  --gray-5: 86, 49, 51;
+  --gray-6: 119, 76, 79;
+  --gray-7: 160, 113, 117;
+  --gray-8: 197, 154, 158;
+  --gray-9: 228, 203, 205;
+  --gray-10: 245, 236, 237;
   --color-bg-1: rgb(12 7 7);
   --color-bg-2: rgb(20 10 11);
   --color-bg-3: rgb(33 17 18);
@@ -98,16 +100,16 @@ body[arco-theme="dark"][color-name="Red"] {
 }
 
 body[color-name="Orange"] {
-  --gray-1: 254 249 245;
-  --gray-2: 252 241 234;
-  --gray-3: 247 225 212;
-  --gray-4: 235 198 176;
-  --gray-5: 216 165 133;
-  --gray-6: 189 126 91;
-  --gray-7: 153 91 61;
-  --gray-8: 119 61 37;
-  --gray-9: 82 36 18;
-  --gray-10: 48 17 7;
+  --gray-1: 254, 249, 245;
+  --gray-2: 252, 241, 234;
+  --gray-3: 247, 225, 212;
+  --gray-4: 235, 198, 176;
+  --gray-5: 216, 165, 133;
+  --gray-6: 189, 126, 91;
+  --gray-7: 153, 91, 61;
+  --gray-8: 119, 61, 37;
+  --gray-9: 82, 36, 18;
+  --gray-10: 48, 17, 7;
   --color-bg-1: rgb(255 251 247);
   --color-bg-2: rgb(252 243 236);
   --color-bg-3: rgb(248 229 216);
@@ -117,16 +119,16 @@ body[color-name="Orange"] {
 }
 
 body[arco-theme="dark"][color-name="Orange"] {
-  --gray-1: 28 25 23;
-  --gray-2: 41 37 36;
-  --gray-3: 68 64 60;
-  --gray-4: 87 83 78;
-  --gray-5: 120 113 108;
-  --gray-6: 168 162 158;
-  --gray-7: 214 211 209;
-  --gray-8: 231 229 228;
-  --gray-9: 245 245 244;
-  --gray-10: 250 250 249;
+  --gray-1: 28, 25, 23;
+  --gray-2: 41, 37, 36;
+  --gray-3: 68, 64, 60;
+  --gray-4: 87, 83, 78;
+  --gray-5: 120, 113, 108;
+  --gray-6: 168, 162, 158;
+  --gray-7: 214, 211, 209;
+  --gray-8: 231, 229, 228;
+  --gray-9: 245, 245, 244;
+  --gray-10: 250, 250, 249;
 
   --color-bg-1: rgb(12 10 9);
   --color-bg-2: rgb(28 25 23);
@@ -138,16 +140,16 @@ body[arco-theme="dark"][color-name="Orange"] {
 }
 
 body[color-name="Yellow"] {
-  --gray-1: 253 252 245;
-  --gray-2: 250 247 230;
-  --gray-3: 244 236 197;
-  --gray-4: 232 216 153;
-  --gray-5: 212 192 105;
-  --gray-6: 183 161 64;
-  --gray-7: 145 124 36;
-  --gray-8: 109 90 20;
-  --gray-9: 74 58 10;
-  --gray-10: 42 31 4;
+  --gray-1: 253, 252, 245;
+  --gray-2: 250, 247, 230;
+  --gray-3: 244, 236, 197;
+  --gray-4: 232, 216, 153;
+  --gray-5: 212, 192, 105;
+  --gray-6: 183, 161, 64;
+  --gray-7: 145, 124, 36;
+  --gray-8: 109, 90, 20;
+  --gray-9: 74, 58, 10;
+  --gray-10: 42, 31, 4;
   --color-bg-1: rgb(255 253 244);
   --color-bg-2: rgb(252 249 232);
   --color-bg-3: rgb(246 239 206);
@@ -157,16 +159,16 @@ body[color-name="Yellow"] {
 }
 
 body[arco-theme="dark"][color-name="Yellow"] {
-  --gray-1: 15 13 8;
-  --gray-2: 24 20 11;
-  --gray-3: 39 32 15;
-  --gray-4: 60 48 21;
-  --gray-5: 86 69 31;
-  --gray-6: 122 98 48;
-  --gray-7: 163 134 76;
-  --gray-8: 201 177 114;
-  --gray-9: 229 216 169;
-  --gray-10: 245 239 213;
+  --gray-1: 15, 13, 8;
+  --gray-2: 24, 20, 11;
+  --gray-3: 39, 32, 15;
+  --gray-4: 60, 48, 21;
+  --gray-5: 86, 69, 31;
+  --gray-6: 122, 98, 48;
+  --gray-7: 163, 134, 76;
+  --gray-8: 201, 177, 114;
+  --gray-9: 229, 216, 169;
+  --gray-10: 245, 239, 213;
   --color-bg-1: rgb(11 10 5);
   --color-bg-2: rgb(19 16 8);
   --color-bg-3: rgb(31 25 11);
@@ -177,16 +179,16 @@ body[arco-theme="dark"][color-name="Yellow"] {
 }
 
 body[color-name="Green"] {
-  --gray-1: 246 252 248;
-  --gray-2: 237 248 240;
-  --gray-3: 216 240 224;
-  --gray-4: 183 224 197;
-  --gray-5: 145 203 167;
-  --gray-6: 106 177 136;
-  --gray-7: 74 143 106;
-  --gray-8: 47 109 78;
-  --gray-9: 26 77 53;
-  --gray-10: 10 46 29;
+  --gray-1: 246, 252, 248;
+  --gray-2: 237, 248, 240;
+  --gray-3: 216, 240, 224;
+  --gray-4: 183, 224, 197;
+  --gray-5: 145, 203, 167;
+  --gray-6: 106, 177, 136;
+  --gray-7: 74, 143, 106;
+  --gray-8: 47, 109, 78;
+  --gray-9: 26, 77, 53;
+  --gray-10: 10, 46, 29;
   --color-bg-1: rgb(248 253 250);
   --color-bg-2: rgb(239 249 242);
   --color-bg-3: rgb(220 242 228);
@@ -196,16 +198,16 @@ body[color-name="Green"] {
 }
 
 body[arco-theme="dark"][color-name="Green"] {
-  --gray-1: 8 14 10;
-  --gray-2: 11 23 16;
-  --gray-3: 17 38 26;
-  --gray-4: 25 59 41;
-  --gray-5: 39 85 59;
-  --gray-6: 61 119 84;
-  --gray-7: 92 160 117;
-  --gray-8: 132 198 156;
-  --gray-9: 184 226 202;
-  --gray-10: 226 244 233;
+  --gray-1: 8, 14, 10;
+  --gray-2: 11, 23, 16;
+  --gray-3: 17, 38, 26;
+  --gray-4: 25, 59, 41;
+  --gray-5: 39, 85, 59;
+  --gray-6: 61, 119, 84;
+  --gray-7: 92, 160, 117;
+  --gray-8: 132, 198, 156;
+  --gray-9: 184, 226, 202;
+  --gray-10: 226, 244, 233;
   --color-bg-1: rgb(5 10 7);
   --color-bg-2: rgb(8 16 11);
   --color-bg-3: rgb(13 27 19);
@@ -216,16 +218,16 @@ body[arco-theme="dark"][color-name="Green"] {
 }
 
 body[color-name="Blue"] {
-  --gray-1: 247 250 255;
-  --gray-2: 239 245 253;
-  --gray-3: 223 234 249;
-  --gray-4: 193 214 240;
-  --gray-5: 159 188 228;
-  --gray-6: 120 158 209;
-  --gray-7: 84 126 181;
-  --gray-8: 54 95 149;
-  --gray-9: 31 67 110;
-  --gray-10: 13 38 68;
+  --gray-1: 247, 250, 255;
+  --gray-2: 239, 245, 253;
+  --gray-3: 223, 234, 249;
+  --gray-4: 193, 214, 240;
+  --gray-5: 159, 188, 228;
+  --gray-6: 120, 158, 209;
+  --gray-7: 84, 126, 181;
+  --gray-8: 54, 95, 149;
+  --gray-9: 31, 67, 110;
+  --gray-10: 13, 38, 68;
   --color-bg-1: rgb(249 252 255);
   --color-bg-2: rgb(240 247 254);
   --color-bg-3: rgb(225 236 250);
@@ -235,16 +237,16 @@ body[color-name="Blue"] {
 }
 
 body[arco-theme="dark"][color-name="Blue"] {
-  --gray-1: 8 11 16;
-  --gray-2: 11 18 26;
-  --gray-3: 17 30 43;
-  --gray-4: 27 46 66;
-  --gray-5: 40 67 94;
-  --gray-6: 62 96 130;
-  --gray-7: 94 132 172;
-  --gray-8: 133 170 210;
-  --gray-9: 185 211 234;
-  --gray-10: 230 240 248;
+  --gray-1: 8, 11, 16;
+  --gray-2: 11, 18, 26;
+  --gray-3: 17, 30, 43;
+  --gray-4: 27, 46, 66;
+  --gray-5: 40, 67, 94;
+  --gray-6: 62, 96, 130;
+  --gray-7: 94, 132, 172;
+  --gray-8: 133, 170, 210;
+  --gray-9: 185, 211, 234;
+  --gray-10: 230, 240, 248;
   --color-bg-1: rgb(4 7 11);
   --color-bg-2: rgb(7 13 20);
   --color-bg-3: rgb(12 22 35);
@@ -256,16 +258,16 @@ body[arco-theme="dark"][color-name="Blue"] {
 
 /* YInMn Blue -- tuned neutral/backdrop so the blue primaries pop */
 body[color-name="YInMn Blue"] {
-  --gray-1: 250 251 253;
-  --gray-2: 244 246 250;
-  --gray-3: 230 235 245;
-  --gray-4: 200 210 225;
-  --gray-5: 170 185 205;
-  --gray-6: 135 155 180;
-  --gray-7: 100 125 155;
-  --gray-8: 65 95 135;
-  --gray-9: 36 66 110;
-  --gray-10: 15 34 70;
+  --gray-1: 250, 251, 253;
+  --gray-2: 244, 246, 250;
+  --gray-3: 230, 235, 245;
+  --gray-4: 200, 210, 225;
+  --gray-5: 170, 185, 205;
+  --gray-6: 135, 155, 180;
+  --gray-7: 100, 125, 155;
+  --gray-8: 65, 95, 135;
+  --gray-9: 36, 66, 110;
+  --gray-10: 15, 34, 70;
 
   --color-bg-1: rgb(250 251 253);
   --color-bg-2: rgb(244 246 250);
@@ -296,16 +298,16 @@ body[color-name="YInMn Blue"] .content-empty::before {
 
 body[arco-theme="dark"][color-name="YInMn Blue"] {
   /* Darker grays with an extremely subtle blue hint (still reads gray) */
-  --gray-1: 10 10 13;
-  --gray-2: 16 16 20;
-  --gray-3: 34 34 42;
-  --gray-4: 56 56 68;
-  --gray-5: 86 86 106;
-  --gray-6: 110 110 132;
-  --gray-7: 138 138 162;
-  --gray-8: 170 170 198;
-  --gray-9: 204 204 230;
-  --gray-10: 236 236 250;
+  --gray-1: 10, 10, 13;
+  --gray-2: 16, 16, 20;
+  --gray-3: 34, 34, 42;
+  --gray-4: 56, 56, 68;
+  --gray-5: 86, 86, 106;
+  --gray-6: 110, 110, 132;
+  --gray-7: 138, 138, 162;
+  --gray-8: 170, 170, 198;
+  --gray-9: 204, 204, 230;
+  --gray-10: 236, 236, 250;
 
   --color-bg-1: rgb(6 6 8);
   --color-bg-2: rgb(14 14 18);
@@ -321,16 +323,16 @@ body[arco-theme="dark"][color-name="YInMn Blue"] {
 }
 
 body[color-name="Violet"] {
-  --gray-1: 251 248 255;
-  --gray-2: 245 239 252;
-  --gray-3: 233 223 247;
-  --gray-4: 212 193 239;
-  --gray-5: 185 159 226;
-  --gray-6: 154 122 207;
-  --gray-7: 122 87 179;
-  --gray-8: 92 58 145;
-  --gray-9: 64 34 106;
-  --gray-10: 35 15 65;
+  --gray-1: 251, 248, 255;
+  --gray-2: 245, 239, 252;
+  --gray-3: 233, 223, 247;
+  --gray-4: 212, 193, 239;
+  --gray-5: 185, 159, 226;
+  --gray-6: 154, 122, 207;
+  --gray-7: 122, 87, 179;
+  --gray-8: 92, 58, 145;
+  --gray-9: 64, 34, 106;
+  --gray-10: 35, 15, 65;
   --color-bg-1: rgb(253 250 255);
   --color-bg-2: rgb(246 240 253);
   --color-bg-3: rgb(236 225 248);
@@ -340,16 +342,16 @@ body[color-name="Violet"] {
 }
 
 body[arco-theme="dark"][color-name="Violet"] {
-  --gray-1: 11 9 16;
-  --gray-2: 18 14 25;
-  --gray-3: 29 22 40;
-  --gray-4: 45 34 61;
-  --gray-5: 64 49 88;
-  --gray-6: 91 73 124;
-  --gray-7: 124 104 164;
-  --gray-8: 162 146 200;
-  --gray-9: 206 196 229;
-  --gray-10: 239 236 248;
+  --gray-1: 11, 9, 16;
+  --gray-2: 18, 14, 25;
+  --gray-3: 29, 22, 40;
+  --gray-4: 45, 34, 61;
+  --gray-5: 64, 49, 88;
+  --gray-6: 91, 73, 124;
+  --gray-7: 124, 104, 164;
+  --gray-8: 162, 146, 200;
+  --gray-9: 206, 196, 229;
+  --gray-10: 239, 236, 248;
   --color-bg-1: rgb(8 6 12);
   --color-bg-2: rgb(13 10 19);
   --color-bg-3: rgb(22 17 32);
@@ -382,16 +384,16 @@ body[arco-theme="dark"] .arco-radio-button::after {
 
 /* Gray: neutral paper-like light theme. Light-only — no dark variant. */
 body[color-name="Gray"] {
-  --gray-1: 250 250 250;
-  --gray-2: 244 244 245;
-  --gray-3: 228 228 231;
-  --gray-4: 212 212 216;
-  --gray-5: 161 161 170;
-  --gray-6: 113 113 122;
-  --gray-7: 82 82 91;
-  --gray-8: 63 63 70;
-  --gray-9: 39 39 42;
-  --gray-10: 24 24 27;
+  --gray-1: 250, 250, 250;
+  --gray-2: 244, 244, 245;
+  --gray-3: 228, 228, 231;
+  --gray-4: 212, 212, 216;
+  --gray-5: 161, 161, 170;
+  --gray-6: 113, 113, 122;
+  --gray-7: 82, 82, 91;
+  --gray-8: 63, 63, 70;
+  --gray-9: 39, 39, 42;
+  --gray-10: 24, 24, 27;
 
   --color-bg-1: rgb(250 250 250);
   --color-bg-2: rgb(244 244 245);
@@ -420,16 +422,16 @@ body[color-name="Gray"] .content-empty::before {
 /* OLED-friendly: pure black backgrounds for OLED panels (power savings, deep contrast).
    Dark-only theme — no light variant. */
 body[arco-theme="dark"][color-name="OLED"] {
-  --gray-1: 10 10 10;
-  --gray-2: 18 18 18;
-  --gray-3: 30 30 30;
-  --gray-4: 48 48 48;
-  --gray-5: 72 72 72;
-  --gray-6: 110 110 110;
-  --gray-7: 150 150 150;
-  --gray-8: 190 190 190;
-  --gray-9: 220 220 220;
-  --gray-10: 240 240 240;
+  --gray-1: 10, 10, 10;
+  --gray-2: 18, 18, 18;
+  --gray-3: 30, 30, 30;
+  --gray-4: 48, 48, 48;
+  --gray-5: 72, 72, 72;
+  --gray-6: 110, 110, 110;
+  --gray-7: 150, 150, 150;
+  --gray-8: 190, 190, 190;
+  --gray-9: 220, 220, 220;
+  --gray-10: 240, 240, 240;
 
   --color-bg-1: rgb(0 0 0);
   --color-bg-2: rgb(0 0 0);

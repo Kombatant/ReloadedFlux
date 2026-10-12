@@ -8,7 +8,7 @@
 
 .search-and-sort-bar.classic-toolbar {
   justify-content: space-between;
-  background-color: rgb(var(--color-bg-1));
+  background-color: var(--color-bg-1);
   min-height: 44px;
   padding: 0 0 8px;
 }
@@ -18,7 +18,7 @@
   justify-content: space-between;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0) 100%),
-    rgb(var(--color-bg-1));
+    var(--color-bg-1);
   gap: 12px 20px;
   padding: 10px 0 8px;
 }
@@ -215,7 +215,7 @@
   border: 1px solid var(--color-border-2);
   border-radius: 999px;
   padding: 0 12px !important;
-  background-color: rgb(var(--color-fill-2));
+  background-color: var(--color-fill-2);
   color: var(--color-text-2);
 }
 
@@ -297,7 +297,7 @@
     .arco-btn-disabled
   ):focus-visible {
   border-color: var(--color-border-3);
-  background-color: rgb(var(--color-fill-4)) !important;
+  background-color: var(--color-fill-4) !important;
 }
 
 /* Compact mode collapses these to icon-only squares; the track would crowd the
@@ -398,7 +398,7 @@
 .search-and-sort-bar .button-group button:not(.arco-btn-disabled):focus-visible,
 .search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):hover,
 .search-and-sort-bar .button-group .arco-btn:not(.arco-btn-disabled):focus-visible {
-  background-color: rgb(var(--color-fill-2)) !important;
+  background-color: var(--color-fill-2) !important;
   color: var(--color-text-1);
 }
 
@@ -420,7 +420,7 @@
 .search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):hover,
 .search-and-sort-bar.stream-toolbar .toolbar-action-button:not(.arco-btn-disabled):focus-visible {
   border-color: var(--color-border-3);
-  background-color: rgb(var(--color-fill-3)) !important;
+  background-color: var(--color-fill-3) !important;
 }
 
 .search-and-sort-bar.stream-toolbar .toolbar-action-button.is-active:not(.arco-btn-disabled):hover,
