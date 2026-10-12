@@ -1,8 +1,10 @@
-import { Button, Space, Tag } from "@arco-design/web-react"
+import { Space, Tag } from "@arco-design/web-react"
 import { IconPlus, IconRefresh } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useEffect, useRef, useState } from "react"
 
+import IconButton from "@/components/ui/IconButton"
+import { polyglotState } from "@/hooks/useLanguage"
 import { duplicateHotkeysState, resetHotkey, updateHotkey } from "@/store/hotkeysState"
 
 import EditableTag from "./EditableTag"
@@ -28,6 +30,7 @@ const processKeyName = (keys) =>
 
 const EditableTagGroup = ({ keys, record }) => {
   const duplicateHotkeys = useStore(duplicateHotkeysState)
+  const { polyglot } = useStore(polyglotState)
 
   const [isEditing, setIsEditing] = useState(false)
 
@@ -58,7 +61,7 @@ const EditableTagGroup = ({ keys, record }) => {
   return (
     <div ref={groupRef}>
       {isEditing ? (
-        <Space wrap style={{ marginBottom: -8 }}>
+        <Space wrap className="hotkey-tag-group">
           {keys.map((key, keyIndex) => (
             <EditableTag
               key={`${record.action}-${key}`}
@@ -76,36 +79,24 @@ const EditableTagGroup = ({ keys, record }) => {
             />
           ))}
           <Tag
+            className="app-add-tag"
             icon={<IconPlus />}
-            style={{
-              backgroundColor: "var(--color-bg-1)",
-              border: "1px dashed var(--color-border-2)",
-              cursor: "pointer",
-              width: "32px",
-            }}
             onClick={() => {
               const newKeys = [...keys, ""]
               updateHotkey(record.action, newKeys)
             }}
           />
-          <Button
+          <IconButton
             icon={<IconRefresh />}
-            shape="circle"
-            size="mini"
+            label={polyglot.t("hotkeys.reset_tooltip")}
+            size="sm"
             onClick={() => resetHotkey(record.action)}
           />
         </Space>
       ) : (
         <Tag
-          style={{
-            cursor: "pointer",
-            backgroundColor: keys.some((key) => duplicateHotkeys.includes(key))
-              ? "var(--color-danger-light-4)"
-              : "var(--color-fill-2)",
-            color: keys.some((key) => duplicateHotkeys.includes(key))
-              ? "white"
-              : "var(--color-text-1)",
-          }}
+          className="hotkey-tag"
+          color={keys.some((key) => duplicateHotkeys.includes(key)) ? "red" : undefined}
           onClick={() => setIsEditing(true)}
         >
           {processKeyName(keys)}

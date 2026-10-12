@@ -363,6 +363,7 @@
     "disabled_label": "Disabled",
     "only_available_in_layout": "Only available in %{layout} layout",
     "ai_summary_excluded_language_disabled_reason": "Available only when a specific summary language is selected",
+    "ai_provider_required_reason": "Choose an AI provider first",
     "update_content_on_fetch_label": "Auto-save fetched content",
     "update_content_on_fetch_description": "Automatically update and save fetched content to database",
     "content_fetcher_label": "Content Fetcher",
@@ -468,6 +469,7 @@
   "hotkeys": {
     "key": "Key",
     "function": "Function",
+    "reset_tooltip": "Reset to default",
     "exitDetailView": "Exit the article view and return to the list",
     "fetchOriginalArticle": "Fetch and display the original content of the current article",
     "navigateToNextArticle": "Navigate to the next article in the list",

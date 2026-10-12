@@ -1,8 +1,7 @@
-import { Modal } from "@arco-design/web-react"
-
 import { addCategory, deleteCategory, updateCategory } from "@/apis/categories"
 import { polyglotState } from "@/hooks/useLanguage"
 import { setCategoriesData, setFeedsData } from "@/store/dataState"
+import confirmAction from "@/utils/confirm"
 import { Message, Notification } from "@/utils/feedback"
 
 const useCategoryOperations = (useNotification = false) => {
@@ -102,7 +101,8 @@ const useCategoryOperations = (useNotification = false) => {
 
   const handleDeleteCategory = async (category, requireConfirmation = true) => {
     if (requireConfirmation) {
-      Modal.confirm({
+      confirmAction({
+        danger: true,
         title: polyglot.t("sidebar.delete_category_confirm_title"),
         content: polyglot.t("sidebar.delete_category_confirm_content", {
           title: category.title,

@@ -16,7 +16,7 @@ const SettingItem = ({
   >
     <header>
       <div className="setting-row-title">
-        <Typography.Title heading={6} style={{ marginTop: 0 }}>
+        <Typography.Title className="setting-row-heading" heading={6}>
           {title}
         </Typography.Title>
         {disabled && disabledLabel ? (

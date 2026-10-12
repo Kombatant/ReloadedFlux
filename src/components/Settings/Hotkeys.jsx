@@ -50,11 +50,11 @@ const Hotkeys = () => {
   return (
     <Table
       borderCell={true}
+      className="settings-table"
       columns={columns}
       data={hotkeysMapping}
       pagination={false}
       size="small"
-      style={{ margin: "0 auto", width: "90%" }}
     />
   )
 }

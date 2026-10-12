@@ -318,3 +318,48 @@ body[arco-theme="dark"] .app-segment.is-selected {
   outline: 2px solid rgb(var(--primary-5));
   outline-offset: 1px;
 }
+
+/* Dialog sizes: every Modal takes app-modal plus one size. */
+.app-modal.arco-modal {
+  max-width: calc(100vw - 32px);
+}
+
+.app-modal-sm.arco-modal {
+  width: 400px;
+}
+
+.app-modal-md.arco-modal {
+  width: 520px;
+}
+
+.app-modal-lg.arco-modal {
+  width: 720px;
+}
+
+.app-modal .arco-form > .arco-form-item:last-child {
+  margin-bottom: 0;
+}
+
+.app-modal-footnote {
+  display: block;
+  margin-top: var(--space-4);
+}
+
+.app-modal-lead {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-2);
+}
+
+/* Dashed "+" tag that adds an item to a tag list. */
+.app-add-tag.arco-tag {
+  width: 32px;
+  justify-content: center;
+  border: 1px dashed var(--color-border-3);
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.app-add-tag.arco-tag:hover {
+  border-color: rgb(var(--primary-6));
+  color: rgb(var(--primary-6));
+}

@@ -1,4 +1,4 @@
-import { Button, Divider, Modal, Select, Switch } from "@arco-design/web-react"
+import { Button, Divider, Select, Switch } from "@arco-design/web-react"
 import { IconDownload, IconUpload } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useRef, useState } from "react"
@@ -8,6 +8,7 @@ import { dataState } from "@/store/dataState"
 import { replaceHotkeys } from "@/store/hotkeysState"
 import { replaceSettingsPreservingAi, settingsState, updateSettings } from "@/store/settingsState"
 import { replaceExpandedCategories } from "@/store/sidebarState"
+import confirmAction from "@/utils/confirm"
 import { Notification } from "@/utils/feedback"
 import { downloadFile, readFileAsText } from "@/utils/file"
 import {
@@ -84,7 +85,8 @@ const General = () => {
       const fileContent = await readFileAsText(file)
       const importedSnapshot = parseSettingsImportXml(fileContent)
 
-      Modal.confirm({
+      confirmAction({
+        danger: true,
         title: polyglot.t("settings.settings_import_confirm"),
         content: (
           <div>
@@ -92,7 +94,6 @@ const General = () => {
             <p>{polyglot.t("settings.settings_import_ai_notice")}</p>
           </div>
         ),
-        okButtonProps: { status: "danger" },
         onOk: () => applyImportedSettings(importedSnapshot),
       })
     } catch (error) {
@@ -167,7 +168,7 @@ const General = () => {
         description={polyglot.t("settings.settings_transfer_description")}
         title={polyglot.t("settings.settings_transfer_label")}
       >
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="setting-row-actions">
           <Button
             disabled={importingSettings}
             icon={<IconUpload />}

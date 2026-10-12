@@ -70,10 +70,9 @@ const Reading = () => {
       >
         <InputNumber
           className="input-select"
-          defaultValue={pageSize}
           min={1}
           mode="button"
-          size="small"
+          value={pageSize}
           onChange={(value) => updateSettings({ pageSize: value })}
         />
       </SettingItem>
@@ -131,9 +130,7 @@ const Reading = () => {
           disabled={markReadBy !== "view"}
           max={5}
           min={1}
-          size="small"
           step={1}
-          style={{ width: 120 }}
           suffix={polyglot.t("settings.seconds_suffix")}
           value={markReadAfterSeconds}
           onChange={(value) =>

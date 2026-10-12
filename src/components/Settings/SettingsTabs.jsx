@@ -27,15 +27,9 @@ import Reading from "./Reading"
 import "./SettingsTabs.css"
 
 const CustomTabTitle = ({ icon, title }) => (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    }}
-  >
+  <div className="settings-tab-title">
     {icon}
-    <div style={{ fontSize: "12px" }}>{title}</div>
+    <div>{title}</div>
   </div>
 )
 
@@ -44,14 +38,7 @@ const SettingsTabs = ({ activeTab, onTabChange }) => {
   const { isBelowMedium } = useScreenWidth()
 
   return (
-    <SimpleBar
-      style={{
-        maxHeight: "80vh",
-        overflow: "auto",
-        marginRight: "-20px",
-        paddingRight: "20px",
-      }}
-    >
+    <SimpleBar className="settings-tabs-scroll">
       <Tabs
         animation
         activeTab={activeTab}
@@ -62,89 +49,53 @@ const SettingsTabs = ({ activeTab, onTabChange }) => {
         <Tabs.TabPane
           key="1"
           title={
-            <CustomTabTitle
-              icon={<IconUnorderedList style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.feeds")}
-            />
+            <CustomTabTitle icon={<IconUnorderedList />} title={polyglot.t("settings.feeds")} />
           }
         >
           <FeedList />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="2"
-          title={
-            <CustomTabTitle
-              icon={<IconFolder style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.categories")}
-            />
-          }
+          title={<CustomTabTitle icon={<IconFolder />} title={polyglot.t("settings.categories")} />}
         >
           <CategoryList />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="3"
-          title={
-            <CustomTabTitle
-              icon={<IconStorage style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.general")}
-            />
-          }
+          title={<CustomTabTitle icon={<IconStorage />} title={polyglot.t("settings.general")} />}
         >
           <General />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="4"
-          title={
-            <CustomTabTitle
-              icon={<IconEye style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.reading")}
-            />
-          }
+          title={<CustomTabTitle icon={<IconEye />} title={polyglot.t("settings.reading")} />}
         >
           <Reading />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="5"
           title={
-            <CustomTabTitle
-              icon={<IconFile style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.article_display")}
-            />
+            <CustomTabTitle icon={<IconFile />} title={polyglot.t("settings.article_display")} />
           }
         >
           <ArticleDisplay />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="6"
-          title={
-            <CustomTabTitle
-              icon={<IconSkin style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.appearance")}
-            />
-          }
+          title={<CustomTabTitle icon={<IconSkin />} title={polyglot.t("settings.appearance")} />}
         >
           <Appearance />
         </Tabs.TabPane>
         <Tabs.TabPane
           key="7"
-          title={
-            <CustomTabTitle
-              icon={<IconRobot style={{ fontSize: "20px" }} />}
-              title={polyglot.t("settings.ai")}
-            />
-          }
+          title={<CustomTabTitle icon={<IconRobot />} title={polyglot.t("settings.ai")} />}
         >
           <Ai />
         </Tabs.TabPane>
         {!isBelowMedium && (
           <Tabs.TabPane
             key="8"
-            title={
-              <CustomTabTitle
-                icon={<IconCommand style={{ fontSize: "20px" }} />}
-                title={polyglot.t("settings.hotkeys")}
-              />
-            }
+            title={<CustomTabTitle icon={<IconCommand />} title={polyglot.t("settings.hotkeys")} />}
           >
             <Hotkeys />
           </Tabs.TabPane>

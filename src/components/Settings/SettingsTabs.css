@@ -1,15 +1,33 @@
-.custom-tabs .arco-tabs-header {
-  margin: 0 auto !important;
+.settings-tabs-scroll {
+  max-height: 80vh;
+  overflow: auto;
+  margin-right: -20px;
+  padding-right: 20px;
 }
 
+.custom-tabs .arco-tabs-header {
+  margin: 0 auto;
+}
+
+.settings-tab-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--font-size-xs);
+}
+
+.settings-tab-title .arco-icon {
+  font-size: var(--icon-lg);
+}
+
+/* Row controls come in two widths: compact (selects, numbers, sliders) and
+   wide (free text, model names). */
 .input-select,
 .input-slider {
-  margin-left: 16px;
-  width: 130px;
+  width: var(--control-w-sm);
 }
 
 .input-wide {
-  margin-left: 16px;
-  width: 260px;
-  max-width: 45vw;
+  width: var(--control-w-lg);
 }

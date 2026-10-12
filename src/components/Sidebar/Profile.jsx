@@ -7,7 +7,6 @@ import {
   IconExclamationCircle,
   IconGithub,
   IconInfoCircle,
-  IconInfoCircleFill,
   IconLaunch,
   IconLink,
   IconMoonFill,
@@ -31,6 +30,7 @@ import { resetContent } from "@/store/contentState"
 import { resetData } from "@/store/dataState"
 import { resetFeedIcons } from "@/store/feedIconsState"
 import { resetSettings, settingsState, updateSettings } from "@/store/settingsState"
+import confirmAction from "@/utils/confirm"
 import { GITHUB_REPO_PATH } from "@/utils/constants"
 import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
@@ -84,21 +84,18 @@ export default function Profile() {
   const buildDate = buildInfo.gitCommitDate ?? buildInfo.gitDate ?? buildInfo.buildDate ?? "unknown"
 
   const handleResetSettings = () => {
-    Modal.confirm({
+    confirmAction({
+      danger: true,
       title: polyglot.t("sidebar.settings_reset_confirm"),
-      content: <p>{polyglot.t("sidebar.settings_reset_description")}</p>,
-      icon: <IconInfoCircleFill />,
-      okButtonProps: { status: "danger" },
+      content: polyglot.t("sidebar.settings_reset_description"),
       onOk: () => resetSettings(),
     })
   }
 
   const handleLogout = () => {
-    Modal.confirm({
+    confirmAction({
       title: polyglot.t("sidebar.logout_confirm"),
-      content: <p>{polyglot.t("sidebar.logout_description")}</p>,
-      icon: <IconInfoCircleFill />,
-      okButtonProps: { status: "danger" },
+      content: polyglot.t("sidebar.logout_description"),
       onOk: () => {
         resetAuth()
         resetContent()

@@ -46,3 +46,12 @@
 .arco-radio {
   padding-left: 0;
 }
+
+/* Arco breaks words anywhere (break-all), splitting "article" into "art|icle".
+   Wrap at word boundaries and only break a word that cannot fit (long URLs). */
+.arco-typography,
+.arco-table-cell,
+.arco-ellipsis-multiple {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}

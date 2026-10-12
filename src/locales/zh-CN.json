@@ -363,6 +363,7 @@
     "disabled_label": "已禁用",
     "only_available_in_layout": "仅在%{layout}布局中可用",
     "ai_summary_excluded_language_disabled_reason": "仅在选择了特定摘要语言时可用",
+    "ai_provider_required_reason": "请先选择 AI 提供商",
     "update_content_on_fetch_label": "获取原文时自动保存",
     "update_content_on_fetch_description": "获取原文时自动更新并保存到数据库",
     "content_fetcher_label": "内容获取方式",
@@ -468,6 +469,7 @@
   "hotkeys": {
     "key": "键",
     "function": "功能",
+    "reset_tooltip": "恢复默认",
     "exitDetailView": "退出文章视图并返回列表",
     "fetchOriginalArticle": "获取并显示当前文章的原文",
     "navigateToNextArticle": "在列表中导航到下一篇文章",

@@ -379,6 +379,7 @@
     "disabled_label": "Desactivado",
     "only_available_in_layout": "Disponible solo en el diseño %{layout}",
     "ai_summary_excluded_language_disabled_reason": "Disponible solo cuando se selecciona un idioma de resumen específico",
+    "ai_provider_required_reason": "Elige primero un proveedor de IA",
     "update_content_on_fetch_label": "Guardar automáticamente el contenido obtenido",
     "update_content_on_fetch_description": "Actualizar y guardar automáticamente el contenido obtenido en la base de datos",
     "content_fetcher_label": "Obtención de contenido",
@@ -482,6 +483,7 @@
   "hotkeys": {
     "key": "Clave",
     "function": "Función",
+    "reset_tooltip": "Restablecer al valor predeterminado",
     "exitDetailView": "Salir de la vista del artículo y volver a la lista",
     "fetchOriginalArticle": "Obtener y mostrar el contenido original del artículo actual",
     "navigateToNextArticle": "Navegar al siguiente artículo en la lista",

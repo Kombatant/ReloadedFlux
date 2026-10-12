@@ -74,9 +74,9 @@ const EditableTag = ({ value, onChange, onRemove, editOnMount = false }) => {
   return isEditing ? (
     <Input
       autoFocus
-      size="mini"
+      className="hotkey-tag-input"
+      size="small"
       status={duplicateHotkeys.includes(value) ? "error" : undefined}
-      style={{ width: 80 }}
       value={value}
       onBlur={handleEdit}
       onChange={onChange}
@@ -84,13 +84,9 @@ const EditableTag = ({ value, onChange, onRemove, editOnMount = false }) => {
     />
   ) : (
     <Tag
+      className="hotkey-tag"
       closable={!!onRemove}
-      style={{
-        backgroundColor: duplicateHotkeys.includes(value)
-          ? "var(--color-danger-light-4)"
-          : "var(--color-fill-2)",
-        color: duplicateHotkeys.includes(value) ? "white" : "var(--color-text-1)",
-      }}
+      color={duplicateHotkeys.includes(value) ? "red" : undefined}
       onClick={() => setIsEditing(true)}
       onClose={(event) => {
         event.stopPropagation()

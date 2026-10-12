@@ -1,13 +1,5 @@
-.edit-modal {
-  width: 400px;
-}
-
 .feed-table {
   width: 100%;
-}
-
-.feed-table .arco-checkbox-mask {
-  border-radius: 0 !important;
 }
 
 .feed-table-action-bar {
@@ -18,7 +10,8 @@
 
 .feed-table-action-bar .button-group {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: var(--space-2);
   padding-bottom: 16px;
   padding-left: 8px;
 }
@@ -28,14 +21,13 @@
   width: 300px;
 }
 
-@media screen and (max-width: 768px) {
-  .edit-modal {
-    width: 95%;
-  }
-}
-
 .feed-table .arco-pagination {
   display: flex;
   justify-content: space-between;
   width: 90%;
+}
+
+.feed-table-row-actions {
+  display: flex;
+  gap: 2px;
 }

@@ -42,7 +42,7 @@ const SettingsModal = () => {
       focusLock
       unmountOnExit
       alignCenter={false}
-      className="settings-modal"
+      className="settings-modal app-modal app-modal-lg"
       footer={null}
       title={null}
       visible={settingsModalVisible}
@@ -105,8 +105,8 @@ const AddFeedModal = () => {
   return (
     <Modal
       unmountOnExit
+      className="app-modal app-modal-sm"
       confirmLoading={feedModalLoading}
-      style={{ width: "400px", maxWidth: "95%" }}
       title={polyglot.t("main.add_feed_modal_title")}
       visible={addFeedModalVisible}
       onOk={feedForm.submit}
@@ -117,9 +117,7 @@ const AddFeedModal = () => {
     >
       <Form
         form={feedForm}
-        labelCol={{ span: 7 }}
         layout="vertical"
-        wrapperCol={{ span: 17 }}
         onSubmit={async (values) => {
           const url = values.url.trim()
           if (url) {
@@ -137,7 +135,6 @@ const AddFeedModal = () => {
           <Input placeholder={polyglot.t("main.add_feed_modal_feed_url_placeholder")} />
         </Form.Item>
         <Form.Item
-          required
           field="category"
           label={polyglot.t("main.add_feed_modal_category_label")}
           rules={categoryRule}
@@ -161,7 +158,6 @@ const AddFeedModal = () => {
           initialValue={false}
           label={polyglot.t("main.add_feed_modal_crawler_label")}
           rules={crawlerRule}
-          style={{ marginBottom: 0 }}
           tooltip={<div>{polyglot.t("main.add_feed_modal_crawler_tooltip")}</div>}
           triggerPropName="checked"
         >

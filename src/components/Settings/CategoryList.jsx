@@ -34,6 +34,8 @@ const CategoryList = () => {
             className="tag-style"
             closable={category.feedCount === 0}
             size="medium"
+            // Stay mounted until the confirmed delete updates the store.
+            visible={true}
             onClick={() => {
               setSelectedCategory(category)
               setCategoryModalVisible(true)
@@ -43,7 +45,7 @@ const CategoryList = () => {
             }}
             onClose={async (event) => {
               event.stopPropagation()
-              await handleDeleteCategory(category, false)
+              await handleDeleteCategory(category)
             }}
           >
             {category.title}
@@ -61,7 +63,7 @@ const CategoryList = () => {
           />
         ) : (
           <Tag
-            className="add-category-tag"
+            className="app-add-tag"
             icon={<IconPlus />}
             size="medium"
             tabIndex={0}

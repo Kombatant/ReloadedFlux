@@ -1,10 +1,9 @@
-import { Modal } from "@arco-design/web-react"
-
 import { deleteFeed, getFeedEntries, refreshFeed } from "@/apis"
 import { markFeedAsRead as markFeedAsReadAPI } from "@/apis/feeds"
 import { polyglotState } from "@/hooks/useLanguage"
 import { contentState, setEntries } from "@/store/contentState"
 import { setFeedsData, setUnreadInfo } from "@/store/dataState"
+import confirmAction from "@/utils/confirm"
 import { getUTCDate } from "@/utils/date"
 import { Message, Notification } from "@/utils/feedback"
 
@@ -101,7 +100,8 @@ export const useFeedOperations = (useNotification = false) => {
     try {
       const starredEntries = await getFeedEntries(feed.id || feed.key, null, true)
       if (starredEntries.total > 0) {
-        Modal.confirm({
+        confirmAction({
+          danger: true,
           title: polyglot.t("feed_table.remove_feed_confirm_title"),
           content: polyglot.t("feed_table.remove_feed_confirm_content", {
             count: starredEntries.total,
@@ -114,7 +114,8 @@ export const useFeedOperations = (useNotification = false) => {
           title: feed.title,
         })
 
-        Modal.confirm({
+        confirmAction({
+          danger: true,
           title: confirmTitle,
           content: confirmContent,
           onOk: () => deleteFeedDirectly(feed),

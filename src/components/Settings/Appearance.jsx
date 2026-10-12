@@ -1,8 +1,9 @@
-import { Divider, Select, Switch, Tooltip } from "@arco-design/web-react"
+import { Divider, Select, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
 import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
+import CustomTooltip from "@/components/ui/CustomTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import {
@@ -90,7 +91,11 @@ const Appearance = () => {
         description={polyglot.t("appearance.theme_color_description")}
         title={polyglot.t("appearance.theme_color_label")}
       >
-        <div style={{ display: "flex" }}>
+        <div
+          aria-label={polyglot.t("appearance.theme_color_label")}
+          className="color-swatches"
+          role="radiogroup"
+        >
           {Object.keys(colors)
             .filter((colorName) => !isModeRestrictedColor(colorName, isDark))
             .map((colorName) => {
@@ -101,35 +106,21 @@ const Appearance = () => {
               } else if (isLightOnlyColor(colorName)) {
                 tooltip = polyglot.t("appearance.theme_color_gray_description")
               }
+              const isSelected = colorName === themeColor
               return (
-                <Tooltip key={colorName} content={tooltip} position="tl">
-                  <div
-                    role="button"
-                    tabIndex={0}
+                <CustomTooltip key={colorName} mini content={tooltip}>
+                  <button
+                    aria-checked={isSelected}
+                    className={isSelected ? "color-swatch is-selected" : "color-swatch"}
+                    role="radio"
+                    style={{ "--swatch-color": getDisplayColorValue(colorName) }}
+                    type="button"
                     aria-label={polyglot.t("appearance.theme_color_aria_label", {
                       color: colorName,
                     })}
-                    style={{
-                      width: "18px",
-                      height: "18px",
-                      borderRadius: "50%",
-                      margin: "2px",
-                      backgroundColor: getDisplayColorValue(colorName),
-                      cursor: "pointer",
-                      border: "3px solid var(--color-bg-3)",
-                      outline:
-                        colorName === themeColor
-                          ? `1px solid ${getDisplayColorValue(colorName)}`
-                          : "none",
-                    }}
                     onClick={() => handleConfigChange({ themeColor: colorName })}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        handleConfigChange({ themeColor: colorName })
-                      }
-                    }}
                   />
-                </Tooltip>
+                </CustomTooltip>
               )
             })}
         </div>

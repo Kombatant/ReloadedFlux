@@ -1,5 +1,6 @@
 import { Form, Input, Modal, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
+import { useState } from "react"
 
 import useCategoryOperations from "@/hooks/useCategoryOperations"
 import { polyglotState } from "@/hooks/useLanguage"
@@ -15,6 +16,7 @@ const EditCategoryModal = ({
 }) => {
   const { polyglot } = useStore(polyglotState)
   const { editCategory } = useCategoryOperations(useNotification)
+  const [saving, setSaving] = useState(false)
 
   const handleCancel = () => {
     setVisible(false)
@@ -22,7 +24,10 @@ const EditCategoryModal = ({
   }
 
   const handleSubmit = async (values) => {
-    const success = await editCategory(selectedCategory.id, values.title, values.hidden)
+    setSaving(true)
+    const success = await editCategory(selectedCategory.id, values.title, values.hidden).finally(
+      () => setSaving(false),
+    )
     if (success) {
       setVisible(false)
       categoryForm.resetFields()
@@ -44,8 +49,8 @@ const EditCategoryModal = ({
   return (
     <Modal
       unmountOnExit
-      className="modal-style"
-      closable={false}
+      className="app-modal app-modal-sm"
+      confirmLoading={saving}
       title={modalTitle}
       visible={visible}
       onCancel={handleCancel}

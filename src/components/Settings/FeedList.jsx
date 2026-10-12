@@ -5,7 +5,6 @@ import {
   Input,
   Modal,
   Select,
-  Space,
   Switch,
   Table,
   Tag,
@@ -29,6 +28,7 @@ import { exportOPML, importOPML, refreshAllFeed, updateFeed } from "@/apis"
 import CustomLink from "@/components/ui/CustomLink"
 import CustomTooltip from "@/components/ui/CustomTooltip"
 import EditFeedModal from "@/components/ui/EditFeedModal"
+import IconButton from "@/components/ui/IconButton"
 import { handleFeedRefresh, updateFeedStatus, useFeedOperations } from "@/hooks/useFeedOperations"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
@@ -125,23 +125,20 @@ const RefreshModal = ({ visible, setVisible }) => {
 
   return (
     <>
-      <CustomTooltip mini content={polyglot.t("feed_table.refresh_feeds_tooltip")}>
-        <Button
-          icon={<IconRefresh />}
-          shape="circle"
-          size="small"
-          onClick={() => setVisible(true)}
-        />
-      </CustomTooltip>
+      <IconButton
+        icon={<IconRefresh />}
+        label={polyglot.t("feed_table.refresh_feeds_tooltip")}
+        onClick={() => setVisible(true)}
+      />
       <Modal
-        className="edit-modal"
+        className="app-modal app-modal-sm"
         title={polyglot.t("feed_table.refresh_feeds_title")}
         visible={visible}
         footer={[
           <Button key="cancel" onClick={closeModal}>
             {polyglot.t("feed_table.refresh_feeds_cancel")}
           </Button>,
-          <Button key="error" type="outline" onClick={refreshErrorFeeds}>
+          <Button key="error" onClick={refreshErrorFeeds}>
             {polyglot.t("feed_table.refresh_feeds_error")}
           </Button>,
           <Button key="all" type="primary" onClick={refreshAllFeeds}>
@@ -229,76 +226,78 @@ const BulkOperationsModal = ({ visible, setVisible, selectedFeeds, onComplete })
 
   return (
     <Modal
-      className="edit-modal"
+      className="app-modal app-modal-sm"
       confirmLoading={loading}
       title={polyglot.t("feed_table.bulk_operations_title")}
       visible={visible}
       onCancel={handleCancel}
       onOk={handleBulkOperation}
     >
-      <div style={{ marginBottom: 16 }}>
-        <p>{polyglot.t("feed_table.bulk_operations_selected", { count: selectedFeeds.length })}</p>
-      </div>
+      <p className="app-modal-lead">
+        {polyglot.t("feed_table.bulk_operations_selected", { count: selectedFeeds.length })}
+      </p>
 
-      <Form.Item label={polyglot.t("feed_table.bulk_operations_type")}>
-        <Select
-          getPopupContainer={() => document.body}
-          value={operationType}
-          onChange={(value) => {
-            setOperationType(value)
-            setNewCategoryId("")
-            setNewStatus("")
-          }}
-        >
-          <Select.Option value="category">
-            {polyglot.t("feed_table.bulk_operations_change_category")}
-          </Select.Option>
-          <Select.Option value="status">
-            {polyglot.t("feed_table.bulk_operations_change_status")}
-          </Select.Option>
-        </Select>
-      </Form.Item>
-
-      {operationType === "category" && (
-        <Form.Item label={polyglot.t("feed_table.bulk_operations_new_category")}>
+      <Form layout="vertical">
+        <Form.Item label={polyglot.t("feed_table.bulk_operations_type")}>
           <Select
             getPopupContainer={() => document.body}
-            placeholder={polyglot.t("feed_table.bulk_operations_select_category")}
-            value={newCategoryId}
-            onChange={setNewCategoryId}
+            value={operationType}
+            onChange={(value) => {
+              setOperationType(value)
+              setNewCategoryId("")
+              setNewStatus("")
+            }}
           >
-            {categoriesData.map((category) => (
-              <Select.Option key={category.id} value={category.id}>
-                {category.title}
+            <Select.Option value="category">
+              {polyglot.t("feed_table.bulk_operations_change_category")}
+            </Select.Option>
+            <Select.Option value="status">
+              {polyglot.t("feed_table.bulk_operations_change_status")}
+            </Select.Option>
+          </Select>
+        </Form.Item>
+
+        {operationType === "category" && (
+          <Form.Item label={polyglot.t("feed_table.bulk_operations_new_category")}>
+            <Select
+              getPopupContainer={() => document.body}
+              placeholder={polyglot.t("feed_table.bulk_operations_select_category")}
+              value={newCategoryId}
+              onChange={setNewCategoryId}
+            >
+              {categoriesData.map((category) => (
+                <Select.Option key={category.id} value={category.id}>
+                  {category.title}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        {operationType === "status" && (
+          <Form.Item label={polyglot.t("feed_table.bulk_operations_new_status")}>
+            <Select
+              getPopupContainer={() => document.body}
+              placeholder={polyglot.t("feed_table.bulk_operations_select_status")}
+              value={newStatus}
+              onChange={setNewStatus}
+            >
+              <Select.Option value="hide">
+                {polyglot.t("feed_table.bulk_operations_hide")}
               </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
-
-      {operationType === "status" && (
-        <Form.Item label={polyglot.t("feed_table.bulk_operations_new_status")}>
-          <Select
-            getPopupContainer={() => document.body}
-            placeholder={polyglot.t("feed_table.bulk_operations_select_status")}
-            value={newStatus}
-            onChange={setNewStatus}
-          >
-            <Select.Option value="hide">
-              {polyglot.t("feed_table.bulk_operations_hide")}
-            </Select.Option>
-            <Select.Option value="show">
-              {polyglot.t("feed_table.bulk_operations_show")}
-            </Select.Option>
-            <Select.Option value="disable">
-              {polyglot.t("feed_table.bulk_operations_disable")}
-            </Select.Option>
-            <Select.Option value="enable">
-              {polyglot.t("feed_table.bulk_operations_enable")}
-            </Select.Option>
-          </Select>
-        </Form.Item>
-      )}
+              <Select.Option value="show">
+                {polyglot.t("feed_table.bulk_operations_show")}
+              </Select.Option>
+              <Select.Option value="disable">
+                {polyglot.t("feed_table.bulk_operations_disable")}
+              </Select.Option>
+              <Select.Option value="enable">
+                {polyglot.t("feed_table.bulk_operations_enable")}
+              </Select.Option>
+            </Select>
+          </Form.Item>
+        )}
+      </Form>
     </Modal>
   )
 }
@@ -341,7 +340,7 @@ const BulkUpdateModal = ({ visible, setVisible }) => {
 
   return (
     <Modal
-      className="edit-modal"
+      className="app-modal app-modal-sm"
       title={polyglot.t("feed_table.modal_bulk_update_title")}
       visible={visible}
       onOk={bulkUpdateFeedHosts}
@@ -350,16 +349,8 @@ const BulkUpdateModal = ({ visible, setVisible }) => {
         setNewHost("")
       }}
     >
-      <Input
-        placeholder="rsshub.app"
-        value={newHost}
-        prefix={
-          <Tooltip content={polyglot.t("feed_table.modal_bulk_update_description")}>
-            <IconQuestionCircle />
-          </Tooltip>
-        }
-        onChange={(value) => setNewHost(value)}
-      />
+      <p className="app-modal-lead">{polyglot.t("feed_table.modal_bulk_update_description")}</p>
+      <Input placeholder="rsshub.app" value={newHost} onChange={(value) => setNewHost(value)} />
     </Modal>
   )
 }
@@ -529,32 +520,26 @@ const FeedList = () => {
       fixed: "right",
       width: 100,
       render: (_, record) => (
-        <Space style={{ marginLeft: -10 }}>
-          <CustomTooltip mini content={polyglot.t("feed_table.table_feed_edit_tooltip")}>
-            <Button
-              icon={<IconEdit />}
-              shape="circle"
-              size="mini"
-              onClick={() => handleSelectFeed(record)}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("feed_table.table_feed_refresh_tooltip")}>
-            <Button
-              icon={<IconRefresh />}
-              shape="circle"
-              size="mini"
-              onClick={() => refreshSingleFeed(record)}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("feed_table.table_feed_remove_tooltip")}>
-            <Button
-              icon={<IconDelete />}
-              shape="circle"
-              size="mini"
-              onClick={() => handleDeleteFeed(record)}
-            />
-          </CustomTooltip>
-        </Space>
+        <div className="feed-table-row-actions">
+          <IconButton
+            icon={<IconEdit />}
+            label={polyglot.t("feed_table.table_feed_edit_tooltip")}
+            size="sm"
+            onClick={() => handleSelectFeed(record)}
+          />
+          <IconButton
+            icon={<IconRefresh />}
+            label={polyglot.t("feed_table.table_feed_refresh_tooltip")}
+            size="sm"
+            onClick={() => refreshSingleFeed(record)}
+          />
+          <IconButton
+            icon={<IconDelete />}
+            label={polyglot.t("feed_table.table_feed_remove_tooltip")}
+            size="sm"
+            onClick={() => handleDeleteFeed(record)}
+          />
+        </div>
       ),
     },
   ].filter(Boolean)
@@ -631,7 +616,6 @@ const FeedList = () => {
           <CustomTooltip mini content={polyglot.t("feed_table.bulk_operations_tooltip")}>
             <Button
               disabled={selectedRowKeys.length === 0}
-              size="small"
               type={selectedRowKeys.length > 0 ? "primary" : "default"}
               onClick={() => setBulkOperationsModalVisible(true)}
             >
@@ -639,14 +623,11 @@ const FeedList = () => {
               {selectedRowKeys.length > 0 && ` (${selectedRowKeys.length})`}
             </Button>
           </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("feed_table.table_feed_bulk_update_tooltip")}>
-            <Button
-              icon={<IconEdit />}
-              shape="circle"
-              size="small"
-              onClick={() => setBulkUpdateModalVisible(true)}
-            />
-          </CustomTooltip>
+          <IconButton
+            icon={<IconEdit />}
+            label={polyglot.t("feed_table.table_feed_bulk_update_tooltip")}
+            onClick={() => setBulkUpdateModalVisible(true)}
+          />
           <BulkOperationsModal
             selectedFeeds={getSelectedFeeds()}
             setVisible={setBulkOperationsModalVisible}

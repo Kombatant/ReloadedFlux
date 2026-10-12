@@ -11,7 +11,6 @@
 
 .settings-modal {
   top: 5%;
-  width: 720px;
   overflow-y: auto;
 }
 
@@ -30,6 +29,5 @@
   }
   .settings-modal {
     top: 8%;
-    width: 95%;
   }
 }

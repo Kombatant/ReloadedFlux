@@ -362,6 +362,7 @@
     "disabled_label": "Απενεργοποιημένο",
     "only_available_in_layout": "Διαθέσιμο μόνο στη διάταξη %{layout}",
     "ai_summary_excluded_language_disabled_reason": "Διαθέσιμο μόνο όταν έχει επιλεγεί συγκεκριμένη γλώσσα σύνοψης",
+    "ai_provider_required_reason": "Επιλέξτε πρώτα έναν πάροχο AI",
     "update_content_on_fetch_label": "Αυτόματη αποθήκευση ανακτημένου περιεχομένου",
     "update_content_on_fetch_description": "Αποθήκευση και ενημέρωση του περιεχομένου στη βάση δεδομένων",
     "content_fetcher_label": "Ανάκτηση περιεχομένου",
@@ -467,6 +468,7 @@
   "hotkeys": {
     "key": "Πλήκτρο",
     "function": "Λειτουργία",
+    "reset_tooltip": "Επαναφορά στην προεπιλογή",
     "exitDetailView": "Έξοδος από την προβολή άρθρου και επιστροφή στη λίστα",
     "fetchOriginalArticle": "Ανάκτηση και εμφάνιση του πρωτότυπου περιεχομένου του άρθρου",
     "navigateToNextArticle": "Πήγαινε στο επόμενο άρθρο στη λίστα",

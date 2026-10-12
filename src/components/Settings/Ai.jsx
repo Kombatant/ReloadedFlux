@@ -156,7 +156,7 @@ const Ai = () => {
         title={polyglot.t("settings.content.ai_provider_label")}
       >
         <Select
-          className="input-select"
+          className="input-wide"
           getPopupContainer={() => document.body}
           value={settings.aiProvider}
           onChange={handleAiProviderChange}
@@ -184,13 +184,18 @@ const Ai = () => {
 
       <Divider />
 
-      <SettingItem description={apiCredentialDescription} title={apiCredentialLabel}>
+      <SettingItem
+        description={apiCredentialDescription}
+        disabled={isProviderNone}
+        disabledLabel={polyglot.t("settings.disabled_label")}
+        disabledReason={polyglot.t("settings.ai_provider_required_reason")}
+        title={apiCredentialLabel}
+      >
         <ApiCredentialInput
           allowClear
-          className="input-select"
+          className="input-wide"
           disabled={isProviderNone}
           placeholder={apiCredentialPlaceholder}
-          style={{ width: "30ch" }}
           value={currentApiKey}
           onChange={(value) =>
             updateSettings({
@@ -207,15 +212,17 @@ const Ai = () => {
 
       <SettingItem
         description={polyglot.t("settings.content.ai_model_description")}
+        disabled={isProviderNone}
+        disabledLabel={polyglot.t("settings.disabled_label")}
+        disabledReason={polyglot.t("settings.ai_provider_required_reason")}
         title={polyglot.t("settings.content.ai_model_label")}
       >
         <Select
-          className="input-select"
+          className="input-wide"
           disabled={isProviderNone || modelIds.length === 0}
           getPopupContainer={() => document.body}
           loading={modelsLoading}
           placeholder={polyglot.t("settings.content.ai_models_empty")}
-          style={{ width: "30ch" }}
           value={currentModel || undefined}
           onChange={(value) =>
             updateSettings({
@@ -242,9 +249,8 @@ const Ai = () => {
         title={polyglot.t("settings.content.ai_summary_language_label")}
       >
         <Select
-          className="input-select"
+          className="input-wide"
           getPopupContainer={() => document.body}
-          style={{ width: "30ch" }}
           value={settings.aiSummaryLanguage}
           onChange={(value) =>
             updateSettings(
@@ -276,11 +282,10 @@ const Ai = () => {
       >
         <Select
           allowClear
-          className="input-select"
+          className="input-wide"
           disabled={isAutoSummaryLanguage}
           getPopupContainer={() => document.body}
           placeholder={polyglot.t("settings.content.ai_summary_excluded_language_none")}
-          style={{ width: "30ch" }}
           value={(isAutoSummaryLanguage ? "" : settings.aiSummaryExcludedLanguage) || undefined}
           onChange={(value) => updateSettings({ aiSummaryExcludedLanguage: value || "" })}
         >

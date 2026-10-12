@@ -1,11 +1,13 @@
 import { Form, Input, Link, Modal, Select, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
+import { useState } from "react"
 
 import { updateFeed } from "@/apis"
 import { polyglotState } from "@/hooks/useLanguage"
 import { authState } from "@/store/authState"
 import { categoriesState, setFeedsData } from "@/store/dataState"
 import { Message, Notification } from "@/utils/feedback"
+import { includesIgnoreCase } from "@/utils/filter"
 
 const EditFeedModal = ({
   visible,
@@ -18,6 +20,7 @@ const EditFeedModal = ({
   const { polyglot } = useStore(polyglotState)
   const auth = useStore(authState)
   const categories = useStore(categoriesState)
+  const [saving, setSaving] = useState(false)
 
   const feedId = selectedFeed?.id || selectedFeed?.key
   const minifluxEditUrl = `${auth.server}/feed/${feedId}/edit`
@@ -62,6 +65,15 @@ const EditFeedModal = ({
   }
 
   const handleSubmit = async (values) => {
+    setSaving(true)
+    try {
+      await submitFeed(values)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const submitFeed = async (values) => {
     const newDetails = {
       categoryId: values.categoryId,
       title: values.title,
@@ -92,27 +104,26 @@ const EditFeedModal = ({
   return (
     <Modal
       unmountOnExit
-      className="edit-modal"
-      closable={false}
+      className="app-modal app-modal-sm"
+      confirmLoading={saving}
       title={polyglot.t("feed_table.modal_edit_feed_title")}
       visible={visible}
       onCancel={handleCancel}
       onOk={feedForm.submit}
     >
-      <Form
-        form={feedForm}
-        labelCol={{ span: 7 }}
-        layout="vertical"
-        wrapperCol={{ span: 17 }}
-        onSubmit={handleSubmit}
-      >
+      <Form form={feedForm} layout="vertical" onSubmit={handleSubmit}>
         <Form.Item
-          required
           field="categoryId"
           label={polyglot.t("feed_table.modal_edit_feed_category_label")}
           rules={[{ required: true }]}
         >
-          <Select>
+          <Select
+            showSearch
+            placeholder={polyglot.t("main.add_feed_modal_category_placeholder")}
+            filterOption={(inputValue, option) =>
+              includesIgnoreCase(option.props.children, inputValue)
+            }
+          >
             {categories.map((category) => (
               <Select.Option key={category.id} value={category.id}>
                 {category.title}
@@ -175,7 +186,7 @@ const EditFeedModal = ({
           <Switch />
         </Form.Item>
       </Form>
-      <Link href={minifluxEditUrl} target="_blank">
+      <Link className="app-modal-footnote" href={minifluxEditUrl} target="_blank">
         {polyglot.t("feed_table.modal_edit_feed_miniflux_link")}
       </Link>
     </Modal>

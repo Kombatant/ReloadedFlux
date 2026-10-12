@@ -53,9 +53,7 @@ const ArticleDisplay = () => {
           className="input-select"
           max={1.25}
           min={0.75}
-          size="small"
           step={0.05}
-          style={{ width: 120 }}
           suffix="rem"
           value={fontSize}
           onChange={(value) => updateSettings({ fontSize: value })}
@@ -69,9 +67,7 @@ const ArticleDisplay = () => {
           className="input-select"
           max={100}
           min={50}
-          size="small"
           step={2}
-          style={{ width: 120 }}
           suffix="%"
           value={articleWidth}
           onChange={(value) => updateSettings({ articleWidth: value })}
