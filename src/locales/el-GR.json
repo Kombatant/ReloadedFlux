@@ -1,7 +1,9 @@
 {
   "app": {
     "new_version_available": "Νέα διαθέσιμη έκδοση",
-    "new_version_available_description": "Ελέγξτε την τελευταία έκδοση στο GitHub"
+    "new_version_available_description": "Ελέγξτε την τελευταία έκδοση στο GitHub",
+    "back_home": "Επιστροφή στην αρχική",
+    "error_title": "Κάτι πήγε στραβά"
   },
   "login": {
     "apptitle": "::ReloadedFlux",
@@ -80,6 +82,18 @@
     "view_on_github": "Άνοιγμα GitHub",
     "refresh_app": "Ανανέωση",
     "unknown_build": "Άγνωστο"
+  },
+  "about": {
+    "kicker": "Σχετικά",
+    "description": "Ένας προσεγμένος web client για το Miniflux, που συντηρείται από τον Pete \"Kombatant\" Vagiakos.",
+    "project_repository": "Αποθετήριο έργου",
+    "lineage": "Προέλευση: ReactFlux",
+    "version": "Έκδοση",
+    "channel": "Κανάλι",
+    "commit": "Commit",
+    "build_date": "Ημερομηνία build",
+    "build_info": "Πληροφορίες build",
+    "close": "Κλείσιμο"
   },
   "actions": {
     "check": "Έλεγχος",
@@ -173,7 +187,9 @@
     "stream_end_read_everything": "Διαβάσατε όλα τα άρθρα εδώ.",
     "stream_end_show_read": "Εμφάνιση αναγνωσμένων άρθρων",
     "stream_end_refresh": "Ανανέωση",
-    "stream_end_see_all": "Μετάβαση σε όλα τα άρθρα"
+    "stream_end_see_all": "Μετάβαση σε όλα τα άρθρα",
+    "load_more": "Φόρτωση περισσότερων",
+    "loading_more": "Φόρτωση περισσότερων…"
   },
   "article_toc": {
     "tooltip": "Πίνακας περιεχομένων",

@@ -1,5 +1,5 @@
-import { Button, Typography } from "@arco-design/web-react"
-import { IconEmpty, IconLeft, IconRight } from "@arco-design/web-react/icon"
+import { Button } from "@arco-design/web-react"
+import { IconLeft, IconRight } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { AnimatePresence } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -11,6 +11,8 @@ import ActionButtons from "@/components/Article/ActionButtons"
 import ArticleDetail from "@/components/Article/ArticleDetail"
 import ArticleList from "@/components/Article/ArticleList"
 import ContentToolbar from "@/components/Article/ContentToolbar"
+import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
+import EmptyState from "@/components/ui/EmptyState"
 import FadeTransition from "@/components/ui/FadeTransition"
 import useAppData from "@/hooks/useAppData"
 import useArticleList from "@/hooks/useArticleList"
@@ -454,10 +456,7 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
           className="content-empty content-wrapper"
           style={isBelowMedium ? undefined : { flex: 1, minWidth: 0 }}
         >
-          <IconEmpty style={{ fontSize: "64px" }} />
-          <Typography.Title heading={6} style={{ color: "var(--color-text-3)", marginTop: "10px" }}>
-            ReloadedFlux
-          </Typography.Title>
+          <EmptyState icon={<ReloadedFluxIcon />} title="ReloadedFlux" />
         </div>
       )}
     </div>

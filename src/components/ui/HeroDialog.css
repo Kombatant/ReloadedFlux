@@ -1,0 +1,257 @@
+/* Hero dialog shell. Works for both Modal (header kept for its close button)
+   and Modal.info (.arco-modal-simple). */
+.hero-dialog.arco-modal {
+  position: relative;
+  width: min(520px, calc(100vw - 32px));
+  padding: 0;
+  overflow: hidden;
+  background: var(--color-bg-1);
+}
+
+.hero-dialog .arco-modal-content,
+.hero-dialog .arco-modal-body {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Keep Arco's header mounted so its close button survives, but let it float
+   over the banner instead of taking space. */
+.hero-dialog .arco-modal-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: var(--z-raised);
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.hero-dialog .arco-modal-header .arco-modal-title {
+  display: none;
+}
+
+.hero-dialog .arco-modal-close-btn {
+  top: 14px;
+  right: 14px;
+  color: var(--color-text-2);
+  pointer-events: auto;
+}
+
+.hero-dialog .arco-modal-footer {
+  margin-top: 0;
+  padding: var(--space-4) var(--space-6) var(--space-5);
+  border-top: 1px solid var(--color-border-2);
+  background: var(--color-bg-1);
+}
+
+.hero-dialog-header {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 28px 28px var(--space-6);
+  border-bottom: 1px solid var(--color-border-2);
+  background:
+    linear-gradient(135deg, rgba(var(--primary-6), 0.12), transparent 56%),
+    linear-gradient(180deg, var(--color-bg-2), var(--color-bg-1));
+  color: var(--color-text-1);
+}
+
+.hero-dialog-logo {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--elev-1);
+  font-size: 38px;
+}
+
+.hero-dialog-logo--brand {
+  background: var(--brand-icon-background);
+  color: var(--brand-icon-foreground);
+}
+
+.hero-dialog-logo--inverse {
+  background: var(--color-text-1);
+  color: var(--color-bg-1);
+}
+
+body[arco-theme="dark"] .hero-dialog-logo {
+  box-shadow: none;
+}
+
+.hero-dialog-heading {
+  min-width: 0;
+}
+
+.hero-dialog-kicker {
+  margin-bottom: var(--space-1);
+  color: rgb(var(--primary-6));
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.hero-dialog-heading h2 {
+  margin: 0;
+  color: var(--color-text-1);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.hero-dialog-title-strong {
+  font-weight: 700;
+}
+
+.hero-dialog-heading p {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-2);
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+}
+
+.hero-dialog-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 18px var(--space-6) 0;
+}
+
+.hero-dialog-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: var(--control-h-lg);
+  margin: 0;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-md);
+  background: var(--color-fill-1);
+  color: var(--color-text-1);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.hero-dialog-link:hover {
+  border-color: rgba(var(--primary-6), 0.4);
+  background: var(--color-primary-light-1);
+  color: rgb(var(--primary-6));
+}
+
+.hero-dialog-link:focus-visible {
+  outline: 2px solid rgb(var(--primary-5));
+  outline-offset: 2px;
+}
+
+.hero-dialog-link svg {
+  flex: 0 0 auto;
+  font-size: var(--icon-md);
+}
+
+.hero-dialog-link--wide {
+  grid-column: 1 / -1;
+}
+
+.hero-dialog-link-external {
+  margin-left: auto;
+}
+
+.hero-dialog-details {
+  display: grid;
+  gap: 1px;
+  margin: 18px var(--space-6) var(--space-6);
+  overflow: hidden;
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-md);
+  background: var(--color-border-2);
+}
+
+.hero-dialog-detail {
+  display: grid;
+  grid-template-columns: 18px minmax(88px, auto) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: var(--space-3) 14px;
+  background: var(--color-bg-1);
+}
+
+.hero-dialog-detail svg {
+  color: var(--color-text-3);
+  font-size: var(--icon-md);
+}
+
+.hero-dialog-detail span {
+  color: var(--color-text-2);
+  font-size: var(--font-size-sm);
+}
+
+.hero-dialog-detail strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-1);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The highlighted row is the reason the dialog is open (e.g. the new build). */
+.hero-dialog-detail--highlight svg,
+.hero-dialog-detail--highlight strong {
+  color: rgb(var(--primary-6));
+}
+
+@media screen and (max-width: 520px) {
+  .hero-dialog-header {
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    padding: 22px var(--space-5) var(--space-5);
+  }
+
+  .hero-dialog-logo {
+    width: 56px;
+    height: 56px;
+    font-size: 30px;
+  }
+
+  .hero-dialog-heading h2 {
+    font-size: 21px;
+  }
+
+  .hero-dialog-links {
+    grid-template-columns: 1fr;
+    padding: var(--space-4) 18px 0;
+  }
+
+  .hero-dialog-details {
+    margin: var(--space-4) 18px 18px;
+  }
+
+  .hero-dialog-detail {
+    grid-template-columns: 18px 1fr;
+    gap: 6px 10px;
+  }
+
+  .hero-dialog-detail strong {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .hero-dialog .arco-modal-footer {
+    padding: 14px 18px 18px;
+  }
+}

@@ -1,5 +1,4 @@
 import { Button, Divider, Form, Input, Link, Typography } from "@arco-design/web-react"
-import useForm from "@arco-design/web-react/es/Form/useForm"
 import { IconHome, IconLock, IconUser } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { ofetch } from "ofetch"
@@ -24,7 +23,7 @@ const Login = () => {
   const { homePage } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
 
-  const [loginForm] = useForm()
+  const [loginForm] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
   const [searchParams] = useSearchParams()
@@ -93,12 +92,7 @@ const Login = () => {
       <div className="page-layout">
         <div className="form-panel">
           <div className="login-form">
-            <Typography.Title heading={1}>
-              {
-                // polyglot.t("login.apptitle")
-              }
-            </Typography.Title>
-            <Typography.Title heading={3}>
+            <Typography.Title className="login-title" heading={3}>
               {polyglot.t("login.login_to_your_server")}
             </Typography.Title>
             <Form
@@ -178,9 +172,9 @@ const Login = () => {
               )}
             </Form>
             <Button
+              long
+              className="login-submit"
               loading={loading}
-              long={true}
-              style={{ marginTop: "20px" }}
               type="primary"
               onClick={() => loginForm.submit()}
             >
@@ -188,8 +182,7 @@ const Login = () => {
             </Button>
             <Divider>{polyglot.t("login.another_login_method")}</Divider>
             <Button
-              long={true}
-              style={{ marginTop: "20px" }}
+              long
               type="secondary"
               onClick={() => setAuthMethod(authMethod === "token" ? "user" : "token")}
             >
@@ -197,11 +190,11 @@ const Login = () => {
                 ? polyglot.t("login.another_login_button")
                 : polyglot.t("login.token_label")}
             </Button>
-            <div style={{ display: "flex", marginTop: "40px" }}>
+            <div className="login-help">
               <Typography.Text disabled>{polyglot.t("login.need_help")}</Typography.Text>
               <Link
-                href={"https://miniflux.app/docs/api.html#authentication"}
-                style={{ fontWeight: "500" }}
+                className="login-help-link"
+                href="https://miniflux.app/docs/api.html#authentication"
               >
                 {polyglot.t("login.miniflux_official_website")}
               </Link>

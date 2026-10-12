@@ -21,6 +21,7 @@ import { useNavigate } from "react-router"
 
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
+import { HeroDialogDetails, HeroDialogHeader, HeroDialogLinks } from "@/components/ui/HeroDialog"
 import SegmentedControl from "@/components/ui/SegmentedControl"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
@@ -111,83 +112,58 @@ export default function Profile() {
 
   const handleAbout = () => {
     Modal.info({
-      className: "about-modal",
+      className: "hero-dialog",
       icon: null,
       title: null,
       content: (
-        <div className="about-modal-content">
-          <div className="about-modal-header">
-            <div aria-hidden="true" className="about-modal-logo">
-              <ReloadedFluxIcon />
-            </div>
-            <div className="about-modal-heading">
-              <div className="about-modal-kicker">About</div>
-              <h2>
-                <span className="about-modal-title-strong">Reloaded</span>Flux
-              </h2>
-              <p>
-                A polished web client for Miniflux, maintained by Pete &quot;Kombatant&quot;
-                Vagiakos.
-              </p>
-            </div>
-          </div>
-
-          <div className="about-modal-actions">
-            <a
-              className="about-modal-action"
-              href="https://github.com/Kombatant/ReloadedFlux"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <IconGithub />
-              Project repository
-            </a>
-            <a
-              className="about-modal-action"
-              href="https://github.com/electh/ReactFlux"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <IconLink />
-              ReactFlux lineage
-            </a>
-            <a
-              className="about-modal-action about-modal-report-issue"
-              href={`https://github.com/${GITHUB_REPO_PATH}/issues`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <IconExclamationCircle />
-              {polyglot.t("sidebar.report_issue")}
-              <IconLaunch className="about-modal-external-icon" />
-            </a>
-          </div>
-
-          <div aria-label="Build information" className="about-modal-details">
-            <div className="about-modal-detail">
-              <IconCode />
-              <span>Version</span>
-              <strong>{buildVersion}</strong>
-            </div>
-            <div className="about-modal-detail">
-              <IconBranch />
-              <span>Channel</span>
-              <strong>{buildChannel}</strong>
-            </div>
-            <div className="about-modal-detail">
-              <IconGithub />
-              <span>Commit</span>
-              <strong>{buildCommit}</strong>
-            </div>
-            <div className="about-modal-detail">
-              <IconCalendarClock />
-              <span>Build date</span>
-              <strong>{buildDate}</strong>
-            </div>
-          </div>
-        </div>
+        <>
+          <HeroDialogHeader
+            description={polyglot.t("about.description")}
+            kicker={polyglot.t("about.kicker")}
+            logo={<ReloadedFluxIcon />}
+            title={
+              <>
+                <span className="hero-dialog-title-strong">Reloaded</span>Flux
+              </>
+            }
+          />
+          <HeroDialogLinks
+            links={[
+              {
+                href: "https://github.com/Kombatant/ReloadedFlux",
+                icon: <IconGithub />,
+                label: polyglot.t("about.project_repository"),
+              },
+              {
+                href: "https://github.com/electh/ReactFlux",
+                icon: <IconLink />,
+                label: polyglot.t("about.lineage"),
+              },
+              {
+                href: `https://github.com/${GITHUB_REPO_PATH}/issues`,
+                icon: <IconExclamationCircle />,
+                label: polyglot.t("sidebar.report_issue"),
+                wide: true,
+                external: true,
+              },
+            ]}
+          />
+          <HeroDialogDetails
+            label={polyglot.t("about.build_info")}
+            items={[
+              { icon: <IconCode />, label: polyglot.t("about.version"), value: buildVersion },
+              { icon: <IconBranch />, label: polyglot.t("about.channel"), value: buildChannel },
+              { icon: <IconGithub />, label: polyglot.t("about.commit"), value: buildCommit },
+              {
+                icon: <IconCalendarClock />,
+                label: polyglot.t("about.build_date"),
+                value: buildDate,
+              },
+            ]}
+          />
+        </>
       ),
-      okText: "OK",
+      okText: polyglot.t("about.close"),
     })
   }
 

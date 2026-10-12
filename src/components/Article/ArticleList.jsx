@@ -1,4 +1,4 @@
-import { Divider, Spin } from "@arco-design/web-react"
+import { Divider } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { throttle } from "lodash-es"
 import { forwardRef, useEffect, useMemo } from "react"
@@ -7,6 +7,7 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import FadeTransition from "@/components/ui/FadeTransition"
+import LoadMore from "@/components/ui/LoadMore"
 import Ripple from "@/components/ui/Ripple"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
@@ -30,10 +31,7 @@ const LoadMoreComponent = ({ getEntries }) => {
   return (
     isArticleListReady &&
     loadMoreVisible && (
-      <div ref={loadMoreRef} className="load-more-container">
-        <Spin loading={loadingMore} style={{ paddingRight: "10px" }} />
-        Loading more ...
-      </div>
+      <LoadMore ref={loadMoreRef} loading={loadingMore} onLoad={() => handleLoadMore(getEntries)} />
     )
   )
 }

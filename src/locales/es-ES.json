@@ -1,7 +1,9 @@
 {
   "app": {
     "new_version_available": "Nueva versión disponible",
-    "new_version_available_description": "Por favor, compruebe la última versión en GitHub"
+    "new_version_available_description": "Por favor, compruebe la última versión en GitHub",
+    "back_home": "Volver al inicio",
+    "error_title": "Algo salió mal"
   },
   "login": {
     "apptitle": "::ReloadedFlux",
@@ -97,6 +99,18 @@
     "refresh_app": "Actualizar",
     "unknown_build": "Desconocida"
   },
+  "about": {
+    "kicker": "Acerca de",
+    "description": "Un cliente web cuidado para Miniflux, mantenido por Pete \"Kombatant\" Vagiakos.",
+    "project_repository": "Repositorio del proyecto",
+    "lineage": "Origen: ReactFlux",
+    "version": "Versión",
+    "channel": "Canal",
+    "commit": "Commit",
+    "build_date": "Fecha de compilación",
+    "build_info": "Información de compilación",
+    "close": "Cerrar"
+  },
   "actions": {
     "check": "Comprobar",
     "dismiss": "Descartar",
@@ -189,7 +203,9 @@
     "stream_end_read_everything": "Has leído todo aquí.",
     "stream_end_show_read": "Mostrar artículos leídos",
     "stream_end_refresh": "Actualizar",
-    "stream_end_see_all": "Ir a Todos los artículos"
+    "stream_end_see_all": "Ir a Todos los artículos",
+    "load_more": "Cargar más",
+    "loading_more": "Cargando más…"
   },
   "article_toc": {
     "tooltip": "Tabla de contenidos",

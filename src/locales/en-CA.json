@@ -1,7 +1,9 @@
 {
   "app": {
     "new_version_available": "New version available",
-    "new_version_available_description": "Please check the latest version on GitHub"
+    "new_version_available_description": "Please check the latest version on GitHub",
+    "back_home": "Back to home",
+    "error_title": "Something went wrong"
   },
   "login": {
     "apptitle": "::ReloadedFlux",
@@ -80,6 +82,18 @@
     "view_on_github": "Open GitHub",
     "refresh_app": "Refresh",
     "unknown_build": "Unknown"
+  },
+  "about": {
+    "kicker": "About",
+    "description": "A polished web client for Miniflux, maintained by Pete \"Kombatant\" Vagiakos.",
+    "project_repository": "Project repository",
+    "lineage": "ReactFlux lineage",
+    "version": "Version",
+    "channel": "Channel",
+    "commit": "Commit",
+    "build_date": "Build date",
+    "build_info": "Build information",
+    "close": "Close"
   },
   "actions": {
     "check": "Check",
@@ -173,7 +187,9 @@
     "stream_end_read_everything": "You've read everything here.",
     "stream_end_show_read": "Show read articles",
     "stream_end_refresh": "Refresh",
-    "stream_end_see_all": "Go to All articles"
+    "stream_end_see_all": "Go to All articles",
+    "load_more": "Load more",
+    "loading_more": "Loading more…"
   },
   "article_toc": {
     "tooltip": "Table of Contents",

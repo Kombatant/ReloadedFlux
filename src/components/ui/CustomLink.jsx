@@ -1,5 +1,7 @@
-import { forwardRef, useState } from "react"
+import { forwardRef } from "react"
 import { Link } from "react-router"
+
+import "./controls.css"
 
 const CustomLink = forwardRef(
   (
@@ -11,28 +13,13 @@ const CustomLink = forwardRef(
     },
     ref,
   ) => {
-    const [isHovering, setIsHovering] = useState(false)
-
-    const handleMouseEnter = (e) => {
-      setIsHovering(true)
-      onMouseEnter(e)
-    }
-
-    const handleMouseLeave = (e) => {
-      setIsHovering(false)
-      onMouseLeave(e)
-    }
-
     return (
       <Link
         ref={ref}
+        className="app-link"
         to={url}
-        style={{
-          color: "inherit",
-          textDecoration: isHovering ? "underline" : "none",
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         {text}
       </Link>

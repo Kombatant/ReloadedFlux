@@ -4,11 +4,6 @@
    CSS, scoped under its own class.
    --------------------------------------------------------------------------- */
 
-/* Icon-bearing secondary buttons render as quiet ghost buttons by default. */
-.arco-btn-secondary:not(.arco-btn-disabled):has(svg) {
-  background-color: transparent;
-}
-
 .arco-layout-sider-light {
   box-shadow: none !important;
 }

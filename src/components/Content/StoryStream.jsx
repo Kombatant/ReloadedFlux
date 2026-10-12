@@ -1,4 +1,4 @@
-import { Avatar, Button, Typography } from "@arco-design/web-react"
+import { Avatar, Button } from "@arco-design/web-react"
 import { IconArrowRight, IconCheck, IconEye, IconRefresh } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { throttle } from "lodash-es"
@@ -11,6 +11,8 @@ import ContentToolbar, { StreamNavButtons } from "@/components/Article/ContentTo
 import LoadingCards from "@/components/Article/LoadingCards"
 import StreamArticleCard from "@/components/Article/StreamArticleCard"
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
+import EmptyState from "@/components/ui/EmptyState"
+import LoadMore from "@/components/ui/LoadMore"
 import { polyglotState } from "@/hooks/useLanguage"
 import useLoadMore from "@/hooks/useLoadMore"
 import { contentState, filteredEntriesState } from "@/store/contentState"
@@ -254,49 +256,48 @@ const StoryStream = ({
     )
 
   const streamEndContent = (
-    <div className="story-stream-end-inner">
-      <div className="story-stream-end-check">
-        <IconCheck />
-      </div>
-      <Typography.Text className="story-stream-end-title">
-        {polyglot.t(
-          isUnreadOnly
-            ? "article_list.stream_end_caught_up"
-            : "article_list.stream_end_reached_end",
-        )}
-      </Typography.Text>
-      {isUnreadOnly ? (
-        <Typography.Text className="story-stream-end-subtitle">
-          {sourceTitle
-            ? polyglot.t("article_list.stream_end_read_everything_in", { title: sourceTitle })
-            : polyglot.t("article_list.stream_end_read_everything")}
-        </Typography.Text>
-      ) : null}
-      <div className="story-stream-end-actions">
-        {canShowRead ? (
+    <EmptyState
+      icon={<IconCheck />}
+      tone="success"
+      actions={
+        <>
+          {canShowRead ? (
+            <Button
+              icon={<IconEye />}
+              type="primary"
+              onClick={() => updateSettings({ showStatus: "all" })}
+            >
+              {polyglot.t("article_list.stream_end_show_read")}
+            </Button>
+          ) : null}
           <Button
-            icon={<IconEye />}
-            type="primary"
-            onClick={() => updateSettings({ showStatus: "all" })}
+            icon={<IconRefresh />}
+            type={canShowRead ? "secondary" : "primary"}
+            onClick={refreshFeed}
           >
-            {polyglot.t("article_list.stream_end_show_read")}
+            {polyglot.t("article_list.stream_end_refresh")}
           </Button>
-        ) : null}
-        <Button
-          icon={<IconRefresh />}
-          type={canShowRead ? "secondary" : "primary"}
-          onClick={refreshFeed}
-        >
-          {polyglot.t("article_list.stream_end_refresh")}
-        </Button>
-      </div>
-      {infoFrom === "all" ? null : (
-        <Button className="story-stream-end-link" type="text" onClick={() => navigate("/all")}>
-          {polyglot.t("article_list.stream_end_see_all")}
-          <IconArrowRight />
-        </Button>
+        </>
+      }
+      description={
+        isUnreadOnly
+          ? sourceTitle
+            ? polyglot.t("article_list.stream_end_read_everything_in", { title: sourceTitle })
+            : polyglot.t("article_list.stream_end_read_everything")
+          : null
+      }
+      footer={
+        infoFrom === "all" ? null : (
+          <Button className="story-stream-end-link" type="text" onClick={() => navigate("/all")}>
+            {polyglot.t("article_list.stream_end_see_all")}
+            <IconArrowRight />
+          </Button>
+        )
+      }
+      title={polyglot.t(
+        isUnreadOnly ? "article_list.stream_end_caught_up" : "article_list.stream_end_reached_end",
       )}
-    </div>
+    />
   )
 
   return (
@@ -365,15 +366,7 @@ const StoryStream = ({
                 />
               ))}
               {loadMoreVisible ? (
-                <div className="load-more-container story-stream-load-more">
-                  <Button
-                    loading={loadingMore}
-                    type="text"
-                    onClick={() => handleLoadMore(getEntries)}
-                  >
-                    Loading more ...
-                  </Button>
-                </div>
+                <LoadMore loading={loadingMore} onLoad={() => handleLoadMore(getEntries)} />
               ) : (
                 <div className="story-stream-end" style={{ minHeight: spacerHeight || undefined }}>
                   {streamEndContent}

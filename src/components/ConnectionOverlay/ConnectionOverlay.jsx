@@ -64,7 +64,6 @@ const ConnectionOverlay = () => {
           long
           icon={<IconRefresh />}
           loading={isRetrying}
-          size="large"
           type="primary"
           onClick={handleRefresh}
         >

@@ -34,6 +34,7 @@ import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/App
 import EditCategoryModal from "@/components/ui/EditCategoryModal"
 import EditFeedModal from "@/components/ui/EditFeedModal"
 import FeedIcon from "@/components/ui/FeedIcon"
+import { HeroDialogDetails, HeroDialogHeader } from "@/components/ui/HeroDialog"
 import IconButton from "@/components/ui/IconButton"
 import useAppData from "@/hooks/useAppData"
 import useCategoryOperations from "@/hooks/useCategoryOperations"
@@ -687,7 +688,7 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
       )}
 
       <Modal
-        className="update-modal"
+        className="hero-dialog"
         title={null}
         visible={isUpdateModalVisible}
         footer={[
@@ -706,36 +707,29 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
         ]}
         onCancel={handleCloseUpdateDialog}
       >
-        <div className="update-modal-content">
-          <div className="update-modal-header">
-            <div aria-hidden="true" className="update-modal-logo">
-              <IconDownload />
-            </div>
-            <div className="update-modal-heading">
-              <div className="update-modal-kicker">
-                {polyglot.t("sidebar.update_available_tooltip")}
-              </div>
-              <h2>{polyglot.t("sidebar.update_available_title")}</h2>
-              <p>{polyglot.t("sidebar.update_available_description")}</p>
-            </div>
-          </div>
-
-          <div
-            aria-label={polyglot.t("sidebar.update_available_title")}
-            className="update-modal-details"
-          >
-            <div className="update-modal-detail">
-              <IconDesktop />
-              <span>{polyglot.t("sidebar.current_build_label")}</span>
-              <strong>{currentBuildLabel}</strong>
-            </div>
-            <div className="update-modal-detail update-modal-detail-highlight">
-              <IconGithub />
-              <span>{polyglot.t("sidebar.github_build_label")}</span>
-              <strong>{remoteBuildLabel}</strong>
-            </div>
-          </div>
-        </div>
+        <HeroDialogHeader
+          description={polyglot.t("sidebar.update_available_description")}
+          kicker={polyglot.t("sidebar.update_available_tooltip")}
+          logo={<IconDownload />}
+          logoVariant="inverse"
+          title={polyglot.t("sidebar.update_available_title")}
+        />
+        <HeroDialogDetails
+          label={polyglot.t("sidebar.update_available_title")}
+          items={[
+            {
+              icon: <IconDesktop />,
+              label: polyglot.t("sidebar.current_build_label"),
+              value: currentBuildLabel,
+            },
+            {
+              icon: <IconGithub />,
+              label: polyglot.t("sidebar.github_build_label"),
+              value: remoteBuildLabel,
+              highlight: true,
+            },
+          ]}
+        />
       </Modal>
     </div>
   )

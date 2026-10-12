@@ -4,6 +4,8 @@ import useFeedIcons from "@/hooks/useFeedIcons"
 import { updateFeedIcon } from "@/store/feedIconsState"
 import { getSecondHostname } from "@/utils/url"
 
+import "./controls.css"
+
 const DEFAULT_ICON_URL = "/default-feed-icon.png"
 
 const getFallbackIconURL = (feed) => {
@@ -63,9 +65,8 @@ const FeedIcon = ({ feed, className = "feed-icon" }) => {
     return (
       <img
         alt=""
-        className={className}
+        className={className ? `app-feed-icon ${className}` : "app-feed-icon"}
         src={DEFAULT_ICON_URL}
-        style={{ borderRadius: "20%", backgroundColor: "rgba(255, 255, 255, 0.1)" }}
       />
     )
   }
@@ -74,12 +75,8 @@ const FeedIcon = ({ feed, className = "feed-icon" }) => {
     <img
       ref={imgRef}
       alt=""
-      className={className}
+      className={className ? `app-feed-icon ${className}` : "app-feed-icon"}
       src={iconURL}
-      style={{
-        borderRadius: "20%",
-        backgroundColor: "rgba(255, 255, 255, 0.1)",
-      }}
       onError={handleError}
       onLoad={handleImageLoad}
     />

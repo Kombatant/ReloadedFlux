@@ -1,11 +1,11 @@
-import { Button, Select } from "@arco-design/web-react"
+import { Select } from "@arco-design/web-react"
 import { IconCopy } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import hljs from "highlight.js"
 import { useCallback, useEffect, useState } from "react"
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs"
 
-import CustomTooltip from "@/components/ui/CustomTooltip"
+import IconButton from "@/components/ui/IconButton"
 import { polyglotState } from "@/hooks/useLanguage"
 import { ANIMATION_DURATION_MS } from "@/utils/constants"
 import { Message } from "@/utils/feedback"
@@ -79,9 +79,12 @@ const CopyButton = ({ onClick }) => {
   const { polyglot } = useStore(polyglotState)
 
   return (
-    <CustomTooltip mini content={polyglot.t("actions.copy_to_clipboard_tooltip")}>
-      <Button className="copy-button" icon={<IconCopy />} onClick={onClick} />
-    </CustomTooltip>
+    <IconButton
+      className="copy-button"
+      icon={<IconCopy />}
+      label={polyglot.t("actions.copy_to_clipboard_tooltip")}
+      onClick={onClick}
+    />
   )
 }
 

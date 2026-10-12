@@ -16,19 +16,33 @@ body[arco-theme="dark"] .background {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2;
-  background-color: #fff;
+  z-index: var(--z-sticky);
+  background-color: var(--color-bg-1);
   width: 50%;
   height: 100%;
   overflow-y: auto;
 }
 
-body[arco-theme="dark"] .form-panel {
-  background-color: #17171a;
-}
-
 .login-form {
   width: 340px;
+}
+
+.login-title.arco-typography {
+  margin-bottom: var(--space-6);
+}
+
+.login-submit.arco-btn {
+  margin-top: var(--space-2);
+}
+
+.login-help {
+  display: flex;
+  align-items: center;
+  margin-top: var(--space-8);
+}
+
+.login-help-link {
+  font-weight: 500;
 }
 
 .page-layout {
