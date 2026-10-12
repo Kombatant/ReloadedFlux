@@ -16,6 +16,13 @@
   padding-left: 8px;
 }
 
+.feed-table-search {
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
 .search-input {
   margin-bottom: 16px;
   width: 300px;
@@ -36,4 +43,23 @@
   display: flex;
   justify-content: center;
   margin-top: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .feed-table-action-bar {
+    flex-wrap: wrap;
+  }
+
+  .feed-table-search {
+    flex-basis: 100%;
+  }
+
+  .feed-table-action-bar .search-input {
+    width: 100%;
+    margin-bottom: var(--space-2);
+  }
+
+  .feed-table-action-bar .button-group {
+    padding-left: 0;
+  }
 }

@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Select, Switch } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router"
 
 import { addFeed } from "@/apis"
@@ -30,11 +30,19 @@ const SettingsModal = () => {
     settingsTabsActiveTab,
   } = useModalToggle()
 
+  // On mobile, close Settings when the user navigates away. Track the path in a
+  // ref so opening the dialog itself does not count as a navigation (it used
+  // to close the moment it opened on narrow screens).
+  const lastPathnameRef = useRef(location.pathname)
   useEffect(() => {
-    if (isBelowMedium && settingsModalVisible) {
+    if (lastPathnameRef.current === location.pathname) {
+      return
+    }
+    lastPathnameRef.current = location.pathname
+    if (isBelowMedium) {
       setSettingsModalVisible(false)
     }
-  }, [location.pathname, isBelowMedium, settingsModalVisible, setSettingsModalVisible])
+  }, [location.pathname, isBelowMedium, setSettingsModalVisible])
 
   return (
     <Modal

@@ -90,9 +90,8 @@
 .article-detail-meta {
   display: flex;
   align-items: baseline;
-  flex-wrap: nowrap;
-  gap: 10px 6px;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .article-detail-source {

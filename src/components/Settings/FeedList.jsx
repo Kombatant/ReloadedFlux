@@ -563,14 +563,7 @@ const FeedList = () => {
   return (
     <>
       <div className="feed-table-action-bar">
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "left",
-            minWidth: 0,
-          }}
-        >
+        <div className="feed-table-search">
           <Input.Search
             allowClear
             className="search-input"

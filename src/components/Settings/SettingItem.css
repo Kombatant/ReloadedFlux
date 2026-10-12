@@ -80,3 +80,21 @@
 .hotkey-tag-input {
   width: 96px;
 }
+
+@media screen and (max-width: 768px) {
+  .setting-row {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .setting-row > header {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .setting-row .input-select,
+  .setting-row .input-wide,
+  .setting-row .input-slider {
+    width: 100%;
+  }
+}

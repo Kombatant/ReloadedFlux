@@ -118,7 +118,9 @@ body[arco-theme="dark"] .content-empty::before {
     /* Make article detail cover the whole viewport on mobile */
     position: fixed !important;
     inset: 0 !important;
-    z-index: 10000 !important;
+    /* Same level as Arco popups (1000); those render later in the DOM, so
+       menus, messages, drawers and the photo lightbox all stack above it. */
+    z-index: var(--z-fullscreen) !important;
     width: 100% !important;
     height: 100% !important;
     border: 0;
