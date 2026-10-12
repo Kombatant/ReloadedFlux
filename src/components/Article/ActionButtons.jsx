@@ -1,4 +1,4 @@
-import { Button, Dropdown, Menu } from "@arco-design/web-react"
+import { Dropdown, Menu } from "@arco-design/web-react"
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -18,7 +18,8 @@ import { useStore } from "@nanostores/react"
 import { memo, useState } from "react"
 
 import AiSpark from "@/components/icons/AiSpark"
-import CustomTooltip from "@/components/ui/CustomTooltip"
+import { AppMenu, AppMenuItemContent } from "@/components/ui/AppMenu"
+import IconButton from "@/components/ui/IconButton"
 import useClassicKeyHandlers from "@/hooks/useClassicKeyHandlers"
 import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
@@ -51,12 +52,11 @@ const DesktopButtons = memo(
         {commonButtons.fetch}
         {commonButtons.summary}
         {hasIntegrations && (
-          <CustomTooltip
-            mini
-            content={polyglot.t("article_card.save_to_third_party_services_tooltip")}
-          >
-            <Button icon={<IconSave />} shape="circle" onClick={handleSaveToThirdPartyServices} />
-          </CustomTooltip>
+          <IconButton
+            icon={<IconSave />}
+            label={polyglot.t("article_card.save_to_third_party_services_tooltip")}
+            onClick={handleSaveToThirdPartyServices}
+          />
         )}
         {commonButtons.toc}
         {commonButtons.more}
@@ -169,88 +169,73 @@ const ActionButtons = () => {
   const commonButtons = {
     prev:
       isBelowMedium && enableSwipeGesture ? undefined : (
-        <CustomTooltip mini content={polyglot.t("article_card.previous_tooltip")}>
-          <Button
-            disabled={!prevContent}
-            icon={<IconArrowLeft />}
-            shape="circle"
-            onClick={navigateToPreviousArticle}
-          />
-        </CustomTooltip>
+        <IconButton
+          disabled={!prevContent}
+          icon={<IconArrowLeft />}
+          label={polyglot.t("article_card.previous_tooltip")}
+          onClick={navigateToPreviousArticle}
+        />
       ),
     next:
       isBelowMedium && enableSwipeGesture ? undefined : (
-        <CustomTooltip mini content={polyglot.t("article_card.next_tooltip")}>
-          <Button
-            disabled={!nextContent}
-            icon={<IconArrowRight />}
-            shape="circle"
-            onClick={navigateToNextArticle}
-          />
-        </CustomTooltip>
+        <IconButton
+          disabled={!nextContent}
+          icon={<IconArrowRight />}
+          label={polyglot.t("article_card.next_tooltip")}
+          onClick={navigateToNextArticle}
+        />
       ),
     status: (
-      <CustomTooltip
-        mini
-        content={
+      <IconButton
+        icon={isUnread ? <IconMinusCircle /> : <IconRecord />}
+        label={
           isUnread
             ? polyglot.t("article_card.mark_as_read_tooltip")
             : polyglot.t("article_card.mark_as_unread_tooltip")
         }
-      >
-        <Button
-          icon={isUnread ? <IconMinusCircle /> : <IconRecord />}
-          shape="circle"
-          onClick={() => handleToggleStatus(activeContent)}
-        />
-      </CustomTooltip>
+        onClick={() => handleToggleStatus(activeContent)}
+      />
     ),
     star: (
-      <CustomTooltip
-        mini
-        content={
+      <IconButton
+        icon={isStarred ? <IconStarFill /> : <IconStar />}
+        starred={isStarred}
+        label={
           isStarred
             ? polyglot.t("article_card.unstar_tooltip")
             : polyglot.t("article_card.star_tooltip")
         }
-      >
-        <Button
-          icon={isStarred ? <IconStarFill style={{ color: "#ffcd00" }} /> : <IconStar />}
-          shape="circle"
-          onClick={() => handleToggleStarred(activeContent)}
-        />
-      </CustomTooltip>
+        onClick={() => handleToggleStarred(activeContent)}
+      />
     ),
     close: (
-      <CustomTooltip mini content={polyglot.t("article_card.close_tooltip")}>
-        <Button icon={<IconClose />} shape="circle" onClick={() => exitDetailView()} />
-      </CustomTooltip>
+      <IconButton
+        icon={<IconClose />}
+        label={polyglot.t("article_card.close_tooltip")}
+        onClick={() => exitDetailView()}
+      />
     ),
     fetch: (
-      <CustomTooltip mini content={fetchOriginalTooltip}>
-        <Button
-          disabled={isFetchedOriginal}
-          icon={<IconCloudDownload />}
-          loading={isFetchingOriginal}
-          shape="circle"
-          onClick={handleFetchOriginal}
-        />
-      </CustomTooltip>
+      <IconButton
+        disabled={isFetchedOriginal}
+        icon={<IconCloudDownload />}
+        label={fetchOriginalTooltip}
+        loading={isFetchingOriginal}
+        onClick={handleFetchOriginal}
+      />
     ),
     summary: (
-      <CustomTooltip mini content={polyglot.t("article_card.summarize_tooltip")}>
-        <Button
-          disabled={isSummaryDisabled}
-          icon={<AiSpark />}
-          loading={isSummarizing}
-          shape="circle"
-          onClick={async () => {
-            setIsSummarizing(true)
-            await handleSummarizeContent()
-            setIsSummarizing(false)
-          }}
-        />
-      </CustomTooltip>
+      <IconButton
+        disabled={isSummaryDisabled}
+        icon={<AiSpark />}
+        label={polyglot.t("article_card.summarize_tooltip")}
+        loading={isSummarizing}
+        onClick={async () => {
+          setIsSummarizing(true)
+          await handleSummarizeContent()
+          setIsSummarizing(false)
+        }}
+      />
     ),
     toc: hasHeadings ? <ArticleTOC /> : null,
     more: (
@@ -258,15 +243,16 @@ const ActionButtons = () => {
         popupVisible={dropdownVisible}
         position="br"
         trigger="click"
-        triggerProps={{ className: "settings-dropdown" }}
         droplist={
-          <Menu>
+          <AppMenu>
             {hasIntegrations && isBelowMedium && (
               <Menu.Item
                 key="save_to_third_party_services"
                 onClick={() => handleSaveToThirdPartyServices(activeContent)}
               >
-                <span>{polyglot.t("article_card.save_to_third_party_services_tooltip")}</span>
+                <AppMenuItemContent icon={<IconSave />}>
+                  {polyglot.t("article_card.save_to_third_party_services_tooltip")}
+                </AppMenuItemContent>
               </Menu.Item>
             )}
 
@@ -276,28 +262,25 @@ const ActionButtons = () => {
                 disabled={isFetchedOriginal || isFetchingOriginal}
                 onClick={handleFetchOriginal}
               >
-                <div className="settings-menu-item">
-                  <span>{fetchOriginalTooltip}</span>
-                  <IconCloudDownload />
-                </div>
+                <AppMenuItemContent icon={<IconCloudDownload />}>
+                  {fetchOriginalTooltip}
+                </AppMenuItemContent>
               </Menu.Item>
             )}
 
             {navigator.share && (
               <Menu.Item key="share" onClick={handleShare}>
-                <div className="settings-menu-item">
-                  <span>{polyglot.t("article_card.share_tooltip")}</span>
-                  <IconShareExternal />
-                </div>
+                <AppMenuItemContent icon={<IconShareExternal />}>
+                  {polyglot.t("article_card.share_tooltip")}
+                </AppMenuItemContent>
               </Menu.Item>
             )}
 
             {activeContent.comments_url !== "" && (
               <Menu.Item key="view-comments" onClick={handleViewComments}>
-                <div className="settings-menu-item">
-                  <span>{polyglot.t("article_card.view_comments_tooltip")}</span>
-                  <IconMessage />
-                </div>
+                <AppMenuItemContent icon={<IconMessage />}>
+                  {polyglot.t("article_card.view_comments_tooltip")}
+                </AppMenuItemContent>
               </Menu.Item>
             )}
 
@@ -305,16 +288,19 @@ const ActionButtons = () => {
               key="open-in-browser"
               onClick={() => handleOpenLinkExternally(activeContent)}
             >
-              <div className="settings-menu-item">
-                <span>{polyglot.t("article_card.open_link_externally_tooltip")}</span>
-                <IconLaunch />
-              </div>
+              <AppMenuItemContent icon={<IconLaunch />}>
+                {polyglot.t("article_card.open_link_externally_tooltip")}
+              </AppMenuItemContent>
             </Menu.Item>
-          </Menu>
+          </AppMenu>
         }
         onVisibleChange={setDropdownVisible}
       >
-        <Button icon={<IconMoreVertical />} shape="circle" />
+        <IconButton
+          icon={<IconMoreVertical />}
+          label={polyglot.t("article_card.more_actions_tooltip")}
+          open={dropdownVisible}
+        />
       </Dropdown>
     ),
   }

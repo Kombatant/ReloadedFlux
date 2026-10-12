@@ -172,10 +172,10 @@ const SortMenu = () => {
 
   return (
     <Dropdown
+      droplist={<AppMenu>{renderSortMenuItems(orderDirection, sortOptions)}</AppMenu>}
       popupVisible={visible}
       position="br"
       trigger="click"
-      droplist={<AppMenu>{renderSortMenuItems(orderDirection, sortOptions)}</AppMenu>}
       onVisibleChange={setVisible}
     >
       <ToolbarButton

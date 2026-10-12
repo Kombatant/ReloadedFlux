@@ -1,23 +1,19 @@
-.profile-menu.arco-dropdown-menu {
+/* Profile (main) menu. Rows, dividers and the theme picker come from the
+   shared controls in components/ui; this file adds the appearance block. */
+.profile-menu.app-menu.arco-dropdown-menu {
   width: min(300px, calc(100vw - 24px));
   max-height: calc(100dvh - 24px);
-  padding: 7px;
-  border: 1px solid var(--color-border-2);
-  border-radius: 12px;
-  /* Match the sidebar surface, including the active color palette and OLED mode. */
-  background: var(--color-neutral-2);
-  color: var(--color-text-1);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--elev-2);
 }
 
 .profile-menu-appearance {
-  padding: 9px 9px 10px;
+  padding: var(--space-2) 10px var(--space-3);
 }
 
 .profile-menu-heading {
-  margin-bottom: 14px;
+  margin-bottom: var(--space-3);
   color: var(--color-text-1);
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
 }
 
@@ -29,106 +25,87 @@
 }
 
 .profile-menu-preference + .profile-menu-preference {
-  margin-top: 14px;
+  margin-top: var(--space-3);
 }
 
 .profile-menu-preference legend {
-  margin-bottom: 7px;
+  margin-bottom: 6px;
   padding: 0;
   color: var(--color-text-2);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
 }
 
-.profile-menu-theme-options,
+.profile-menu-theme.app-segmented {
+  display: grid;
+  width: 100%;
+}
+
 .profile-menu-layout-options {
   display: grid;
-  gap: 4px;
-}
-
-.profile-menu-theme-options {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  padding: 3px;
-  border: 1px solid var(--color-border-2);
-  border-radius: 8px;
-  background: var(--color-bg-1);
-}
-
-.profile-menu-layout-options {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--space-2);
 }
 
-.profile-menu-option {
+.profile-menu-layout-option {
   position: relative;
   min-width: 0;
   cursor: pointer;
 }
 
-.profile-menu-option input {
+.profile-menu-layout-option input {
   position: absolute;
   width: 1px;
   height: 1px;
   opacity: 0;
 }
 
-.profile-menu-option-content {
+/* Same selected treatment as a selected article card. */
+.profile-menu-layout-card {
   box-sizing: border-box;
   display: flex;
-  height: 100%;
-  min-height: 32px;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 5px 3px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  gap: 6px;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-md);
   color: var(--color-text-2);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   line-height: 1.4;
   text-align: center;
   overflow-wrap: anywhere;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
 }
 
-.profile-menu-option-content > svg {
-  flex-shrink: 0;
-  font-size: 14px;
+.profile-menu-layout-option:hover .profile-menu-layout-card {
+  background-color: var(--color-fill-2);
 }
 
-.profile-menu-option:hover .profile-menu-option-content {
-  background: var(--color-neutral-3);
-}
-
-.profile-menu-option input:checked + .profile-menu-option-content {
-  color: rgb(var(--primary-6));
-  background: rgba(var(--primary-6), 0.12);
-}
-
-.profile-menu-option input:focus-visible + .profile-menu-option-content {
-  outline: 2px solid rgb(var(--primary-6));
-  outline-offset: 2px;
-}
-
-.profile-menu-layout-options .profile-menu-option-content {
-  flex-direction: column;
-  gap: 7px;
-  padding: 10px;
-  border-color: var(--color-border-2);
-  border-radius: 8px;
-}
-
-.profile-menu-layout-options input:checked + .profile-menu-option-content {
+.profile-menu-layout-option input:checked + .profile-menu-layout-card {
   border-color: rgb(var(--primary-6));
+  background-color: var(--color-primary-light-1);
+  color: rgb(var(--primary-6));
+  font-weight: 500;
+}
+
+.profile-menu-layout-option input:focus-visible + .profile-menu-layout-card {
+  outline: 2px solid rgb(var(--primary-5));
+  outline-offset: 2px;
 }
 
 .profile-menu-layout-preview {
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  height: 42px;
+  height: 40px;
   gap: 4px;
   padding: 5px;
   border: 1px solid currentColor;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   opacity: 0.8;
 }
 
@@ -157,71 +134,6 @@
 
 .profile-menu-layout-preview-stream > span {
   flex: 1;
-}
-
-.profile-menu .arco-divider-horizontal {
-  margin: 6px 0;
-  border-color: var(--color-border-2);
-}
-
-.profile-menu .arco-dropdown-menu-item {
-  display: flex;
-  min-height: 38px;
-  height: auto;
-  align-items: center;
-  padding: 9px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  line-height: 20px;
-  white-space: normal;
-  color: var(--color-text-1);
-}
-
-.profile-menu .arco-dropdown-menu-item:hover {
-  background: var(--color-neutral-3);
-}
-
-.profile-menu .icon-right {
-  flex-shrink: 0;
-  margin-right: 10px;
-  color: var(--color-text-3);
-  font-size: 16px;
-  transform: none;
-}
-
-.profile-menu .profile-menu-external-icon {
-  flex-shrink: 0;
-  margin-left: auto;
-  padding-left: 8px;
-  color: var(--color-text-3);
-  font-size: 13px;
-}
-
-.profile-menu .profile-menu-reset {
-  color: var(--color-text-2);
-}
-
-.profile-menu .profile-menu-logout:hover,
-.profile-menu .profile-menu-logout:hover .icon-right {
-  color: rgb(var(--danger-6));
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.icon-right {
-  margin-right: 8px;
-  font-size: 16px;
-  transform: translateY(1px);
 }
 
 .about-modal.arco-modal-simple {

@@ -116,6 +116,7 @@
     "marked_as_unread": "已标记为未读",
     "update_failed": "更新失败，请重试",
     "close_tooltip": "关闭文章",
+    "more_actions_tooltip": "更多操作",
     "previous_tooltip": "上一篇文章",
     "next_tooltip": "下一篇文章",
     "mark_as_read_tooltip": "标记为已读",

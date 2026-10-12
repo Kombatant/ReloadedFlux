@@ -116,6 +116,7 @@
     "marked_as_unread": "Démarqué comme lu",
     "update_failed": "Impossible de mettre à jour, veuillez réessayer",
     "close_tooltip": "Fermer l'article",
+    "more_actions_tooltip": "Plus d'actions",
     "previous_tooltip": "Article précédent",
     "next_tooltip": "Article suivant",
     "mark_as_read_tooltip": "Marquer comme lu",

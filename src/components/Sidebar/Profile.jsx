@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu, Modal } from "@arco-design/web-react"
+import { Button, Dropdown, Menu, Modal } from "@arco-design/web-react"
 import {
   IconBranch,
   IconCalendarClock,
@@ -6,6 +6,7 @@ import {
   IconDesktop,
   IconExclamationCircle,
   IconGithub,
+  IconInfoCircle,
   IconInfoCircleFill,
   IconLaunch,
   IconLink,
@@ -20,6 +21,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
+import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
+import SegmentedControl from "@/components/ui/SegmentedControl"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
 import useScreenWidth from "@/hooks/useScreenWidth"
@@ -33,32 +36,29 @@ import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
 import "./Profile.css"
 
-const PreferenceGroup = ({ label, name, value, options, onChange, layout = false }) => (
+/** Layout picker: two preview cards that act as a radio group. */
+const LayoutPicker = ({ label, value, options, onChange }) => (
   <fieldset className="profile-menu-preference">
     <legend>{label}</legend>
-    <div className={layout ? "profile-menu-layout-options" : "profile-menu-theme-options"}>
+    <div className="profile-menu-layout-options">
       {options.map((option) => (
-        <label key={option.value} className="profile-menu-option">
+        <label key={option.value} className="profile-menu-layout-option">
           <input
             checked={value === option.value}
-            name={`profile-${name}`}
+            name="profile-layout"
             type="radio"
             value={option.value}
             onChange={() => onChange(option.value)}
           />
-          <span className="profile-menu-option-content">
-            {layout ? (
-              <span
-                aria-hidden="true"
-                className={`profile-menu-layout-preview profile-menu-layout-preview-${option.value}`}
-              >
-                <span />
-                <span />
-                <span />
-              </span>
-            ) : (
-              option.icon
-            )}
+          <span className="profile-menu-layout-card">
+            <span
+              aria-hidden="true"
+              className={`profile-menu-layout-preview profile-menu-layout-preview-${option.value}`}
+            >
+              <span />
+              <span />
+              <span />
+            </span>
             <span>{option.label}</span>
           </span>
         </label>
@@ -201,38 +201,39 @@ export default function Profile() {
       position="bl"
       trigger="click"
       droplist={
-        <Menu className="profile-menu">
+        <AppMenu className="profile-menu">
           <div className="profile-menu-appearance">
             <div className="profile-menu-heading">{polyglot.t("settings.appearance")}</div>
-            <PreferenceGroup
-              label={polyglot.t("sidebar.theme_label")}
-              name="theme"
-              value={themeMode}
-              options={[
-                {
-                  value: "system",
-                  icon: <IconDesktop />,
-                  label: polyglot.t("sidebar.theme_system"),
-                },
-                {
-                  value: "light",
-                  icon: <IconSunFill />,
-                  label: polyglot.t("sidebar.theme_light"),
-                },
-                {
-                  value: "dark",
-                  icon: <IconMoonFill />,
-                  label: polyglot.t("sidebar.theme_dark"),
-                },
-              ]}
-              onChange={(value) => updateSettings({ themeMode: value })}
-            />
+            <fieldset className="profile-menu-preference">
+              <legend>{polyglot.t("sidebar.theme_label")}</legend>
+              <SegmentedControl
+                ariaLabel={polyglot.t("sidebar.theme_label")}
+                className="profile-menu-theme"
+                value={themeMode}
+                options={[
+                  {
+                    value: "system",
+                    icon: <IconDesktop />,
+                    label: polyglot.t("sidebar.theme_system"),
+                  },
+                  {
+                    value: "light",
+                    icon: <IconSunFill />,
+                    label: polyglot.t("sidebar.theme_light"),
+                  },
+                  {
+                    value: "dark",
+                    icon: <IconMoonFill />,
+                    label: polyglot.t("sidebar.theme_dark"),
+                  },
+                ]}
+                onChange={(value) => updateSettings({ themeMode: value })}
+              />
+            </fieldset>
             {/* Combined view is desktop-only; Content uses columns on smaller screens. */}
             {isBelowMedium ? null : (
-              <PreferenceGroup
-                layout
+              <LayoutPicker
                 label={polyglot.t("sidebar.layout_label")}
-                name="layout"
                 value={layoutMode}
                 options={[
                   {
@@ -248,30 +249,37 @@ export default function Profile() {
               />
             )}
           </div>
-          <Divider />
-          <Menu.Item key="0" onClick={() => setSettingsModalVisible(true)}>
-            <IconSettings className="icon-right" />
-            {polyglot.t("sidebar.settings")}
+          <AppMenuDivider />
+          <Menu.Item key="settings" onClick={() => setSettingsModalVisible(true)}>
+            <AppMenuItemContent icon={<IconSettings />}>
+              {polyglot.t("sidebar.settings")}
+            </AppMenuItemContent>
           </Menu.Item>
-          <Menu.Item key="1" onClick={() => window.open(`${server}/settings`, "_blank")}>
-            <IconLink className="icon-right" />
-            {polyglot.t("sidebar.miniflux_settings")}
-            <IconLaunch className="profile-menu-external-icon" />
+          <Menu.Item
+            key="miniflux-settings"
+            onClick={() => window.open(`${server}/settings`, "_blank")}
+          >
+            <AppMenuItemContent icon={<IconLink />} suffix={<IconLaunch />}>
+              {polyglot.t("sidebar.miniflux_settings")}
+            </AppMenuItemContent>
           </Menu.Item>
-          <Menu.Item key="3" onClick={handleAbout}>
-            <IconInfoCircleFill className="icon-right" />
-            {polyglot.t("sidebar.about")}
+          <Menu.Item key="about" onClick={handleAbout}>
+            <AppMenuItemContent icon={<IconInfoCircle />}>
+              {polyglot.t("sidebar.about")}
+            </AppMenuItemContent>
           </Menu.Item>
-          <Divider />
-          <Menu.Item key="4" className="profile-menu-reset" onClick={handleResetSettings}>
-            <IconRefresh className="icon-right" />
-            {polyglot.t("sidebar.reset_settings")}
+          <AppMenuDivider />
+          <Menu.Item key="logout" onClick={handleLogout}>
+            <AppMenuItemContent icon={<IconPoweroff />}>
+              {polyglot.t("sidebar.logout")}
+            </AppMenuItemContent>
           </Menu.Item>
-          <Menu.Item key="5" className="profile-menu-logout" onClick={handleLogout}>
-            <IconPoweroff className="icon-right" />
-            {polyglot.t("sidebar.logout")}
+          <Menu.Item key="reset-settings" onClick={handleResetSettings}>
+            <AppMenuItemContent danger icon={<IconRefresh />}>
+              {polyglot.t("sidebar.reset_settings")}
+            </AppMenuItemContent>
           </Menu.Item>
-        </Menu>
+        </AppMenu>
       }
       onVisibleChange={setMenuVisible}
     >

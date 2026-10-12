@@ -172,8 +172,11 @@
   cursor: default;
 }
 
+/* On dark surfaces a raised grey thumb muddies the accent text; use the same
+   primary tint as other selected states instead. */
 body[arco-theme="dark"] .app-segment.is-selected {
-  background-color: var(--color-fill-3);
+  background-color: var(--color-primary-light-1);
+  box-shadow: none;
 }
 
 .app-segment:focus-visible {
@@ -196,7 +199,10 @@ body[arco-theme="dark"] .app-segment.is-selected {
 .app-menu.arco-dropdown-menu {
   min-width: 200px;
   padding: 4px;
+  border: 1px solid var(--surface-popup-border);
   border-radius: var(--radius-md);
+  background-color: var(--surface-popup);
+  box-shadow: var(--elev-2);
 }
 
 .app-menu .arco-dropdown-menu-item,
@@ -205,6 +211,11 @@ body[arco-theme="dark"] .app-segment.is-selected {
   padding: 0 10px;
   border-radius: var(--radius-sm);
   line-height: 34px;
+}
+
+.app-menu .arco-dropdown-menu-item,
+.app-menu .arco-dropdown-menu-item-group-title {
+  background-color: transparent;
 }
 
 .app-menu .arco-dropdown-menu-item:not(.arco-dropdown-menu-item-disabled):hover {
@@ -235,6 +246,14 @@ body[arco-theme="dark"] .app-segment.is-selected {
   white-space: nowrap;
 }
 
+.app-menu-item-suffix {
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--color-text-3);
+  font-size: var(--font-size-sm);
+}
+
 .app-menu-item.is-checked,
 .app-menu-item.is-checked .app-menu-item-icon {
   color: rgb(var(--primary-6));
@@ -263,7 +282,7 @@ body[arco-theme="dark"] .app-segment.is-selected {
 .app-menu-divider {
   height: 1px;
   margin: 4px 6px;
-  background-color: var(--color-border-2);
+  background-color: var(--surface-popup-border);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -272,4 +291,29 @@ body[arco-theme="dark"] .app-segment.is-selected {
   .app-segment {
     transition: none;
   }
+}
+
+/* InlineAction: a button that reads as inline text. */
+.app-inline-action {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.app-inline-action:hover {
+  color: var(--color-text-1);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.app-inline-action:focus-visible {
+  border-radius: var(--radius-xs);
+  outline: 2px solid rgb(var(--primary-5));
+  outline-offset: 1px;
 }

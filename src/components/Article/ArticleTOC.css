@@ -1,13 +1,13 @@
 .toc-droplist-container {
-  background-color: var(--color-neutral-1);
-  border: 1px solid var(--color-fill-3);
-  border-radius: var(--border-radius-medium);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  border: 1px solid var(--surface-popup-border);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-popup);
+  box-shadow: var(--elev-2);
 }
 
 .toc-filter-container {
-  padding: 16px 16px 0;
+  padding: var(--space-3) var(--space-3) var(--space-2);
 }
 
 .toc-menu-item {
@@ -23,5 +23,13 @@
 
 .toc-menu-container .arco-menu,
 .toc-menu-container .arco-menu-item {
-  background-color: var(--color-neutral-1);
+  background-color: transparent;
+}
+
+.toc-menu-container .arco-menu-item {
+  border-radius: var(--radius-sm);
+}
+
+.toc-menu-container .arco-menu-item:hover {
+  background-color: var(--color-fill-2);
 }

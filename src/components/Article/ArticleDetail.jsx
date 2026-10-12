@@ -6,6 +6,7 @@ import SimpleBar from "simplebar-react"
 
 import CustomLink from "@/components/ui/CustomLink"
 import FadeTransition from "@/components/ui/FadeTransition"
+import InlineAction from "@/components/ui/InlineAction"
 import usePhotoSlider from "@/hooks/usePhotoSlider"
 import useScreenWidth from "@/hooks/useScreenWidth"
 import {
@@ -93,9 +94,9 @@ const ArticleDetail = forwardRef((_, ref) => {
                   <CustomLink text={feedTitle} url={`/feed/${feedId}`} />
                 </span>
                 {activeContent.author ? (
-                  <span className="article-detail-author" onClick={handleAuthorFilter}>
+                  <InlineAction className="article-detail-author" onClick={handleAuthorFilter}>
                     {activeContent.author}
-                  </span>
+                  </InlineAction>
                 ) : null}
               </div>
               {categoryTitle ? (

@@ -1,4 +1,4 @@
-import { Divider, Dropdown, Menu } from "@arco-design/web-react/es"
+import { Dropdown, Menu } from "@arco-design/web-react/es"
 import {
   IconClockCircle,
   IconLaunch,
@@ -12,6 +12,7 @@ import { useStore } from "@nanostores/react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { updateEntriesStatus } from "@/apis"
+import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
 import FeedIcon from "@/components/ui/FeedIcon"
 import useEntryActions from "@/hooks/useEntryActions"
 import { polyglotState } from "@/hooks/useLanguage"
@@ -218,36 +219,29 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
       position="bl"
       trigger="contextMenu"
       droplist={
-        <Menu>
+        <AppMenu>
           <Menu.Item key="open-in-browser" onClick={() => handleOpenLinkExternally(entry)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("article_card.open_link_externally_tooltip")}</span>
-              <IconLaunch />
-            </div>
+            <AppMenuItemContent icon={<IconLaunch />}>
+              {polyglot.t("article_card.open_link_externally_tooltip")}
+            </AppMenuItemContent>
           </Menu.Item>
 
-          <Divider style={{ margin: "4px 0" }} />
+          <AppMenuDivider />
 
           <Menu.Item key="toggle-status" onClick={() => handleToggleStatus(entry)}>
-            <div className="settings-menu-item">
-              <span>
-                {isUnread
-                  ? polyglot.t("article_card.mark_as_read_tooltip")
-                  : polyglot.t("article_card.mark_as_unread_tooltip")}
-              </span>
-              {isUnread ? <IconMinusCircle /> : <IconRecord />}
-            </div>
+            <AppMenuItemContent icon={isUnread ? <IconMinusCircle /> : <IconRecord />}>
+              {isUnread
+                ? polyglot.t("article_card.mark_as_read_tooltip")
+                : polyglot.t("article_card.mark_as_unread_tooltip")}
+            </AppMenuItemContent>
           </Menu.Item>
 
           <Menu.Item key="toggle-starred" onClick={() => handleToggleStarred(entry)}>
-            <div className="settings-menu-item">
-              <span>
-                {isStarred
-                  ? polyglot.t("article_card.unstar_tooltip")
-                  : polyglot.t("article_card.star_tooltip")}
-              </span>
-              {isStarred ? <IconStarFill style={{ color: "#ffcd00" }} /> : <IconStar />}
-            </div>
+            <AppMenuItemContent icon={isStarred ? <IconStarFill /> : <IconStar />}>
+              {isStarred
+                ? polyglot.t("article_card.unstar_tooltip")
+                : polyglot.t("article_card.star_tooltip")}
+            </AppMenuItemContent>
           </Menu.Item>
 
           {hasIntegrations && (
@@ -255,13 +249,12 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
               key="save-to-third-party-services"
               onClick={() => handleSaveToThirdPartyServices(entry)}
             >
-              <div className="settings-menu-item">
-                <span>{polyglot.t("article_card.save_to_third_party_services_tooltip")}</span>
-                <IconSave />
-              </div>
+              <AppMenuItemContent icon={<IconSave />}>
+                {polyglot.t("article_card.save_to_third_party_services_tooltip")}
+              </AppMenuItemContent>
             </Menu.Item>
           )}
-        </Menu>
+        </AppMenu>
       }
     >
       <div

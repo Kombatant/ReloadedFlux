@@ -1,10 +1,10 @@
-import { Button, Dropdown, Input, Menu, Typography } from "@arco-design/web-react"
+import { Dropdown, Input, Menu, Typography } from "@arco-design/web-react"
 import { IconUnorderedList } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { memo, useState } from "react"
 import SimpleBar from "simplebar-react"
 
-import CustomTooltip from "@/components/ui/CustomTooltip"
+import IconButton from "@/components/ui/IconButton"
 import { polyglotState } from "@/hooks/useLanguage"
 import { articleHeadingsState } from "@/store/contentState"
 import { scrollToHeading } from "@/utils/dom"
@@ -46,8 +46,7 @@ const ArticleTOC = () => {
           <div className="toc-filter-container">
             <Input
               allowClear
-              placeholder={polyglot.t("article_toc.filter_headings") || "Filter headings"}
-              style={{ width: "100%", marginBottom: "8px" }}
+              placeholder={polyglot.t("article_toc.filter_headings")}
               value={filterValue}
               onChange={handleFilterChange}
             />
@@ -73,9 +72,11 @@ const ArticleTOC = () => {
       }
       onVisibleChange={setDropdownVisible}
     >
-      <CustomTooltip mini content={polyglot.t("article_toc.tooltip") || "Table of Contents"}>
-        <Button icon={<IconUnorderedList />} shape="circle" />
-      </CustomTooltip>
+      <IconButton
+        icon={<IconUnorderedList />}
+        label={polyglot.t("article_toc.tooltip")}
+        open={dropdownVisible}
+      />
     </Dropdown>
   )
 }

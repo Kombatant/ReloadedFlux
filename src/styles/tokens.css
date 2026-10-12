@@ -60,7 +60,11 @@
 
 body {
   --color-star: #f7ba1e;
-  --surface-popup: var(--color-bg-popup);
+  /* Menus and popovers are built from the active palette's own greys (so
+     YInMn Blue, OLED etc. stay in tone) instead of Arco's generic popup grey:
+     the sidebar surface lifted a little toward the next step. */
+  --surface-popup: color-mix(in srgb, var(--color-neutral-2) 70%, var(--color-neutral-3));
+  --surface-popup-border: var(--color-border-2);
 
   /* Elevation */
   --elev-raised: 0 1px 2px rgba(0, 0, 0, 0.1);

@@ -132,6 +132,7 @@
     "marked_as_unread": "Marcado como no leído",
     "update_failed": "Error al actualizar, por favor intente de nuevo",
     "close_tooltip": "Cerrar artículo",
+    "more_actions_tooltip": "Más acciones",
     "previous_tooltip": "Artículo anterior",
     "next_tooltip": "Artículo siguiente",
     "mark_as_read_tooltip": "Marcar como leído",

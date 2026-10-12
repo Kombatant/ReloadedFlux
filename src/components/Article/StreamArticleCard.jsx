@@ -1,4 +1,4 @@
-import { Button, Tag, Typography } from "@arco-design/web-react"
+import { Tag, Typography } from "@arco-design/web-react"
 import {
   IconCloudDownload,
   IconLaunch,
@@ -15,8 +15,9 @@ import { useNavigate } from "react-router"
 import { updateEntriesStatus } from "@/apis"
 import AiSpark from "@/components/icons/AiSpark"
 import CustomLink from "@/components/ui/CustomLink"
-import CustomTooltip from "@/components/ui/CustomTooltip"
 import FeedIcon from "@/components/ui/FeedIcon"
+import IconButton from "@/components/ui/IconButton"
+import InlineAction from "@/components/ui/InlineAction"
 import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
@@ -280,80 +281,54 @@ const StreamArticleCard = ({
     >
       <div className="stream-story-actions-row">
         <div className="stream-story-actions">
-          <CustomTooltip
-            mini
-            content={
+          <IconButton
+            icon={isUnread ? <IconMinusCircle /> : <IconRecord />}
+            label={
               isUnread
                 ? polyglot.t("article_card.mark_as_read_tooltip")
                 : polyglot.t("article_card.mark_as_unread_tooltip")
             }
-          >
-            <Button
-              icon={isUnread ? <IconMinusCircle /> : <IconRecord />}
-              shape="circle"
-              size="small"
-              onClick={withStopPropagation(() => handleToggleStatus(currentEntry))}
-            />
-          </CustomTooltip>
-          <CustomTooltip
-            mini
-            content={
+            onClick={withStopPropagation(() => handleToggleStatus(currentEntry))}
+          />
+          <IconButton
+            icon={isStarred ? <IconStarFill /> : <IconStar />}
+            starred={isStarred}
+            label={
               isStarred
                 ? polyglot.t("article_card.unstar_tooltip")
                 : polyglot.t("article_card.star_tooltip")
             }
-          >
-            <Button
-              icon={isStarred ? <IconStarFill style={{ color: "#ffcd00" }} /> : <IconStar />}
-              shape="circle"
-              size="small"
-              onClick={withStopPropagation(() => handleToggleStarred(currentEntry))}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={fetchOriginalTooltip}>
-            <Button
-              icon={<IconCloudDownload />}
-              loading={isFetchingOriginal}
-              shape="circle"
-              size="small"
-              onClick={withStopPropagation(() => handleFetchContent(currentEntry))}
-            />
-          </CustomTooltip>
-          <CustomTooltip mini content={polyglot.t("article_card.summarize_tooltip")}>
-            <Button
-              disabled={aiProvider === "none" || hasAiSummary}
-              icon={<AiSpark />}
-              loading={isSummarizing}
-              shape="circle"
-              size="small"
-              onClick={withStopPropagation(async () => {
-                setSummarizingEntryId(currentEntry.id)
-                await handleSummarizeContent(currentEntry)
-                setSummarizingEntryId(null)
-              })}
-            />
-          </CustomTooltip>
+            onClick={withStopPropagation(() => handleToggleStarred(currentEntry))}
+          />
+          <IconButton
+            icon={<IconCloudDownload />}
+            label={fetchOriginalTooltip}
+            loading={isFetchingOriginal}
+            onClick={withStopPropagation(() => handleFetchContent(currentEntry))}
+          />
+          <IconButton
+            disabled={aiProvider === "none" || hasAiSummary}
+            icon={<AiSpark />}
+            label={polyglot.t("article_card.summarize_tooltip")}
+            loading={isSummarizing}
+            onClick={withStopPropagation(async () => {
+              setSummarizingEntryId(currentEntry.id)
+              await handleSummarizeContent(currentEntry)
+              setSummarizingEntryId(null)
+            })}
+          />
           {hasIntegrations ? (
-            <CustomTooltip
-              mini
-              content={polyglot.t("article_card.save_to_third_party_services_tooltip")}
-            >
-              <Button
-                icon={<IconSave />}
-                shape="circle"
-                size="small"
-                onClick={withStopPropagation(() => handleSaveToThirdPartyServices(currentEntry))}
-              />
-            </CustomTooltip>
-          ) : null}
-          <CustomTooltip mini content={polyglot.t("article_card.open_link_externally_tooltip")}>
-            <Button
-              icon={<IconLaunch />}
-              shape="circle"
-              size="small"
-              onClick={withStopPropagation(() => handleOpenLinkExternally(currentEntry))}
+            <IconButton
+              icon={<IconSave />}
+              label={polyglot.t("article_card.save_to_third_party_services_tooltip")}
+              onClick={withStopPropagation(() => handleSaveToThirdPartyServices(currentEntry))}
             />
-          </CustomTooltip>
+          ) : null}
+          <IconButton
+            icon={<IconLaunch />}
+            label={polyglot.t("article_card.open_link_externally_tooltip")}
+            onClick={withStopPropagation(() => handleOpenLinkExternally(currentEntry))}
+          />
         </div>
       </div>
       <Typography.Title
@@ -407,7 +382,7 @@ const StreamArticleCard = ({
               <CustomLink text={currentEntry.feed.title} url={`/feed/${currentEntry.feed.id}`} />
             </span>
             {currentEntry.author ? (
-              <span
+              <InlineAction
                 className="stream-story-author"
                 onClick={(event) => {
                   event.stopPropagation()
@@ -415,7 +390,7 @@ const StreamArticleCard = ({
                 }}
               >
                 {currentEntry.author}
-              </span>
+              </InlineAction>
             ) : null}
           </div>
           {currentEntry.feed.category?.title ? (

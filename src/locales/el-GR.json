@@ -116,6 +116,7 @@
     "marked_as_unread": "Σημειώθηκε ως μη αναγνωσμένο",
     "update_failed": "Αποτυχία ενημέρωσης, δοκιμάστε ξανά",
     "close_tooltip": "Κλείσιμο άρθρου",
+    "more_actions_tooltip": "Περισσότερες ενέργειες",
     "previous_tooltip": "Προηγούμενο άρθρο",
     "next_tooltip": "Επόμενο άρθρο",
     "mark_as_read_tooltip": "Σήμανση ως αναγνωσμένο",

@@ -12,9 +12,10 @@ export const AppMenu = ({ className, ...props }) => (
 /**
  * Row content for an AppMenu item: icon first, then the label. `checked`
  * turns the icon slot into a check mark (radio-style sections); `danger`
- * paints destructive actions.
+ * paints destructive actions; `suffix` adds a trailing hint such as an
+ * external-link icon.
  */
-export const AppMenuItemContent = ({ icon, checked, danger = false, children }) => {
+export const AppMenuItemContent = ({ icon, checked, danger = false, suffix, children }) => {
   const isCheckable = checked !== undefined
   const slot = isCheckable ? checked ? <IconCheck /> : null : icon
 
@@ -31,6 +32,11 @@ export const AppMenuItemContent = ({ icon, checked, danger = false, children }) 
         </span>
       ) : null}
       <span className="app-menu-item-label">{children}</span>
+      {suffix ? (
+        <span aria-hidden="true" className="app-menu-item-suffix">
+          {suffix}
+        </span>
+      ) : null}
     </span>
   )
 }

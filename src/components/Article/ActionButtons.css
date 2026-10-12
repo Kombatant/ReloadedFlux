@@ -2,32 +2,15 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  z-index: 2;
-  padding: 8px 10px;
+  z-index: var(--z-sticky);
+  padding: var(--space-2) 10px;
 }
 
 .action-buttons .left-side,
 .action-buttons .right-side {
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.action-buttons .left-side .arco-btn-secondary.arco-btn-disabled {
-  background-color: transparent;
-}
-
-.action-buttons .arco-btn-secondary:not(.arco-btn-disabled) {
-  background-color: transparent;
-}
-
-/* Make all action buttons transparent by default but keep hover/focus effect */
-.action-buttons .arco-btn:not(.arco-btn-disabled) {
-  background-color: transparent;
-}
-.action-buttons .arco-btn:not(.arco-btn-disabled):hover,
-.action-buttons .arco-btn:not(.arco-btn-disabled):focus {
-  background-color: var(--color-bg-1);
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .action-buttons.mobile {
@@ -39,17 +22,5 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 8px;
-}
-
-.settings-menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
-}
-
-.settings-dropdown .arco-dropdown-menu {
-  background-color: var(--color-neutral-1);
+  gap: var(--space-2);
 }

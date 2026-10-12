@@ -116,6 +116,7 @@
     "marked_as_unread": "Marked as unread",
     "update_failed": "Failed to update, please try again",
     "close_tooltip": "Close article",
+    "more_actions_tooltip": "More actions",
     "previous_tooltip": "Previous article",
     "next_tooltip": "Next article",
     "mark_as_read_tooltip": "Mark as read",

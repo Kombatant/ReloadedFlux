@@ -34,32 +34,47 @@
   height: 44px;
 }
 
+.menu-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sidebar-brand-title.arco-typography {
+  margin: 0;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.sidebar-brand-title-strong {
+  font-weight: 700;
+}
+
 .menu-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-1);
 }
 
-.menu-header-actions .arco-btn:not(.arco-btn-disabled) {
-  background-color: transparent;
+/* Section captions ("Articles", "Feeds") share the menu section-title style. */
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  margin-top: var(--space-2);
+  padding: 0 var(--space-2) 0 var(--space-3);
 }
 
-.menu-header-actions .arco-btn:not(.arco-btn-disabled):hover,
-.menu-header-actions .arco-btn:not(.arco-btn-disabled):focus {
-  background-color: var(--color-bg-1);
-}
-
-.update-available-button .arco-icon {
-  color: var(--color-danger-6);
-}
-
-.menu-header .profile-menu-trigger {
-  margin-right: 10px;
-}
-
-.section-title {
+.sidebar-section-title {
+  margin: 0;
   color: var(--color-text-3);
-  font-style: italic;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: 1.5;
+  text-transform: uppercase;
 }
 
 .custom-menu-item {

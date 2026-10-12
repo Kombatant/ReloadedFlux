@@ -1,7 +1,6 @@
 import {
   Button,
   Collapse,
-  Divider,
   Dropdown,
   Form,
   Menu,
@@ -31,10 +30,11 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
-import CustomTooltip from "@/components/ui/CustomTooltip"
+import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
 import EditCategoryModal from "@/components/ui/EditCategoryModal"
 import EditFeedModal from "@/components/ui/EditFeedModal"
 import FeedIcon from "@/components/ui/FeedIcon"
+import IconButton from "@/components/ui/IconButton"
 import useAppData from "@/hooks/useAppData"
 import useCategoryOperations from "@/hooks/useCategoryOperations"
 import { useFeedOperations } from "@/hooks/useFeedOperations"
@@ -103,43 +103,37 @@ const CategoryTitle = ({
       position="bl"
       trigger="contextMenu"
       droplist={
-        <Menu>
+        <AppMenu>
           <MenuItem key="edit-category" onClick={() => onEditCategory(category)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.edit_category")}</span>
-              <IconEdit />
-            </div>
+            <AppMenuItemContent icon={<IconEdit />}>
+              {polyglot.t("sidebar.context_menu.edit_category")}
+            </AppMenuItemContent>
           </MenuItem>
 
           <MenuItem key="refresh-category" onClick={() => onRefreshCategory(category)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.refresh_category")}</span>
-              <IconRefresh />
-            </div>
+            <AppMenuItemContent icon={<IconRefresh />}>
+              {polyglot.t("sidebar.context_menu.refresh_category")}
+            </AppMenuItemContent>
           </MenuItem>
 
           <MenuItem key="mark-all-as-read" onClick={() => onMarkAllAsRead(category)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.mark_all_as_read")}</span>
-              <IconMinusCircle />
-            </div>
+            <AppMenuItemContent icon={<IconMinusCircle />}>
+              {polyglot.t("sidebar.context_menu.mark_all_as_read")}
+            </AppMenuItemContent>
           </MenuItem>
 
           {canDelete && (
             <>
-              <Divider style={{ margin: "4px 0" }} />
+              <AppMenuDivider />
 
               <MenuItem key="delete-category" onClick={() => onDeleteCategory(category)}>
-                <div className="settings-menu-item">
-                  <span style={{ color: "var(--color-danger-light-4)" }}>
-                    {polyglot.t("sidebar.context_menu.delete_category")}
-                  </span>
-                  <IconDelete style={{ color: "var(--color-danger-light-4)" }} />
-                </div>
+                <AppMenuItemContent danger icon={<IconDelete />}>
+                  {polyglot.t("sidebar.context_menu.delete_category")}
+                </AppMenuItemContent>
               </MenuItem>
             </>
           )}
-        </Menu>
+        </AppMenu>
       }
     >
       <div
@@ -282,39 +276,33 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
       position="bl"
       trigger="contextMenu"
       droplist={
-        <Menu>
+        <AppMenu>
           <MenuItem key="edit-feed" onClick={() => onEditFeed(feed)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.edit_feed")}</span>
-              <IconEdit />
-            </div>
+            <AppMenuItemContent icon={<IconEdit />}>
+              {polyglot.t("sidebar.context_menu.edit_feed")}
+            </AppMenuItemContent>
           </MenuItem>
 
           <MenuItem key="refresh-feed" onClick={() => onRefreshFeed(feed)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.refresh_feed")}</span>
-              <IconRefresh />
-            </div>
+            <AppMenuItemContent icon={<IconRefresh />}>
+              {polyglot.t("sidebar.context_menu.refresh_feed")}
+            </AppMenuItemContent>
           </MenuItem>
 
           <MenuItem key="mark-all-as-read" onClick={() => onMarkAllAsRead(feed)}>
-            <div className="settings-menu-item">
-              <span>{polyglot.t("sidebar.context_menu.mark_all_as_read")}</span>
-              <IconMinusCircle />
-            </div>
+            <AppMenuItemContent icon={<IconMinusCircle />}>
+              {polyglot.t("sidebar.context_menu.mark_all_as_read")}
+            </AppMenuItemContent>
           </MenuItem>
 
-          <Divider style={{ margin: "4px 0" }} />
+          <AppMenuDivider />
 
           <MenuItem key="delete-feed" onClick={() => onDeleteFeed(feed)}>
-            <div className="settings-menu-item">
-              <span style={{ color: "var(--color-danger-light-4)" }}>
-                {polyglot.t("sidebar.context_menu.delete_feed")}
-              </span>
-              <IconDelete style={{ color: "var(--color-danger-light-4)" }} />
-            </div>
+            <AppMenuItemContent danger icon={<IconDelete />}>
+              {polyglot.t("sidebar.context_menu.delete_feed")}
+            </AppMenuItemContent>
           </MenuItem>
-        </Menu>
+        </AppMenu>
       }
     >
       <div>
@@ -619,32 +607,26 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
     <div className="sidebar-container">
       <div className="sidebar-pinned-header">
         <div className="menu-header">
-          <span style={{ display: "flex", alignItems: "center" }}>
+          <span className="menu-header-brand">
             <Profile />
-            <Typography.Title heading={6} style={{ margin: 0, fontWeight: 300 }}>
-              ::<span style={{ fontWeight: 700 }}>Reloaded</span>Flux
+            <Typography.Title className="sidebar-brand-title" heading={6}>
+              ::<span className="sidebar-brand-title-strong">Reloaded</span>Flux
             </Typography.Title>
           </span>
           <div className="menu-header-actions">
             {hasUpdate ? (
-              <CustomTooltip mini content={polyglot.t("sidebar.update_available_tooltip")}>
-                <Button
-                  className="update-available-button"
-                  icon={<IconDownload />}
-                  shape="circle"
-                  size="small"
-                  onClick={handleOpenUpdateDialog}
-                />
-              </CustomTooltip>
-            ) : null}
-            <CustomTooltip mini content={polyglot.t("article_list.refresh_tooltip")}>
-              <Button
-                icon={<IconRefresh />}
-                shape="circle"
-                size="small"
-                onClick={handleRefreshCurrentView}
+              <IconButton
+                danger
+                icon={<IconDownload />}
+                label={polyglot.t("sidebar.update_available_tooltip")}
+                onClick={handleOpenUpdateDialog}
               />
-            </CustomTooltip>
+            ) : null}
+            <IconButton
+              icon={<IconRefresh />}
+              label={polyglot.t("article_list.refresh_tooltip")}
+              onClick={handleRefreshCurrentView}
+            />
           </div>
         </div>
       </div>
@@ -652,27 +634,13 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
       <div className="sidebar-scroll-area">
         <SimpleBar style={{ maxHeight: "100%" }}>
           <Menu hasCollapseButton={false} selectedKeys={selectedKeys}>
-            <Typography.Title className="section-title" heading={6} style={{ paddingLeft: "12px" }}>
-              {polyglot.t("sidebar.articles")}
-            </Typography.Title>
+            <div className="sidebar-section-header">
+              <h6 className="sidebar-section-title">{polyglot.t("sidebar.articles")}</h6>
+            </div>
             <SidebarMenuItems />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography.Title
-                className="section-title"
-                heading={6}
-                style={{ paddingLeft: "12px" }}
-              >
-                {polyglot.t("sidebar.feeds")}
-              </Typography.Title>
-              <div style={{ display: "flex", gap: "8px", marginRight: "8px" }}>
-                <AddFeed />
-              </div>
+            <div className="sidebar-section-header">
+              <h6 className="sidebar-section-title">{polyglot.t("sidebar.feeds")}</h6>
+              <AddFeed />
             </div>
             <Skeleton animation={true} loading={!isCoreDataReady} text={{ rows: 6 }} />
             {isCoreDataReady && (
