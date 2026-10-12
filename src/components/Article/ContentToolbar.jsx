@@ -11,7 +11,7 @@ import {
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import classNames from "classnames"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router"
 
 import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
@@ -321,11 +321,13 @@ export const StreamNavButtons = ({ streamVirtualizerRef }) => {
  * place; the Classic variant packs the filter and sort into one View menu so
  * the narrow list column keeps a single line.
  *
- * - classic: title · count … Mark read ▾ · View ▾ · Date · Search
- * - stream:  title · count … [Unread | All] · Mark read ▾ · Sort ▾ · Date · Search | ‹ ›
+ * - classic: title · count … Search · Mark read ▾ · View ▾ · Date
+ * - stream:  title · count … Search · [Unread | All] · Mark read ▾ · Sort ▾ · Date | ‹ ›
+ *
+ * Today is already a fixed 24-hour window, so it gets no date filter.
  */
 const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => {
-  const { infoFrom, isArticleListReady } = useStore(contentState)
+  const { filterDate, infoFrom, isArticleListReady } = useStore(contentState)
   const { showStatus } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const dynamicCount = useStore(dynamicCountState)
@@ -336,6 +338,15 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
   const isClassic = variant === "classic"
   // History lists everything already read, so an unread filter is meaningless.
   const showStatusFilter = infoFrom !== "history"
+  const showDateFilter = infoFrom !== "today"
+
+  // Drop a date carried over from another list: Today would still apply it,
+  // with the picker hidden and no way to clear it.
+  useEffect(() => {
+    if (!showDateFilter && filterDate) {
+      setFilterDate(null)
+    }
+  }, [showDateFilter, filterDate])
 
   return (
     <div className={classNames("content-toolbar", `content-toolbar--${variant}`)}>
@@ -357,6 +368,7 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
         ) : null}
       </div>
       <div className="content-toolbar-actions">
+        <SearchControl />
         {!isClassic && showStatusFilter ? (
           <SegmentedControl
             ariaLabel={polyglot.t("article_list.view_show")}
@@ -368,8 +380,7 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
         ) : null}
         <MarkReadControl iconOnly={isClassic} info={info} markAllAsRead={markAllAsRead} />
         {isClassic ? <ViewMenu showStatusSection={showStatusFilter} /> : <SortMenu />}
-        <DateFilter />
-        <SearchControl />
+        {showDateFilter ? <DateFilter /> : null}
         {navigation ? (
           <>
             <span aria-hidden="true" className="content-toolbar-divider" />
