@@ -155,6 +155,25 @@ export default [
     },
   },
   {
+    // Keep controls uniform: actions go through the shared primitives in
+    // src/components/ui (see src/styles/README.md).
+    files: ["src/**/*.{js,jsx}"],
+    ignores: ["src/components/ui/**", "src/utils/confirm.js"],
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "JSXAttribute[name.name='shape'][value.value='circle']",
+          message: "Use IconButton from components/ui for icon-only actions.",
+        },
+        {
+          selector: "CallExpression[callee.object.name='Modal'][callee.property.name='confirm']",
+          message: "Use confirmAction from utils/confirm for confirmations.",
+        },
+      ],
+    },
+  },
+  {
     files: ["src/components/Article/ArticleTOC.jsx", "src/main.jsx", "src/routes.jsx"],
     rules: {
       "unicorn/filename-case": "off",

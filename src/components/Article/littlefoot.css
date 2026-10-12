@@ -1,28 +1,29 @@
+/* littlefoot footnote buttons and popovers, mapped onto the app's theme tokens. */
 .littlefoot {
-  --button-background-color: #949494;
-  --button-text-color: #fff;
-  --button-active-background-color: #3f3f3f;
+  --button-background-color: var(--color-fill-3);
+  --button-text-color: var(--color-text-1);
+  --button-active-background-color: rgb(var(--primary-6));
   --button-active-text-color: #fff;
-  --button-border-radius: 0.5rem;
+  --button-border-radius: var(--radius-md);
   --button-height: 1rem;
   --button-margin: 0 0.1rem;
   --button-padding: 0 0.6rem;
-  --button-transition: background-color 0.25s ease, color 0.25s ease;
-  --popover-background-color: #f5f5f5;
-  --popover-text-color: #111;
-  --popover-border: 1px solid #949494;
-  --popover-border-radius: 0.5rem;
+  --button-transition: background-color var(--motion-base) ease, color var(--motion-base) ease;
+  --popover-background-color: var(--surface-popup);
+  --popover-text-color: var(--color-text-1);
+  --popover-border: 1px solid var(--surface-popup-border);
+  --popover-border-radius: var(--radius-md);
   --popover-max-height: 15em;
   --popover-max-width: 90%;
   --popover-horizontal-padding: 1.4rem;
   --popover-vertical-padding: 0.6rem;
-  --popover-shadow: 0 0 8px #0000004d;
+  --popover-shadow: var(--elev-2);
   --popover-transform-origin: 50% 0;
   --popover-transform: scale(0.1) translateZ(0);
   --popover-active-transform: scale(1) translateZ(0);
-  --popover-transition: opacity 0.25s ease, transform 0.25s ease;
+  --popover-transition: opacity var(--motion-base) ease, transform var(--motion-base) ease;
   --popover-width: 22em;
-  --popover-scroll-indicator-color: #3f3f3f;
+  --popover-scroll-indicator-color: var(--color-text-3);
   --popover-tooltip-size: 0.5rem;
 
   position: relative;

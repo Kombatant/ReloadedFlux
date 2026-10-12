@@ -651,15 +651,7 @@ const FeedList = () => {
         scroll={{ x: true }}
         size="small"
         renderPagination={(paginationNode) => (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: 10,
-            }}
-          >
-            {paginationNode}
-          </div>
+          <div className="feed-table-pagination">{paginationNode}</div>
         )}
         rowSelection={{
           type: "checkbox",
@@ -697,7 +689,7 @@ const FeedList = () => {
       <Divider />
 
       <SettingItem title={polyglot.t("settings.content.import_export_label")}>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="setting-row-actions">
           <Button
             icon={<IconUpload />}
             onClick={() => document.querySelector("#feedListOpmlInput").click()}

@@ -155,21 +155,15 @@ const CategoryTitle = ({
         }}
       >
         <Typography.Ellipsis
+          className="category-title-label"
           expandable={false}
           showTooltip={!isBelowMedium}
-          style={{
-            width: unreadCount ? "80%" : "100%",
-            fontWeight: 500,
-          }}
+          style={{ width: unreadCount ? "80%" : "100%" }}
         >
           {category.title}
         </Typography.Ellipsis>
         {unreadCount > 0 && (
-          <Typography.Ellipsis
-            className="unread-count"
-            expandable={false}
-            style={{ fontWeight: 500 }}
-          >
+          <Typography.Ellipsis className="unread-count" expandable={false}>
             {unreadCount}
           </Typography.Ellipsis>
         )}
@@ -328,13 +322,10 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
         >
           <div className="custom-menu-item">
             <Typography.Ellipsis
+              className="feed-title-label"
               expandable={false}
               showTooltip={!isBelowMedium}
-              style={{
-                width: feed.unreadCount ? "80%" : "100%",
-                paddingLeft: "20px",
-                boxSizing: "border-box",
-              }}
+              style={{ width: feed.unreadCount ? "80%" : "100%" }}
             >
               {showFeedIcon && <FeedIcon className="feed-icon-sidebar" feed={feed} />}
               {feed.title}

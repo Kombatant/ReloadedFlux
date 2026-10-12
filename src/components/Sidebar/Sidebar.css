@@ -17,6 +17,16 @@
   display: flex;
   justify-content: flex-end;
   color: var(--color-text-4);
+  font-weight: 500;
+}
+
+.category-title-label {
+  font-weight: 500;
+}
+
+.feed-title-label {
+  box-sizing: border-box;
+  padding-left: 20px;
 }
 
 .item-count {

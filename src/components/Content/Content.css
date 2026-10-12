@@ -99,6 +99,10 @@ body[arco-theme="dark"] .content-empty::before {
   height: var(--hint-size);
 }
 
+.swipe-hint .arco-icon {
+  font-size: var(--hint-size);
+}
+
 .swipe-hint.left {
   left: 16px;
 }

@@ -262,6 +262,7 @@ export default function Profile() {
         aria-label={polyglot.t("sidebar.profile_menu")}
         className="profile-menu-trigger"
         icon={<ReloadedFluxIcon />}
+        // eslint-disable-next-line no-restricted-syntax -- the brand mark has its own trigger style
         shape="circle"
         title={polyglot.t("sidebar.profile_menu")}
       />

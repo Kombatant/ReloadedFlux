@@ -36,7 +36,7 @@
 
 .simplebar-scrollbar::before {
   transition-delay: 1s;
-  background-color: #959595;
+  background-color: rgb(var(--gray-6));
   min-height: 30px;
 }
 

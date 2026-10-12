@@ -31,3 +31,9 @@
   display: flex;
   gap: 2px;
 }
+
+.feed-table-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}

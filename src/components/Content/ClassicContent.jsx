@@ -437,12 +437,12 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
               <AnimatePresence>
                 {isSwipingRight && (
                   <FadeTransition key="swipe-hint-left" className="swipe-hint left">
-                    <IconLeft style={{ fontSize: 24 }} />
+                    <IconLeft />
                   </FadeTransition>
                 )}
                 {isSwipingLeft && (
                   <FadeTransition key="swipe-hint-right" className="swipe-hint right">
-                    <IconRight style={{ fontSize: 24 }} />
+                    <IconRight />
                   </FadeTransition>
                 )}
               </AnimatePresence>

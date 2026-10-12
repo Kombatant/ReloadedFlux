@@ -13,8 +13,20 @@
   background-color: var(--color-bg-1);
 }
 
+/* Classic sits on the list column's surface (no block of its own) and insets
+   its title to line up with the card text below (list 10px + card 12px). */
 .content-toolbar--classic {
-  padding: 0 var(--space-1) var(--space-2) 0;
+  padding: 0 14px 6px 12px;
+  border-bottom: 1px solid var(--color-border-2);
+  background-color: transparent;
+}
+
+.content-toolbar--classic .content-toolbar-heading {
+  padding-left: 10px;
+}
+
+.content-toolbar--classic .sidebar-trigger + .content-toolbar-heading {
+  padding-left: 0;
 }
 
 .content-toolbar--stream {
