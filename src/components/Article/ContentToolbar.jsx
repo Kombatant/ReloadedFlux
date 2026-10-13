@@ -322,7 +322,9 @@ export const StreamNavButtons = ({ streamVirtualizerRef }) => {
  * the narrow list column keeps a single line.
  *
  * - classic: title · count … Search · Mark read ▾ · View ▾ · Date
- * - stream:  title · count … Search · [Unread | All] · Mark read ▾ · Sort ▾ · Date | ‹ ›
+ * - stream:  ‹ › · title · count … Search · [Unread | All] · Mark read ▾ · Sort ▾ · Date
+ *
+ * Navigation leads the row so it sits where Classic's reading pane keeps it.
  *
  * Today is already a fixed 24-hour window, so it gets no date filter.
  */
@@ -351,6 +353,7 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
   return (
     <div className={classNames("content-toolbar", `content-toolbar--${variant}`)}>
       <SidebarTrigger />
+      {navigation ? <div className="content-toolbar-nav">{navigation}</div> : null}
       <div className="content-toolbar-heading">
         {title ? (
           <Typography.Ellipsis
@@ -381,12 +384,6 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
         <MarkReadControl iconOnly={isClassic} info={info} markAllAsRead={markAllAsRead} />
         {isClassic ? <ViewMenu showStatusSection={showStatusFilter} /> : <SortMenu />}
         {showDateFilter ? <DateFilter /> : null}
-        {navigation ? (
-          <>
-            <span aria-hidden="true" className="content-toolbar-divider" />
-            {navigation}
-          </>
-        ) : null}
       </div>
     </div>
   )
