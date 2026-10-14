@@ -1,11 +1,11 @@
 {
-  "buildVersion": "20261014.03",
+  "buildVersion": "20261014.04",
   "buildDate": "2026-10-14",
-  "buildSequence": 3,
+  "buildSequence": 4,
   "channel": "main",
   "gitBranch": "main",
-  "gitHash": "7b7a438d",
-  "gitCommitDate": "2026-10-13T23:45:45-04:00",
-  "gitDate": "2026-10-13T23:45:45-04:00",
+  "gitHash": "96447823",
+  "gitCommitDate": "2026-10-14T00:12:25-04:00",
+  "gitDate": "2026-10-14T00:12:25-04:00",
   "isCanonical": true
 }
