@@ -28,6 +28,7 @@ import {
   setActiveContent,
   setInfoFrom,
   setInfoId,
+  setIsArticleListReady,
   setIsArticleLoading,
 } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
@@ -254,6 +255,11 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
   }, [duplicateHotkeys, polyglot, showHotkeysSettings])
 
   useEffect(() => {
+    // Mark the list not-ready synchronously, as StreamContent does. Until the
+    // new fetch flips it, the old view's entries are still "ready", and the
+    // auto-select below would open the old list's first entry and navigate
+    // straight back to it (Today -> category stayed on Today).
+    setIsArticleListReady(false)
     setInfoFrom(info.from)
     setInfoId(info.id)
     setActiveContent(null)
@@ -317,8 +323,11 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
   }, [params, activeContent, filteredEntries, fetchSingleEntry])
 
   useEffect(() => {
-    if (!isArticleListReady || isBelowMedium) {
-      if (!isArticleListReady) {
+    // Read readiness live: when the route changes, the info effect above has
+    // just set it false, but this render's `isArticleListReady` is still true.
+    const isListReady = isArticleListReady && contentState.get().isArticleListReady
+    if (!isListReady || isBelowMedium) {
+      if (!isListReady) {
         autoSelectAppliedRef.current = null
       }
       return
