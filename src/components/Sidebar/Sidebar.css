@@ -13,11 +13,40 @@
   align-items: center;
 }
 
-.unread-count {
+/* Unread counts: tabular figures keep the column aligned; three tiers of
+   emphasis (views, categories, feeds) carry the hierarchy. */
+.unread-count,
+.item-count {
   display: flex;
   justify-content: flex-end;
-  color: var(--color-text-4);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.item-count-view {
+  color: var(--color-text-3);
   font-weight: 500;
+}
+
+/* Category totals */
+.unread-count {
+  color: var(--color-text-3);
+  font-weight: 600;
+}
+
+.item-count-feed {
+  color: var(--color-text-3);
+  font-weight: 400;
+}
+
+/* text-4 is too faint on light backgrounds, but in dark it keeps feeds a step below categories. */
+body[arco-theme="dark"] .item-count-feed {
+  color: var(--color-text-4);
+}
+
+.sidebar-container .arco-menu-selected .item-count,
+.submenu-active .unread-count {
+  color: rgb(var(--primary-6));
 }
 
 .category-title-label {
@@ -30,10 +59,7 @@
 }
 
 .item-count {
-  display: flex;
-  justify-content: flex-end;
   width: 50%;
-  color: var(--color-text-4);
 }
 
 .menu-header {
@@ -91,12 +117,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.custom-menu-item .item-count {
-  display: flex;
-  justify-content: flex-end;
-  color: var(--color-text-4);
 }
 
 .category-title {

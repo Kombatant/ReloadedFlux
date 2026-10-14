@@ -174,7 +174,7 @@ const CategoryTitle = ({
 
 const CountDisplay = ({ count }) => {
   return (
-    <Typography.Ellipsis className="item-count" expandable={false}>
+    <Typography.Ellipsis className="item-count item-count-view" expandable={false}>
       {count || ""}
     </Typography.Ellipsis>
   )
@@ -331,7 +331,7 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
               {feed.title}
             </Typography.Ellipsis>
             {feed.unreadCount !== 0 && (
-              <Typography.Ellipsis className="item-count" expandable={false}>
+              <Typography.Ellipsis className="item-count item-count-feed" expandable={false}>
                 {feed.unreadCount}
               </Typography.Ellipsis>
             )}
