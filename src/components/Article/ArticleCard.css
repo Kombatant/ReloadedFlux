@@ -32,6 +32,15 @@
   opacity: 1;
 }
 
+/* The feed-icon backdrop fades with the content. */
+.card-content-read + .card-icon-backdrop {
+  opacity: var(--card-read-opacity);
+}
+
+.card-wrapper.selected .card-content-read + .card-icon-backdrop {
+  opacity: 1;
+}
+
 .card-image-mini {
   width: 80px;
   height: 80px;

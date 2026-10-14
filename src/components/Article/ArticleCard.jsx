@@ -22,6 +22,8 @@ import { settingsState } from "@/store/settingsState"
 import { WIDE_IMAGE_RATIO } from "@/utils/constants"
 import { generateReadingTime, generateRelativeTime } from "@/utils/date"
 import { Message } from "@/utils/feedback"
+
+import CardIconBackdrop from "./CardIconBackdrop"
 import "./ArticleCard.css"
 
 const ArticleCardImage = ({ entry, isWideImage }) => {
@@ -50,6 +52,7 @@ const ArticleCardImage = ({ entry, isWideImage }) => {
 
 const ArticleCard = ({ entry, handleEntryClick, children }) => {
   const {
+    cardIconBackdrop,
     coverDisplayMode,
     enableContextMenu,
     markReadOnScroll,
@@ -329,6 +332,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
             )}
           </div>
         </div>
+        {cardIconBackdrop && <CardIconBackdrop feed={entry.feed} />}
         {children}
       </div>
     </Dropdown>

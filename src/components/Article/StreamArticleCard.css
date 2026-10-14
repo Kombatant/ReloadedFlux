@@ -134,6 +134,14 @@
   margin-top: 0;
 }
 
+/* Read cards already fade it through the `> *` rule above. */
+.stream-story-card .card-icon-backdrop {
+  --icon-backdrop-size: 120px;
+  --icon-backdrop-blur: 3px;
+  --icon-backdrop-fade: 300px;
+  --icon-backdrop-glow-blur: 36px;
+}
+
 /* ---- Main column: eyebrow, title, body ---------------------------------- */
 
 .stream-story-main {

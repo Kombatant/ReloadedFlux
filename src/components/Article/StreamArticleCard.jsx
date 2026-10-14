@@ -39,6 +39,7 @@ import { streamDebug } from "@/utils/stream-debug"
 import ArticleActionBar from "./ArticleActionBar"
 import ArticleBodyRenderer from "./ArticleBodyRenderer"
 import ArticleEyebrow from "./ArticleEyebrow"
+import CardIconBackdrop from "./CardIconBackdrop"
 
 import "./StreamArticleCard.css"
 
@@ -184,8 +185,13 @@ const StreamArticleCard = ({
   showDayHeader = false,
   timelineDate = null,
 }) => {
-  const { articleWidth, markReadOnScroll, streamRenderSelectedOnly, titleAlignment } =
-    useStore(settingsState)
+  const {
+    articleWidth,
+    cardIconBackdrop,
+    markReadOnScroll,
+    streamRenderSelectedOnly,
+    titleAlignment,
+  } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const { isBelowMedium } = useScreenWidth()
 
@@ -366,6 +372,7 @@ const StreamArticleCard = ({
         }
       }}
     >
+      {cardIconBackdrop && <CardIconBackdrop feed={currentEntry.feed} />}
       <div className="stream-story-main">
         <ArticleEyebrow
           centered={isCentered}

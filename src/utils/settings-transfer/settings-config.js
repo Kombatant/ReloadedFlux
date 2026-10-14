@@ -45,6 +45,7 @@ const ENUM_VALUES = {
 
 const BOOLEAN_SETTINGS_KEYS = [
   "animationsEnabled",
+  "cardIconBackdrop",
   "compactSidebarGroups",
   "edgeToEdgeImages",
   "enableContextMenu",
@@ -150,6 +151,7 @@ export const createDefaultSettings = (language = "en-CA") => ({
   articleWidth: 75,
   sidebarWidth: 240,
   entryListWidth: 420,
+  cardIconBackdrop: false,
   compactSidebarGroups: true,
   contentFetcher: "miniflux",
   coverDisplayMode: "auto",

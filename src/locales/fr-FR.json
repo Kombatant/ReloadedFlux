@@ -462,6 +462,8 @@
     "layout_mode_stream": "Combinée",
     "stream_timeline_label": "Vue chronologique",
     "stream_timeline_description": "Affiche les articles sur une frise chronologique, regroupés par jour.",
+    "card_icon_backdrop_label": "Icône du flux en arrière-plan",
+    "card_icon_backdrop_description": "Affiche une icône du flux agrandie et légèrement floutée dans le coin des cartes d'articles.",
     "cover_display_mode_label": "Mode d'affichage des couvertures",
     "cover_display_mode_description": "Choisissez comment les images de couverture sont affichées",
     "cover_display_mode_auto": "Auto",

@@ -45,6 +45,7 @@ const useEffectiveDarkMode = () => {
 const Appearance = () => {
   const {
     animationsEnabled,
+    cardIconBackdrop,
     compactSidebarGroups,
     fontFamily,
     layoutMode,
@@ -191,6 +192,18 @@ const Appearance = () => {
           checked={streamTimeline}
           disabled={!isCombinedLayout}
           onChange={(value) => handleConfigChange({ streamTimeline: value })}
+        />
+      </SettingItem>
+
+      <Divider />
+
+      <SettingItem
+        description={polyglot.t("appearance.card_icon_backdrop_description")}
+        title={polyglot.t("appearance.card_icon_backdrop_label")}
+      >
+        <Switch
+          checked={cardIconBackdrop}
+          onChange={(value) => handleConfigChange({ cardIconBackdrop: value })}
         />
       </SettingItem>
 

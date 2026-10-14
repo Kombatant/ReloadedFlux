@@ -462,6 +462,8 @@
     "layout_mode_stream": "Combined",
     "stream_timeline_label": "Timeline view",
     "stream_timeline_description": "Show articles on a time rail, grouped by day.",
+    "card_icon_backdrop_label": "Feed icon backdrop",
+    "card_icon_backdrop_description": "Show an enlarged, softly blurred feed icon in the corner of article cards.",
     "cover_display_mode_label": "Article cover display mode",
     "cover_display_mode_description": "Choose how article cover images are displayed",
     "cover_display_mode_auto": "Auto",

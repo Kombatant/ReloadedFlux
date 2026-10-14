@@ -461,6 +461,8 @@
     "layout_mode_stream": "Συνδυασμένη",
     "stream_timeline_label": "Προβολή χρονολογίου",
     "stream_timeline_description": "Εμφάνιση των άρθρων σε χρονολόγιο, ομαδοποιημένα ανά ημέρα.",
+    "card_icon_backdrop_label": "Εικονίδιο ροής στο φόντο",
+    "card_icon_backdrop_description": "Εμφανίζει ένα μεγεθυμένο, ελαφρώς θολό εικονίδιο ροής στη γωνία των καρτών άρθρων.",
     "cover_display_mode_label": "Τρόπος εμφάνισης εξώφυλλου άρθρου",
     "cover_display_mode_description": "Επιλέξτε πώς εμφανίζονται οι εικόνες εξωφύλλου",
     "cover_display_mode_auto": "Αυτόματο",

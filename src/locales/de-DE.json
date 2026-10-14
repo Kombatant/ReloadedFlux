@@ -462,6 +462,8 @@
     "layout_mode_stream": "Kombiniert",
     "stream_timeline_label": "Zeitleistenansicht",
     "stream_timeline_description": "Artikel auf einer Zeitleiste anzeigen, nach Tag gruppiert.",
+    "card_icon_backdrop_label": "Feed-Symbol im Hintergrund",
+    "card_icon_backdrop_description": "Zeigt ein vergrößertes, leicht unscharfes Feed-Symbol in der Ecke der Artikelkarten.",
     "cover_display_mode_label": "Titelbild-Anzeigemodus",
     "cover_display_mode_description": "Wählen, wie Artikeltitelbilder angezeigt werden",
     "cover_display_mode_auto": "Automatisch",
