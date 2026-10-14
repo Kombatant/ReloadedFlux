@@ -15,7 +15,7 @@ This fork was initially created to add some stuff that I was sorely missing from
 - AI Summarization of articles
   ![](images/reloadedflux_ai.png)
 
-- New Content section contains old feed + article three dot menu options, plus new colour and global font setting for the whole app.
+- Settings menus have been revamped, with more options present.
   ![](images/reloadedflux_appearance.png)
 
 - Some theme changes I was applying with Tampermonkey up until now, with tweaks to colours, fonts and spacing.
