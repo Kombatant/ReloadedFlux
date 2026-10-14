@@ -4,9 +4,9 @@
   --icon-backdrop-blur: 2px;
   --icon-backdrop-fade: 180px;
   --icon-backdrop-opacity: 0.5;
-  --icon-backdrop-glow-scale: 1.6;
-  --icon-backdrop-glow-blur: 24px;
-  --icon-backdrop-glow-opacity: 0.35;
+  --icon-backdrop-wash-scale: 1.6;
+  --icon-backdrop-wash-blur: 24px;
+  --icon-backdrop-wash-opacity: 0.35;
   position: absolute;
   inset: 0;
   /* Under the card's content but over its background: .card-wrapper is a
@@ -18,8 +18,13 @@
   transition: opacity var(--motion-base);
 }
 
+.card-icon-backdrop-glow {
+  --icon-backdrop-size: 166px;
+  --icon-backdrop-blur: 18px;
+}
+
 .card-icon-backdrop .card-icon-backdrop-image,
-.card-icon-backdrop .card-icon-backdrop-glow {
+.card-icon-backdrop .card-icon-backdrop-wash {
   position: absolute;
   top: calc(var(--icon-backdrop-size) * -0.2);
   left: calc(var(--icon-backdrop-size) * -0.2);
@@ -33,11 +38,15 @@
   filter: blur(var(--icon-backdrop-blur));
 }
 
+.card-icon-backdrop-glow .card-icon-backdrop-image {
+  filter: blur(var(--icon-backdrop-blur)) saturate(1.4);
+}
+
 /* Scaled about the icon's centre, so the wash spreads evenly around it. */
-.card-icon-backdrop .card-icon-backdrop-glow {
-  opacity: var(--icon-backdrop-glow-opacity);
-  filter: blur(var(--icon-backdrop-glow-blur)) saturate(1.4);
-  transform: scale(var(--icon-backdrop-glow-scale));
+.card-icon-backdrop .card-icon-backdrop-wash {
+  opacity: var(--icon-backdrop-wash-opacity);
+  filter: blur(var(--icon-backdrop-wash-blur)) saturate(1.4);
+  transform: scale(var(--icon-backdrop-wash-scale));
 }
 
 @media (prefers-reduced-motion: reduce) {

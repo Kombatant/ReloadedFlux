@@ -47,6 +47,15 @@ test("sanitizeSettings clamps numeric values and falls back on invalid enums", (
   assert.equal(sanitizedSettings.showStatus, defaults.showStatus)
 })
 
+test("sanitizeSettings migrates the old boolean feed icon backdrop", () => {
+  const defaults = createDefaultSettings("en-CA")
+
+  assert.equal(sanitizeSettings({ cardIconBackdrop: true }, defaults).cardIconBackdrop, "icon")
+  assert.equal(sanitizeSettings({ cardIconBackdrop: false }, defaults).cardIconBackdrop, "off")
+  assert.equal(sanitizeSettings({ cardIconBackdrop: "glow" }, defaults).cardIconBackdrop, "glow")
+  assert.equal(sanitizeSettings({ cardIconBackdrop: "bogus" }, defaults).cardIconBackdrop, "off")
+})
+
 test("pickExportableSettings removes all AI settings", () => {
   const settings = sanitizeSettings({
     ...createDefaultSettings("en-CA"),

@@ -139,7 +139,12 @@
   --icon-backdrop-size: 120px;
   --icon-backdrop-blur: 3px;
   --icon-backdrop-fade: 300px;
-  --icon-backdrop-glow-blur: 36px;
+  --icon-backdrop-wash-blur: 36px;
+}
+
+.stream-story-card .card-icon-backdrop-glow {
+  --icon-backdrop-size: 256px;
+  --icon-backdrop-blur: 25px;
 }
 
 /* ---- Main column: eyebrow, title, body ---------------------------------- */

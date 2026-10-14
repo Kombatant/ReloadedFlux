@@ -27,6 +27,7 @@ export const SUPPORTED_LANGUAGES = ["en-CA", "de-DE", "es-ES", "fr-FR", "zh-CN",
 
 const ENUM_VALUES = {
   aiProvider: ["none", ...AI_PROVIDER_KEYS],
+  cardIconBackdrop: ["off", "icon", "glow"],
   contentFetcher: ["miniflux", "fulltextrss"],
   coverDisplayMode: ["auto", "banner", "thumbnail"],
   homePage: ["all", "today", "starred", "history"],
@@ -45,7 +46,6 @@ const ENUM_VALUES = {
 
 const BOOLEAN_SETTINGS_KEYS = [
   "animationsEnabled",
-  "cardIconBackdrop",
   "compactSidebarGroups",
   "edgeToEdgeImages",
   "enableContextMenu",
@@ -151,7 +151,7 @@ export const createDefaultSettings = (language = "en-CA") => ({
   articleWidth: 75,
   sidebarWidth: 240,
   entryListWidth: 420,
-  cardIconBackdrop: false,
+  cardIconBackdrop: "off",
   compactSidebarGroups: true,
   contentFetcher: "miniflux",
   coverDisplayMode: "auto",
@@ -208,6 +208,11 @@ export const sanitizeSettings = (value, defaultSettings = createDefaultSettings(
     typeof storedValue.lightboxSlideAnimation === "boolean"
   ) {
     storedValue.animationsEnabled = storedValue.lightboxSlideAnimation
+  }
+
+  // Briefly an on/off switch before it gained a second style.
+  if (typeof storedValue.cardIconBackdrop === "boolean") {
+    storedValue.cardIconBackdrop = storedValue.cardIconBackdrop ? "icon" : "off"
   }
 
   const sanitizedSettings = { ...defaultSettings, ...storedValue }
@@ -291,6 +296,11 @@ export const sanitizeSettings = (value, defaultSettings = createDefaultSettings(
     { decimals: 2 },
   )
 
+  sanitizedSettings.cardIconBackdrop = sanitizeEnum(
+    storedValue.cardIconBackdrop,
+    defaultSettings.cardIconBackdrop,
+    ENUM_VALUES.cardIconBackdrop,
+  )
   sanitizedSettings.contentFetcher = sanitizeEnum(
     storedValue.contentFetcher,
     defaultSettings.contentFetcher,

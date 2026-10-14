@@ -56,6 +56,12 @@ const Appearance = () => {
   const isDark = useEffectiveDarkMode()
   const isCombinedLayout = layoutMode === "stream"
 
+  const cardIconBackdropOptions = [
+    { label: polyglot.t("appearance.card_icon_backdrop_off"), value: "off" },
+    { label: polyglot.t("appearance.card_icon_backdrop_icon"), value: "icon" },
+    { label: polyglot.t("appearance.card_icon_backdrop_glow"), value: "glow" },
+  ]
+
   const fontFamilyOptions = [
     { label: polyglot.t("appearance.font_family_system"), value: "system-ui" },
     { label: "Inter", value: "'Inter', sans-serif" },
@@ -201,10 +207,18 @@ const Appearance = () => {
         description={polyglot.t("appearance.card_icon_backdrop_description")}
         title={polyglot.t("appearance.card_icon_backdrop_label")}
       >
-        <Switch
-          checked={cardIconBackdrop}
+        <Select
+          className="input-select"
+          getPopupContainer={() => document.body}
+          value={cardIconBackdrop}
           onChange={(value) => handleConfigChange({ cardIconBackdrop: value })}
-        />
+        >
+          {cardIconBackdropOptions.map(({ label, value }) => (
+            <Select.Option key={value} value={value}>
+              {label}
+            </Select.Option>
+          ))}
+        </Select>
       </SettingItem>
 
       <Divider />

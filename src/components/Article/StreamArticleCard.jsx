@@ -372,7 +372,9 @@ const StreamArticleCard = ({
         }
       }}
     >
-      {cardIconBackdrop && <CardIconBackdrop feed={currentEntry.feed} />}
+      {cardIconBackdrop !== "off" && (
+        <CardIconBackdrop feed={currentEntry.feed} variant={cardIconBackdrop} />
+      )}
       <div className="stream-story-main">
         <ArticleEyebrow
           centered={isCentered}

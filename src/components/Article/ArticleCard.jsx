@@ -332,7 +332,9 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
             )}
           </div>
         </div>
-        {cardIconBackdrop && <CardIconBackdrop feed={entry.feed} />}
+        {cardIconBackdrop !== "off" && (
+          <CardIconBackdrop feed={entry.feed} variant={cardIconBackdrop} />
+        )}
         {children}
       </div>
     </Dropdown>
