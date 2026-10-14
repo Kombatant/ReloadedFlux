@@ -86,7 +86,7 @@ const renderAction = (action, { iconOnly, showHint }) => {
  * leading actions icon-only (label moves to the tooltip). Trailing actions
  * keep their labels.
  */
-const ArticleActionBar = ({ className, leading, trailing }) => {
+const ArticleActionBar = ({ className, hideHints = false, leading, trailing }) => {
   const barRef = useRef(null)
   const [density, setDensity] = useState("full")
 
@@ -108,7 +108,7 @@ const ArticleActionBar = ({ className, leading, trailing }) => {
     return () => observer.disconnect()
   }, [])
 
-  const showHint = density === "full"
+  const showHint = density === "full" && !hideHints
   const leadingOptions = { iconOnly: density === "compact", showHint }
   const trailingOptions = { iconOnly: false, showHint }
 

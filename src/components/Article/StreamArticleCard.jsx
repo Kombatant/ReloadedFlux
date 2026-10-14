@@ -60,10 +60,14 @@ const hasCombinedSelection = () => {
 }
 
 /**
- * Action bar under the selected card. Rendered only for the selected card, so
- * its store subscriptions (next entry, hotkeys) never wake the other cards.
+ * Action bar under every card. It is on every card, not just the selected one,
+ * so selecting a card never changes any card's height: a bar that came and
+ * went made the card above shrink ~49px mid-navigation and the newly selected
+ * card bounce before alignment caught up. Next and the key hints act on the
+ * selected entry, so only the selected card shows them; both sit on the same
+ * single row, so they don't change the height either.
  */
-const StreamCardFooter = ({ entry, onNavigateNext }) => {
+const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
   const { hasIntegrations } = useStore(dataState)
   const { aiProvider } = useStore(settingsState)
   const hotkeys = useStore(hotkeysState)
@@ -146,7 +150,7 @@ const StreamCardFooter = ({ entry, onNavigateNext }) => {
       hint: hotkeys.openLinkExternally,
       onClick: () => handleOpenLinkExternally(entry),
     },
-    {
+    isSelected && {
       key: "next",
       icon: <IconArrowDown />,
       label: polyglot.t("article_card.next_label"),
@@ -161,8 +165,9 @@ const StreamCardFooter = ({ entry, onNavigateNext }) => {
   return (
     <ArticleActionBar
       className="stream-story-footer"
+      hideHints={!isSelected}
       leading={isolateClicks(leadingActions)}
-      trailing={isolateClicks(trailingActions)}
+      trailing={isolateClicks(trailingActions.filter(Boolean))}
     />
   )
 }
@@ -404,9 +409,11 @@ const StreamArticleCard = ({
           )}
         </div>
       </div>
-      {isSelected ? (
-        <StreamCardFooter entry={currentEntry} onNavigateNext={onNavigateNext} />
-      ) : null}
+      <StreamCardFooter
+        entry={currentEntry}
+        isSelected={isSelected}
+        onNavigateNext={onNavigateNext}
+      />
     </article>
   )
 
