@@ -18,6 +18,7 @@ const Hotkeys = () => {
     "openLinkExternally",
     "toggleReadStatus",
     "fetchOriginalArticle",
+    "summarizeContent",
     "toggleStarStatus",
     "saveToThirdPartyServices",
     "openPhotoSlider",

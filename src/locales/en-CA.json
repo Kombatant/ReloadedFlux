@@ -505,6 +505,7 @@
     "refreshArticleList": "Refresh the article list",
     "saveToThirdPartyServices": "Save the current article to third-party services",
     "showHotkeysSettings": "Show the hotkeys settings",
+    "summarizeContent": "Summarize the current article with AI",
     "toggleReadStatus": "Toggle the read status of the current article",
     "toggleStarStatus": "Toggle the star status (bookmark) of the current article"
   },

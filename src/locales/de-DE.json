@@ -505,6 +505,7 @@
     "refreshArticleList": "Artikelliste neu laden",
     "saveToThirdPartyServices": "Derzeitigen Artikel bei Drittanbieter speichern",
     "showHotkeysSettings": "Tastenkürzeleinstellungen anzeigen",
+    "summarizeContent": "Den derzeitigen Artikel mit KI zusammenfassen",
     "toggleReadStatus": "Lesezustand des derzeitigen Artikels umschalten",
     "toggleStarStatus": "Lesezeichenzustand des derzeitigen Artikels umschalten"
   },

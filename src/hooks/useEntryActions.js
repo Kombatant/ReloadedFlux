@@ -13,7 +13,9 @@ import {
   fetchingContentIdsState,
   setActiveContent,
   setContentFetching,
+  setContentSummarizing,
   setEntries,
+  summarizingContentIdsState,
 } from "@/store/contentState"
 import {
   setHistoryCount,
@@ -303,7 +305,7 @@ const handleFetchContent = async (entry = contentState.get().activeContent) => {
   }
 }
 
-const handleSummarizeContent = async (entry = contentState.get().activeContent) => {
+const summarizeEntry = async (entry) => {
   const aiProvider = getSettings("aiProvider")
   const aiApiKeys = getSettings("aiApiKeys") || {}
   const aiApiKey = aiApiKeys?.[aiProvider] || ""
@@ -312,10 +314,6 @@ const handleSummarizeContent = async (entry = contentState.get().activeContent) 
   const aiSummaryLanguage = getSettings("aiSummaryLanguage") || AI_SUMMARY_LANGUAGE_AUTO
   const aiSummaryExcludedLanguage = getSettings("aiSummaryExcludedLanguage") || ""
   const { polyglot } = polyglotState.get()
-
-  if (!entry) {
-    return null
-  }
 
   if (aiProvider === AI_PROVIDERS.NONE) {
     Message.warning(polyglot.t("actions.ai_summary_provider_missing"))
@@ -375,6 +373,26 @@ const handleSummarizeContent = async (entry = contentState.get().activeContent) 
     console.error("Failed to summarize content:", error)
     Message.error(polyglot.t("actions.ai_summary_error"))
     return null
+  }
+}
+
+// Resolves to the summary HTML, or null when it failed, the entry already has
+// a summary, or one for the same entry is already running (hotkeys and buttons
+// can fire repeatedly).
+const handleSummarizeContent = async (entry = contentState.get().activeContent) => {
+  if (
+    !entry ||
+    entry.content?.includes("ai-summary") ||
+    summarizingContentIdsState.get().has(entry.id)
+  ) {
+    return null
+  }
+
+  setContentSummarizing(entry.id, true)
+  try {
+    return await summarizeEntry(entry)
+  } finally {
+    setContentSummarizing(entry.id, false)
   }
 }
 

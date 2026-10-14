@@ -44,6 +44,20 @@ export const setContentFetching = (entryId, isFetching) => {
   fetchingContentIdsState.set(ids)
 }
 
+// Ids of entries with an AI summary in flight, shared so a summary started by
+// the hotkey shows the same spinner as one started from a button.
+export const summarizingContentIdsState = atom(new Set())
+
+export const setContentSummarizing = (entryId, isSummarizing) => {
+  const ids = new Set(summarizingContentIdsState.get())
+  if (isSummarizing) {
+    ids.add(entryId)
+  } else {
+    ids.delete(entryId)
+  }
+  summarizingContentIdsState.set(ids)
+}
+
 export const articleHeadingsState = computed([contentState], (content) => {
   const { activeContent } = content
   if (!activeContent?.content) {

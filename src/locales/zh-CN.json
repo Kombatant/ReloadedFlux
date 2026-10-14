@@ -505,6 +505,7 @@
     "refreshArticleList": "刷新文章列表",
     "saveToThirdPartyServices": "保存当前文章到第三方服务",
     "showHotkeysSettings": "显示快捷键设置",
+    "summarizeContent": "使用 AI 总结当前文章",
     "toggleReadStatus": "切换当前文章的阅读状态 (已读/未读)",
     "toggleStarStatus": "切换当前文章的星标状态 (收藏)"
   },

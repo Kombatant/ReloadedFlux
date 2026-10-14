@@ -22,6 +22,7 @@ const useClassicHotkeys = ({ handleRefreshArticleList, classicVirtualizerRef }) 
     openPhotoSlider,
     saveToThirdPartyServices,
     showHotkeysSettings,
+    summarizeContent,
     toggleReadStatus,
     toggleStarStatus,
   } = useClassicKeyHandlers({ classicVirtualizerRef })
@@ -29,6 +30,7 @@ const useClassicHotkeys = ({ handleRefreshArticleList, classicVirtualizerRef }) 
   const {
     handleFetchContent,
     handleSaveToThirdPartyServices,
+    handleSummarizeContent,
     handleToggleStarred,
     handleToggleStatus,
   } = useEntryActions()
@@ -68,6 +70,10 @@ const useClassicHotkeys = ({ handleRefreshArticleList, classicVirtualizerRef }) 
   useHotkeys(removeConflictingKeys(hotkeys.showHotkeysSettings), showHotkeysSettings, {
     useKey: true,
   })
+
+  useHotkeys(removeConflictingKeys(hotkeys.summarizeContent), () =>
+    summarizeContent(() => handleSummarizeContent(activeContent)),
+  )
 
   useHotkeys(removeConflictingKeys(hotkeys.toggleReadStatus), () =>
     toggleReadStatus(() => handleToggleStatus(activeContent)),

@@ -813,6 +813,10 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     handleSaveToThirdPartyServices()
   })
 
+  const summarizeContent = withActiveContent((handleSummarizeContent) => {
+    handleSummarizeContent()
+  })
+
   const showHotkeysSettings = () => {
     setSettingsTabsActiveTab("8")
     setSettingsModalVisible(true)
@@ -853,6 +857,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
     saveToThirdPartyServices,
     scrollSelectedCardIntoView,
     showHotkeysSettings,
+    summarizeContent,
     toggleReadStatus,
     toggleStarStatus,
   }

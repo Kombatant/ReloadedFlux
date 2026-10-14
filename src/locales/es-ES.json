@@ -519,6 +519,7 @@
     "refreshArticleList": "Actualizar la lista de artículos",
     "saveToThirdPartyServices": "Guardar el artículo actual en servicios de terceros",
     "showHotkeysSettings": "Mostrar los ajustes de los atajos de teclado",
+    "summarizeContent": "Resumir el artículo actual con IA",
     "toggleReadStatus": "Alternar el estado de lectura del artículo actual",
     "toggleStarStatus": "Activar o desactivar el estado de la estrella (marcador) del artículo actual"
   },

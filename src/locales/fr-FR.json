@@ -505,6 +505,7 @@
     "refreshArticleList": "Rafraîchir la liste des articles",
     "saveToThirdPartyServices": "Sauvegarder l'article actuel dans les services tiers",
     "showHotkeysSettings": "Afficher les paramètres de raccourcis clavier",
+    "summarizeContent": "Résumer l'article actuel avec l'IA",
     "toggleReadStatus": "Basculer le statut de lecture de l'article actuel",
     "toggleStarStatus": "Basculer le statut de favori de l'article actuel"
   },

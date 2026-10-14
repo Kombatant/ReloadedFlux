@@ -10,7 +10,7 @@ import {
   IconStarFill,
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 
 import { updateEntriesStatus } from "@/apis"
 import AiSpark from "@/components/icons/AiSpark"
@@ -18,7 +18,11 @@ import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import { fetchingContentIdsState, nextContentState } from "@/store/contentState"
+import {
+  fetchingContentIdsState,
+  nextContentState,
+  summarizingContentIdsState,
+} from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { hotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
@@ -73,6 +77,7 @@ const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
   const hotkeys = useStore(hotkeysState)
   const nextContent = useStore(nextContentState)
   const fetchingContentIds = useStore(fetchingContentIdsState)
+  const summarizingContentIds = useStore(summarizingContentIdsState)
   const { polyglot } = useStore(polyglotState)
   const fetchOriginalTooltip = useFetchOriginalTooltip()
   const {
@@ -83,7 +88,6 @@ const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
     handleToggleStarred,
     handleToggleStatus,
   } = useEntryActions()
-  const [summarizingEntryId, setSummarizingEntryId] = useState(null)
 
   const isUnread = entry.status === "unread"
   const isStarred = entry.starred
@@ -112,13 +116,10 @@ const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
       icon: <AiSpark />,
       label: polyglot.t("article_card.summarize_label"),
       tooltip: polyglot.t("article_card.summarize_tooltip"),
+      hint: hotkeys.summarizeContent,
       disabled: aiProvider === "none" || hasAiSummary,
-      loading: summarizingEntryId === entry.id,
-      onClick: async () => {
-        setSummarizingEntryId(entry.id)
-        await handleSummarizeContent(entry)
-        setSummarizingEntryId(null)
-      },
+      loading: summarizingContentIds.has(entry.id),
+      onClick: () => handleSummarizeContent(entry),
     },
     {
       key: "fetch",

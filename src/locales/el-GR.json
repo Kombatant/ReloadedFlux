@@ -504,6 +504,7 @@
     "refreshArticleList": "Ανανέωση λίστας άρθρων",
     "saveToThirdPartyServices": "Αποθήκευση του άρθρου σε τρίτες υπηρεσίες",
     "showHotkeysSettings": "Εμφάνιση ρυθμίσεων συντομεύσεων",
+    "summarizeContent": "Σύνοψη του τρέχοντος άρθρου με τεχνητή νοημοσύνη",
     "toggleReadStatus": "Εναλλαγή κατάστασης ανάγνωσης του άρθρου",
     "toggleStarStatus": "Εναλλαγή σελιδοδείκτη του άρθρου"
   },

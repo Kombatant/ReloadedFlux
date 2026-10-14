@@ -32,6 +32,7 @@ import {
   fetchingContentIdsState,
   nextContentState,
   prevContentState,
+  summarizingContentIdsState,
 } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { hotkeysState } from "@/store/hotkeysState"
@@ -70,6 +71,7 @@ const ActionButtons = ({ placement = "top" }) => {
   const { polyglot } = useStore(polyglotState)
   const headings = useStore(articleHeadingsState)
   const fetchingContentIds = useStore(fetchingContentIdsState)
+  const summarizingContentIds = useStore(summarizingContentIdsState)
   const hotkeys = useStore(hotkeysState)
 
   const { aiProvider, enableSwipeGesture } = useStore(settingsState)
@@ -82,17 +84,16 @@ const ActionButtons = ({ placement = "top" }) => {
   // disable the button on the article now shown
   const [fetchedOriginalId, setFetchedOriginalId] = useState(null)
   const [lastActiveContentId, setLastActiveContentId] = useState(activeContent?.id)
-  const [isSummarizing, setIsSummarizing] = useState(false)
 
   if (activeContent?.id !== lastActiveContentId) {
     setLastActiveContentId(activeContent?.id)
     setFetchedOriginalId(null)
-    setIsSummarizing(false)
   }
 
   const hasHeadings = headings.length > 0
   const isFetchingOriginal = fetchingContentIds.has(activeContent.id)
   const isFetchedOriginal = fetchedOriginalId === activeContent.id
+  const isSummarizing = summarizingContentIds.has(activeContent.id)
 
   const {
     handleFetchContent,
@@ -214,11 +215,7 @@ const ActionButtons = ({ placement = "top" }) => {
         icon={<AiSpark />}
         label={polyglot.t("article_card.summarize_tooltip")}
         loading={isSummarizing}
-        onClick={async () => {
-          setIsSummarizing(true)
-          await handleSummarizeContent()
-          setIsSummarizing(false)
-        }}
+        onClick={() => handleSummarizeContent()}
       />
     ),
     toc: hasHeadings ? <ArticleTOC /> : null,
@@ -345,13 +342,10 @@ const ActionButtons = ({ placement = "top" }) => {
       icon: <AiSpark />,
       label: polyglot.t("article_card.summarize_label"),
       tooltip: polyglot.t("article_card.summarize_tooltip"),
+      hint: hotkeys.summarizeContent,
       disabled: isSummaryDisabled,
       loading: isSummarizing,
-      onClick: async () => {
-        setIsSummarizing(true)
-        await handleSummarizeContent()
-        setIsSummarizing(false)
-      },
+      onClick: () => handleSummarizeContent(),
     },
     {
       key: "fetch",

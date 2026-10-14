@@ -10,6 +10,7 @@ export const defaultHotkeys = {
   refreshArticleList: ["r"],
   saveToThirdPartyServices: ["s"],
   showHotkeysSettings: ["shift+?"],
+  summarizeContent: ["y"],
   toggleReadStatus: ["m"],
   toggleStarStatus: ["f"],
 }

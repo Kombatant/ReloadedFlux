@@ -22,6 +22,7 @@ const useStreamHotkeys = ({ handleRefreshArticleList, streamVirtualizerRef }) =>
     openPhotoSlider,
     saveToThirdPartyServices,
     showHotkeysSettings,
+    summarizeContent,
     toggleReadStatus,
     toggleStarStatus,
   } = useStreamKeyHandlers({ streamVirtualizerRef })
@@ -29,6 +30,7 @@ const useStreamHotkeys = ({ handleRefreshArticleList, streamVirtualizerRef }) =>
   const {
     handleFetchContent,
     handleSaveToThirdPartyServices,
+    handleSummarizeContent,
     handleToggleStarred,
     handleToggleStatus,
   } = useEntryActions()
@@ -68,6 +70,10 @@ const useStreamHotkeys = ({ handleRefreshArticleList, streamVirtualizerRef }) =>
   useHotkeys(removeConflictingKeys(hotkeys.showHotkeysSettings), showHotkeysSettings, {
     useKey: true,
   })
+
+  useHotkeys(removeConflictingKeys(hotkeys.summarizeContent), () =>
+    summarizeContent(() => handleSummarizeContent(activeContent)),
+  )
 
   useHotkeys(removeConflictingKeys(hotkeys.toggleReadStatus), () =>
     toggleReadStatus(() => handleToggleStatus(activeContent)),

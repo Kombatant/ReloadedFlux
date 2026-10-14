@@ -211,6 +211,10 @@ const useClassicKeyHandlers = ({ classicVirtualizerRef } = {}) => {
     handleSaveToThirdPartyServices()
   })
 
+  const summarizeContent = withActiveContent((handleSummarizeContent) => {
+    handleSummarizeContent()
+  })
+
   const showHotkeysSettings = () => {
     setSettingsTabsActiveTab("8")
     setSettingsModalVisible(true)
@@ -250,6 +254,7 @@ const useClassicKeyHandlers = ({ classicVirtualizerRef } = {}) => {
     openPhotoSlider,
     saveToThirdPartyServices,
     showHotkeysSettings,
+    summarizeContent,
     toggleReadStatus,
     toggleStarStatus,
   }
