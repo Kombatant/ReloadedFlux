@@ -143,7 +143,13 @@
     "ai_summary_heading": "Artikelzusammenfassung erstellt von %{model}",
     "save_to_third_party_services_tooltip": "Bei Drittanbieter speichern",
     "share_tooltip": "Teilen",
-    "view_comments_tooltip": "Kommentare anzeigen"
+    "view_comments_tooltip": "Kommentare anzeigen",
+    "summarize_label": "Zusammenfassen",
+    "fetch_original_label": "Original abrufen",
+    "save_label": "Speichern",
+    "open_original_label": "Original öffnen",
+    "next_label": "Weiter",
+    "position_label": "Artikel %{position} von %{total}"
   },
   "article_list": {
     "sort_direction_desc": "Neueste zuerst",
@@ -454,6 +460,8 @@
     "layout_mode_description": "Zwischen der Spaltenansicht und der kombinierten Ansicht wechseln.",
     "layout_mode_classic": "Spalten",
     "layout_mode_stream": "Kombiniert",
+    "stream_timeline_label": "Zeitleistenansicht",
+    "stream_timeline_description": "Artikel auf einer Zeitleiste anzeigen, nach Tag gruppiert.",
     "cover_display_mode_label": "Titelbild-Anzeigemodus",
     "cover_display_mode_description": "Wählen, wie Artikeltitelbilder angezeigt werden",
     "cover_display_mode_auto": "Automatisch",
@@ -508,7 +516,9 @@
     "hours": "%{smart_count} Stunde |||| %{smart_count} Stunden",
     "minutes": "%{smart_count} Minute |||| %{smart_count} Minuten",
     "in_time": "in %{time}",
-    "time_ago": "vor %{time}"
+    "time_ago": "vor %{time}",
+    "today": "Heute",
+    "yesterday": "Gestern"
   },
   "connection": {
     "title": "Verbindung verloren",

@@ -55,6 +55,7 @@ const BOOLEAN_SETTINGS_KEYS = [
   "showFeedIcon",
   "showHiddenFeeds",
   "streamRenderSelectedOnly",
+  "streamTimeline",
   "showUnreadFeedsOnly",
   "updateContentOnFetch",
 ]
@@ -174,6 +175,7 @@ export const createDefaultSettings = (language = "en-CA") => ({
   showHiddenFeeds: false,
   showStatus: "unread",
   streamRenderSelectedOnly: false,
+  streamTimeline: false,
   showUnreadFeedsOnly: false,
   swipeSensitivity: 1,
   themeColor: "Blue",

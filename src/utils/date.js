@@ -28,6 +28,26 @@ export const getUTCDate = () => dayjs().utc().format("YYYY-MM-DDTHH:mm:ss.SSSSSS
 
 export const generateReadableDate = (dateString) => dayjs(dateString).format("dddd · LL · LT")
 
+export const generateClockTime = (dateString) => dayjs(dateString).format("LT")
+
+export const getDayKey = (dateString) => dayjs(dateString).format("YYYY-MM-DD")
+
+// "Today · Tuesday · October 13, 2026"; older days drop the prefix.
+export const generateDayLabel = (dateString) => {
+  const { polyglot } = polyglotState.get()
+  const target = dayjs(dateString)
+  const today = dayjs().startOf("day")
+  const dayName = target.format("dddd · LL")
+
+  if (target.isSame(today, "day")) {
+    return `${polyglot.t("date.today")} · ${dayName}`
+  }
+  if (target.isSame(today.subtract(1, "day"), "day")) {
+    return `${polyglot.t("date.yesterday")} · ${dayName}`
+  }
+  return dayName
+}
+
 export const generateRelativeTime = (dateString, showDetailed) => {
   const { polyglot } = polyglotState.get()
 

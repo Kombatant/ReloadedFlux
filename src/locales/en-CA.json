@@ -143,7 +143,13 @@
     "ai_summary_heading": "Article Summary created by %{model}",
     "save_to_third_party_services_tooltip": "Save to third-party services",
     "share_tooltip": "Share",
-    "view_comments_tooltip": "View comments"
+    "view_comments_tooltip": "View comments",
+    "summarize_label": "Summarize",
+    "fetch_original_label": "Fetch original",
+    "save_label": "Save",
+    "open_original_label": "Open original",
+    "next_label": "Next",
+    "position_label": "Article %{position} of %{total}"
   },
   "article_list": {
     "sort_direction_desc": "Newest first",
@@ -454,6 +460,8 @@
     "layout_mode_description": "Switch between the column layout and the combined layout.",
     "layout_mode_classic": "Column",
     "layout_mode_stream": "Combined",
+    "stream_timeline_label": "Timeline view",
+    "stream_timeline_description": "Show articles on a time rail, grouped by day.",
     "cover_display_mode_label": "Article cover display mode",
     "cover_display_mode_description": "Choose how article cover images are displayed",
     "cover_display_mode_auto": "Auto",
@@ -508,7 +516,9 @@
     "hours": "%{smart_count} hour |||| %{smart_count} hours",
     "minutes": "%{smart_count} minute |||| %{smart_count} minutes",
     "in_time": "in %{time}",
-    "time_ago": "%{time} ago"
+    "time_ago": "%{time} ago",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "connection": {
     "title": "Connection lost",

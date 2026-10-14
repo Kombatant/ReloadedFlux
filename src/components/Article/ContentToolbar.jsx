@@ -1,8 +1,6 @@
 import { Button, DatePicker, Dropdown, Menu, Typography } from "@arco-design/web-react"
 import {
   IconAlignLeft,
-  IconArrowLeft,
-  IconArrowRight,
   IconCalendar,
   IconRecord,
   IconSearch,
@@ -24,8 +22,6 @@ import useStreamKeyHandlers from "@/hooks/useStreamKeyHandlers"
 import {
   contentState,
   dynamicCountState,
-  nextContentState,
-  prevContentState,
   setFilterDate,
   setFilterString,
 } from "@/store/contentState"
@@ -35,6 +31,7 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { getStartOfToday } from "@/utils/date"
 import createSetter from "@/utils/nanostores"
 
+import ArticleNavGroup from "./ArticleNavGroup"
 import MarkReadControl from "./MarkReadControl"
 import SearchForm from "./SearchForm"
 import SidebarTrigger from "./SidebarTrigger"
@@ -120,6 +117,37 @@ const renderSortMenuItems = (orderDirection, sortOptions) =>
       </AppMenuItemContent>
     </Menu.Item>
   ))
+
+/**
+ * The small line above the list title saying what the list shows, e.g.
+ * "Canada / Unread · Newest first". In Classic it also surfaces the View
+ * menu's state, which is otherwise hidden behind an icon.
+ */
+const ListContext = ({ showStatusSection }) => {
+  const { infoFrom } = useStore(contentState)
+  const { orderDirection, showStatus } = useStore(settingsState)
+  const feeds = useStore(feedsState)
+  const { id } = useParams()
+  const statusOptions = useStatusOptions()
+  const sortOptions = useSortOptions()
+
+  const categoryTitle =
+    id && infoFrom === "feed" ? feeds.find((f) => f.id === Number(id))?.category?.title : null
+  const statusLabel = showStatusSection
+    ? statusOptions.find((option) => option.value === showStatus)?.label
+    : null
+  const sortLabel = sortOptions.find((option) => option.value === orderDirection)?.label
+  const details = [statusLabel, sortLabel].filter(Boolean).join(" · ")
+
+  return (
+    <div className="content-toolbar-context">
+      {categoryTitle ? (
+        <span className="content-toolbar-context-parent">{categoryTitle}</span>
+      ) : null}
+      <span className="content-toolbar-context-details">{details}</span>
+    </div>
+  )
+}
 
 /** Classic: one icon menu holding both the Unread/All filter and the sort order. */
 const ViewMenu = ({ showStatusSection }) => {
@@ -291,29 +319,19 @@ const SearchControl = () => {
 
 /** Stream-only previous/next buttons, driven by the stream's own scroll logic. */
 export const StreamNavButtons = ({ streamVirtualizerRef }) => {
-  const { polyglot } = useStore(polyglotState)
-  const prevContent = useStore(prevContentState)
-  const nextContent = useStore(nextContentState)
   const { navigateToNextArticle, navigateToPreviousArticle } = useStreamKeyHandlers({
     streamVirtualizerRef,
   })
 
-  return (
-    <>
-      <IconButton
-        disabled={!prevContent}
-        icon={<IconArrowLeft />}
-        label={polyglot.t("article_card.previous_tooltip")}
-        onClick={navigateToPreviousArticle}
-      />
-      <IconButton
-        disabled={!nextContent}
-        icon={<IconArrowRight />}
-        label={polyglot.t("article_card.next_tooltip")}
-        onClick={navigateToNextArticle}
-      />
-    </>
-  )
+  return <ArticleNavGroup onNext={navigateToNextArticle} onPrevious={navigateToPreviousArticle} />
+}
+
+// The count mirrors the sidebar's tier for the open list (Sidebar.css: views,
+// categories, feeds), so the same number looks the same in both places.
+const COUNT_TIER_CLASS = {
+  category: "content-toolbar-count--category",
+  feed: "content-toolbar-count--feed",
+  view: "content-toolbar-count--view",
 }
 
 /**
@@ -322,7 +340,7 @@ export const StreamNavButtons = ({ streamVirtualizerRef }) => {
  * the narrow list column keeps a single line.
  *
  * - classic: title · count … Search · Mark read ▾ · View ▾ · Date
- * - stream:  ‹ › · title · count … Search · [Unread | All] · Mark read ▾ · Sort ▾ · Date
+ * - stream:  ‹ n / total › · title … Search · [Unread | All] · Mark read ▾ · Sort ▾ · Date
  *
  * Navigation leads the row so it sits where Classic's reading pane keeps it.
  *
@@ -350,27 +368,40 @@ const ContentToolbar = ({ variant, info, markAllAsRead, navigation = null }) => 
     }
   }, [showDateFilter, filterDate])
 
+  // Both layouts: the list-context line (eyebrow style) over title · count.
+  const heading = (
+    <div className="content-toolbar-heading">
+      {title ? (
+        <Typography.Ellipsis
+          className="content-toolbar-title"
+          expandable={false}
+          showTooltip={!isBelowMedium}
+        >
+          {title}
+        </Typography.Ellipsis>
+      ) : (
+        <div className="content-toolbar-title-placeholder" />
+      )}
+      {/* Stream shows the list position in its prev/next group instead. */}
+      {isClassic && isArticleListReady && dynamicCount > 0 ? (
+        <span
+          className={`content-toolbar-count ${COUNT_TIER_CLASS[infoFrom] ?? COUNT_TIER_CLASS.view}`}
+        >
+          {dynamicCount}
+        </span>
+      ) : null}
+    </div>
+  )
+
   return (
     <div className={classNames("content-toolbar", `content-toolbar--${variant}`)}>
       <SidebarTrigger />
       {navigation ? <div className="content-toolbar-nav">{navigation}</div> : null}
-      <div className="content-toolbar-heading">
-        {title ? (
-          <Typography.Ellipsis
-            className="content-toolbar-title"
-            expandable={false}
-            showTooltip={!isBelowMedium}
-          >
-            {title}
-          </Typography.Ellipsis>
-        ) : (
-          <div className="content-toolbar-title-placeholder" />
-        )}
-        {isArticleListReady && dynamicCount > 0 ? (
-          <span className="content-toolbar-count">{dynamicCount}</span>
-        ) : null}
+      <div className="content-toolbar-stack">
+        <ListContext showStatusSection={showStatusFilter} />
+        {heading}
       </div>
-      <div className="content-toolbar-actions">
+      <div className={classNames("content-toolbar-actions", { "app-control-group": isClassic })}>
         <SearchControl />
         {!isClassic && showStatusFilter ? (
           <SegmentedControl

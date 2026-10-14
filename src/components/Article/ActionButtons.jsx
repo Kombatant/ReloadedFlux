@@ -1,5 +1,6 @@
 import { Dropdown, Menu } from "@arco-design/web-react"
 import {
+  IconArrowDown,
   IconArrowLeft,
   IconArrowRight,
   IconClose,
@@ -33,38 +34,14 @@ import {
   prevContentState,
 } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
+import { hotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
+import { withHotkey } from "@/utils/hotkey-label"
 
+import ArticleActionBar from "./ArticleActionBar"
+import ArticleNavGroup from "./ArticleNavGroup"
 import ArticleTOC from "./ArticleTOC"
 import "./ActionButtons.css"
-
-const DesktopButtons = memo(
-  ({ commonButtons, hasIntegrations, handleSaveToThirdPartyServices, polyglot }) => (
-    <>
-      <div className="left-side">
-        {commonButtons.close}
-        {commonButtons.prev}
-        {commonButtons.next}
-      </div>
-      <div className="right-side">
-        {commonButtons.status}
-        {commonButtons.star}
-        {commonButtons.fetch}
-        {commonButtons.summary}
-        {hasIntegrations && (
-          <IconButton
-            icon={<IconSave />}
-            label={polyglot.t("article_card.save_to_third_party_services_tooltip")}
-            onClick={handleSaveToThirdPartyServices}
-          />
-        )}
-        {commonButtons.toc}
-        {commonButtons.more}
-      </div>
-    </>
-  ),
-)
-DesktopButtons.displayName = "DesktopButtons"
 
 const MobileButtons = memo(({ commonButtons, hasHeadings }) => (
   <div className="mobile-buttons">
@@ -81,12 +58,19 @@ const MobileButtons = memo(({ commonButtons, hasHeadings }) => (
 ))
 MobileButtons.displayName = "MobileButtons"
 
-const ActionButtons = () => {
+/**
+ * Reading pane controls. Desktop splits them: `placement="top"` is the pane's
+ * top bar (close, prev/next, table of contents) and `placement="bottom"` the
+ * labelled action bar shared with the Stream card. Mobile keeps one bottom
+ * bar with large touch targets.
+ */
+const ActionButtons = ({ placement = "top" }) => {
   const { activeContent } = useStore(contentState)
   const { hasIntegrations } = useStore(dataState)
   const { polyglot } = useStore(polyglotState)
   const headings = useStore(articleHeadingsState)
   const fetchingContentIds = useStore(fetchingContentIdsState)
+  const hotkeys = useStore(hotkeysState)
 
   const { aiProvider, enableSwipeGesture } = useStore(settingsState)
 
@@ -284,14 +268,17 @@ const ActionButtons = () => {
               </Menu.Item>
             )}
 
-            <Menu.Item
-              key="open-in-browser"
-              onClick={() => handleOpenLinkExternally(activeContent)}
-            >
-              <AppMenuItemContent icon={<IconLaunch />}>
-                {polyglot.t("article_card.open_link_externally_tooltip")}
-              </AppMenuItemContent>
-            </Menu.Item>
+            {/* Desktop shows Open original as a labelled action-bar button. */}
+            {isBelowMedium && (
+              <Menu.Item
+                key="open-in-browser"
+                onClick={() => handleOpenLinkExternally(activeContent)}
+              >
+                <AppMenuItemContent icon={<IconLaunch />}>
+                  {polyglot.t("article_card.open_link_externally_tooltip")}
+                </AppMenuItemContent>
+              </Menu.Item>
+            )}
           </AppMenu>
         }
         onVisibleChange={setDropdownVisible}
@@ -305,23 +292,117 @@ const ActionButtons = () => {
     ),
   }
 
-  return (
-    <div className={`action-buttons ${isBelowMedium ? "mobile" : ""}`}>
-      {isBelowMedium ? (
+  if (isBelowMedium) {
+    return (
+      <div className="action-buttons mobile">
         <MobileButtons commonButtons={commonButtons} hasHeadings={hasHeadings} />
-      ) : (
-        <DesktopButtons
-          commonButtons={commonButtons}
-          handleSaveToThirdPartyServices={() => handleSaveToThirdPartyServices(activeContent)}
-          hasIntegrations={hasIntegrations}
-          navigateToNextArticle={navigateToNextArticle}
-          navigateToPreviousArticle={navigateToPreviousArticle}
-          nextContent={nextContent}
-          polyglot={polyglot}
-          prevContent={prevContent}
-        />
-      )}
-    </div>
+      </div>
+    )
+  }
+
+  if (placement === "top") {
+    const closeLabel = polyglot.t("article_card.close_tooltip")
+
+    return (
+      <div className="action-buttons reading-pane-topbar">
+        <div className="left-side">
+          <IconButton
+            icon={<IconClose />}
+            label={closeLabel}
+            tooltip={withHotkey(closeLabel, hotkeys.exitDetailView)}
+            onClick={() => exitDetailView()}
+          />
+          <span aria-hidden="true" className="reading-pane-nav-divider" />
+          <ArticleNavGroup onNext={navigateToNextArticle} onPrevious={navigateToPreviousArticle} />
+        </div>
+        <div className="right-side">{commonButtons.toc}</div>
+      </div>
+    )
+  }
+
+  const hasMoreActions = Boolean(navigator.share) || activeContent.comments_url !== ""
+
+  const leadingActions = [
+    {
+      key: "status",
+      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
+      label: polyglot.t(
+        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
+      ),
+      hint: hotkeys.toggleReadStatus,
+      onClick: () => handleToggleStatus(activeContent),
+    },
+    {
+      key: "star",
+      icon: isStarred ? <IconStarFill /> : <IconStar />,
+      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
+      hint: hotkeys.toggleStarStatus,
+      starred: isStarred,
+      onClick: () => handleToggleStarred(activeContent),
+    },
+    {
+      key: "summarize",
+      icon: <AiSpark />,
+      label: polyglot.t("article_card.summarize_label"),
+      tooltip: polyglot.t("article_card.summarize_tooltip"),
+      disabled: isSummaryDisabled,
+      loading: isSummarizing,
+      onClick: async () => {
+        setIsSummarizing(true)
+        await handleSummarizeContent()
+        setIsSummarizing(false)
+      },
+    },
+    {
+      key: "fetch",
+      icon: <IconCloudDownload />,
+      label: polyglot.t("article_card.fetch_original_label"),
+      tooltip: fetchOriginalTooltip,
+      hint: hotkeys.fetchOriginalArticle,
+      disabled: isFetchedOriginal,
+      loading: isFetchingOriginal,
+      onClick: handleFetchOriginal,
+    },
+    hasIntegrations
+      ? {
+          key: "save",
+          icon: <IconSave />,
+          label: polyglot.t("article_card.save_label"),
+          tooltip: polyglot.t("article_card.save_to_third_party_services_tooltip"),
+          hint: hotkeys.saveToThirdPartyServices,
+          onClick: () => handleSaveToThirdPartyServices(activeContent),
+        }
+      : null,
+  ].filter(Boolean)
+
+  const trailingActions = [
+    hasMoreActions ? { key: "more", element: commonButtons.more } : null,
+    {
+      key: "open",
+      icon: <IconLaunch />,
+      label: polyglot.t("article_card.open_original_label"),
+      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
+      hint: hotkeys.openLinkExternally,
+      onClick: () => handleOpenLinkExternally(activeContent),
+    },
+    {
+      key: "next",
+      icon: <IconArrowDown />,
+      label: polyglot.t("article_card.next_label"),
+      tooltip: polyglot.t("article_card.next_tooltip"),
+      hint: hotkeys.navigateToNextArticle,
+      primary: true,
+      disabled: !nextContent,
+      onClick: navigateToNextArticle,
+    },
+  ].filter(Boolean)
+
+  return (
+    <ArticleActionBar
+      className="reading-pane-action-bar"
+      leading={leadingActions}
+      trailing={trailingActions}
+    />
   )
 }
 

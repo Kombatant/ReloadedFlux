@@ -4,7 +4,7 @@
   background-color: var(--color-bg-1);
   box-shadow: var(--elev-1);
   margin-bottom: 16px;
-  padding: 22px 24px;
+  padding: 0;
   scroll-margin-block: 8px;
   transition:
     background-color var(--motion-base) ease,
@@ -47,65 +47,13 @@
   }
 }
 
-.stream-story-actions-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 8px;
-}
-
-.feed-icon-topline {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  margin-top: calc((1.25em - 18px) / 2);
-}
-
-.stream-story-source {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  color: var(--article-card-meta-color);
-  font-size: 0.9rem;
-}
-
-.stream-story-source-title,
-.stream-story-author {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.stream-story-source-title {
-  font-weight: 600;
-}
-
-.stream-story-source-title a {
-  color: inherit;
-}
-
-.stream-story-author {
-  cursor: pointer;
-}
-
-.stream-story-author::before {
-  content: "by";
-  margin-right: 6px;
-  color: var(--article-card-subtle-color);
-  text-transform: lowercase;
-}
-
-.stream-story-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  flex-shrink: 0;
-}
-
 .stream-story-title.arco-typography {
-  margin: 0 auto 0 0;
+  margin: 10px 0 0;
   color: var(--article-card-title-color);
+}
+
+.stream-story-align-center .stream-story-title.arco-typography {
+  margin-inline: auto;
 }
 
 .stream-story-title-read.arco-typography {
@@ -122,6 +70,8 @@
   font: inherit;
   gap: 16px;
   line-height: 1.25;
+  /* Arco gives typography links 4px side margins; keep the title on the eyebrow's edge. */
+  margin: 0;
   padding: 0;
   text-align: left;
   text-decoration: none;
@@ -146,38 +96,6 @@
   text-decoration: underline;
 }
 
-.stream-story-combined {
-  margin-top: 14px;
-}
-
-.stream-story-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 6px;
-  color: var(--article-card-subtle-color);
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-  margin-inline: auto;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--color-border-2);
-}
-
-.stream-story-meta > span {
-  white-space: nowrap;
-}
-
-.stream-story-meta-item::before {
-  content: "\2022";
-  display: inline-block;
-  margin-right: 6px;
-  color: var(--article-card-subtle-color);
-}
-
-.stream-story-category {
-  cursor: pointer;
-}
-
 .stream-story-combined .article-content {
   padding: 0;
 }
@@ -198,16 +116,6 @@
   padding-bottom: 12px;
 }
 
-.stream-story-combined-indented .stream-story-preview {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.stream-story-combined-indented .article-body {
-  margin-left: 0;
-  margin-right: 0;
-}
-
 .stream-story-card .article-body p,
 .stream-story-card .article-body li {
   color: var(--article-card-preview-color);
@@ -226,16 +134,99 @@
   margin-top: 0;
 }
 
-@media screen and (max-width: 768px) {
-  .stream-story-card {
-    padding: 18px 16px;
-  }
+/* ---- Main column: eyebrow, title, body ---------------------------------- */
 
-  .stream-story-actions-row {
-    justify-content: flex-end;
-  }
+.stream-story-main {
+  padding: 18px 24px 22px;
+}
 
-  .stream-story-actions {
-    flex-wrap: wrap;
-  }
+.stream-story-combined {
+  margin-top: 16px;
+}
+
+/* Left alignment pins title, preview and body to the eyebrow's edge; centred
+   keeps the article column centred (the body's own default). */
+.stream-story-align-left .stream-story-preview,
+.stream-story-align-left .article-body {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ---- Footer: the selected card's action bar (ArticleActionBar) --------- */
+
+.stream-story-footer {
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+
+/* ---- Timeline view (Appearance > Timeline view) ------------------------- */
+
+.stream-timeline-item {
+  --timeline-time-width: 72px;
+  --timeline-node-width: 28px;
+  position: relative;
+}
+
+/* One continuous rail: each item draws its own segment, edge to edge. */
+.stream-timeline-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--timeline-time-width) + var(--timeline-node-width) / 2 - 1px);
+  width: 2px;
+  background-color: var(--color-border-2);
+}
+
+.stream-timeline-day {
+  position: relative;
+  margin: 4px 0 12px calc(var(--timeline-time-width) + var(--timeline-node-width) + 8px);
+  color: var(--color-text-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.stream-timeline-row {
+  display: grid;
+  grid-template-columns: var(--timeline-time-width) var(--timeline-node-width) minmax(0, 1fr);
+  align-items: start;
+}
+
+.stream-timeline-row > .stream-story-card {
+  margin-left: 8px;
+}
+
+.stream-timeline-time {
+  padding-top: 20px;
+  color: var(--article-card-subtle-color);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.stream-timeline-time.is-selected {
+  color: var(--color-text-1);
+  font-weight: 600;
+}
+
+.stream-timeline-node {
+  position: relative;
+  justify-self: center;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  margin-top: 25px;
+  border: 2px solid var(--color-text-4);
+  border-radius: 50%;
+  background-color: var(--color-bg-1);
+  box-shadow: 0 0 0 4px var(--color-bg-1);
+}
+
+.stream-timeline-node.is-unread {
+  width: 12px;
+  height: 12px;
+  margin-top: 24px;
+  border-color: rgb(var(--primary-6));
+  background-color: rgb(var(--primary-6));
 }

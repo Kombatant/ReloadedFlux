@@ -16,17 +16,70 @@
 /* Classic sits on the list column's surface (no block of its own) and insets
    its title to line up with the card text below (list 10px + card 12px). */
 .content-toolbar--classic {
-  padding: 0 14px 6px 12px;
-  border-bottom: 1px solid var(--color-border-2);
+  padding: 2px 14px 10px 12px;
   background-color: transparent;
 }
 
-.content-toolbar--classic .content-toolbar-heading {
-  padding-left: 10px;
+/* The list-context line (eyebrow style) over title · count, in both layouts. */
+.content-toolbar-stack {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  /* Title keeps its old inset (10px + the heading's 4px); the context line
+     shares that edge. */
+  padding-left: 14px;
 }
 
-.content-toolbar--classic .sidebar-trigger + .content-toolbar-heading {
+.content-toolbar-stack .content-toolbar-heading {
   padding-left: 0;
+}
+
+.content-toolbar--classic .sidebar-trigger + .content-toolbar-stack {
+  padding-left: 0;
+}
+
+/* Stream: the stack follows the nav group, so it only needs the usual gap. */
+.content-toolbar--stream .content-toolbar-stack {
+  padding-left: 0;
+}
+
+.content-toolbar-context {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  color: var(--article-card-subtle-color);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.content-toolbar-context-parent {
+  overflow: hidden;
+  flex: 0 1 auto;
+  color: var(--article-card-meta-color);
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.content-toolbar-context-parent::after {
+  content: "/";
+  margin-left: 6px;
+  color: var(--article-card-subtle-color);
+  font-weight: 400;
+}
+
+.content-toolbar-context-details {
+  overflow: hidden;
+  flex: 0 1 auto;
+  text-overflow: ellipsis;
+}
+
+/* The Classic tools sit on one control-group track (controls.css). */
+.content-toolbar--classic .content-toolbar-actions {
+  gap: 2px;
 }
 
 .content-toolbar--stream {
@@ -57,11 +110,31 @@
   flex: 1 1 auto;
 }
 
+/* Same format as the sidebar counts (Sidebar.css "tabular tiers"): full
+   number, 13px tabular figures, weight and tone by the kind of list open. */
 .content-toolbar-count {
   flex: 0 0 auto;
   color: var(--color-text-3);
-  font-weight: 600;
+  font-size: var(--font-size-sm);
   font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+  line-height: 1.25;
+}
+
+.content-toolbar-count--view {
+  font-weight: 500;
+}
+
+.content-toolbar-count--category {
+  font-weight: 600;
+}
+
+.content-toolbar-count--feed {
+  font-weight: 400;
+}
+
+body[arco-theme="dark"] .content-toolbar-count--feed {
+  color: var(--color-text-4);
 }
 
 .content-toolbar-actions {

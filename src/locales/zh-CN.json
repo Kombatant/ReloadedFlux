@@ -143,7 +143,13 @@
     "ai_summary_heading": "由 %{model} 创建的文章摘要",
     "save_to_third_party_services_tooltip": "保存到第三方服务",
     "share_tooltip": "分享",
-    "view_comments_tooltip": "查看评论"
+    "view_comments_tooltip": "查看评论",
+    "summarize_label": "摘要",
+    "fetch_original_label": "获取原文",
+    "save_label": "保存",
+    "open_original_label": "打开原文",
+    "next_label": "下一篇",
+    "position_label": "第 %{position} 篇，共 %{total} 篇"
   },
   "article_list": {
     "sort_direction_desc": "最新优先",
@@ -456,6 +462,8 @@
     "layout_mode_description": "在分栏布局和组合布局之间切换。",
     "layout_mode_classic": "分栏",
     "layout_mode_stream": "组合",
+    "stream_timeline_label": "时间线视图",
+    "stream_timeline_description": "以时间线显示文章，并按日期分组。",
     "cover_display_mode_label": "文章封面显示方式",
     "cover_display_mode_description": "选择文章封面图片的显示方式",
     "cover_display_mode_auto": "自动",
@@ -508,7 +516,9 @@
     "hours": "%{smart_count} 小时",
     "minutes": "%{smart_count} 分钟",
     "in_time": "%{time}内",
-    "time_ago": "%{time}前"
+    "time_ago": "%{time}前",
+    "today": "今天",
+    "yesterday": "昨天"
   },
   "connection": {
     "title": "连接已断开",

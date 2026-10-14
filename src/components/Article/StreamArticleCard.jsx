@@ -1,5 +1,6 @@
-import { Tag, Typography } from "@arco-design/web-react"
+import { Typography } from "@arco-design/web-react"
 import {
+  IconArrowDown,
   IconCloudDownload,
   IconLaunch,
   IconMinusCircle,
@@ -10,37 +11,30 @@ import {
 } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { useNavigate } from "react-router"
 
 import { updateEntriesStatus } from "@/apis"
 import AiSpark from "@/components/icons/AiSpark"
-import CustomLink from "@/components/ui/CustomLink"
-import FeedIcon from "@/components/ui/FeedIcon"
-import IconButton from "@/components/ui/IconButton"
-import InlineAction from "@/components/ui/InlineAction"
 import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import {
-  fetchingContentIdsState,
-  setActiveContent,
-  setFilterString,
-  setFilterType,
-} from "@/store/contentState"
+import { fetchingContentIdsState, nextContentState } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
+import { hotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
 import {
   freezeMediaLoading,
   observeIframeLoadState,
   unfreezeMediaLoading,
 } from "@/utils/content-freeze"
-import { generateReadableDate, generateReadingTime, generateRelativeTime } from "@/utils/date"
+import { generateClockTime, generateDayLabel, generateReadableDate } from "@/utils/date"
 import { Message } from "@/utils/feedback"
 import { getEntryImageSources, preloadImageMetadata } from "@/utils/images"
 import { streamDebug } from "@/utils/stream-debug"
 
+import ArticleActionBar from "./ArticleActionBar"
 import ArticleBodyRenderer from "./ArticleBodyRenderer"
+import ArticleEyebrow from "./ArticleEyebrow"
 
 import "./StreamArticleCard.css"
 
@@ -52,6 +46,10 @@ const withStopPropagation = (callback) => (event) => {
   callback()
 }
 
+// The card selects itself on click; keep footer clicks from reaching it.
+const isolateClicks = (actions) =>
+  actions.map((action) => ({ ...action, onClick: withStopPropagation(action.onClick) }))
+
 const hasCombinedSelection = () => {
   if (globalThis.window === undefined) {
     return false
@@ -61,33 +59,19 @@ const hasCombinedSelection = () => {
   return Boolean(selection && !selection.isCollapsed && selection.toString().trim())
 }
 
-const StreamArticleCard = ({
-  activeEntry,
-  entry,
-  handleEntryClick,
-  infoFrom,
-  isSelected,
-  shouldPreload,
-}) => {
-  const navigate = useNavigate()
+/**
+ * Action bar under the selected card. Rendered only for the selected card, so
+ * its store subscriptions (next entry, hotkeys) never wake the other cards.
+ */
+const StreamCardFooter = ({ entry, onNavigateNext }) => {
   const { hasIntegrations } = useStore(dataState)
-  const {
-    aiProvider,
-    articleWidth,
-    markReadOnScroll,
-    showDetailedRelativeTime,
-    showEstimatedReadingTime,
-    showFeedIcon,
-    streamRenderSelectedOnly,
-    titleAlignment,
-  } = useStore(settingsState)
-  const { polyglot } = useStore(polyglotState)
+  const { aiProvider } = useStore(settingsState)
+  const hotkeys = useStore(hotkeysState)
+  const nextContent = useStore(nextContentState)
   const fetchingContentIds = useStore(fetchingContentIdsState)
-  const { isBelowMedium } = useScreenWidth()
+  const { polyglot } = useStore(polyglotState)
   const fetchOriginalTooltip = useFetchOriginalTooltip()
-
   const {
-    handleEntryStatusUpdate,
     handleFetchContent,
     handleOpenLinkExternally,
     handleSaveToThirdPartyServices,
@@ -95,15 +79,116 @@ const StreamArticleCard = ({
     handleToggleStarred,
     handleToggleStatus,
   } = useEntryActions()
+  const [summarizingEntryId, setSummarizingEntryId] = useState(null)
+
+  const isUnread = entry.status === "unread"
+  const isStarred = entry.starred
+  const hasAiSummary = entry.content?.includes("ai-summary")
+
+  const leadingActions = [
+    {
+      key: "status",
+      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
+      label: polyglot.t(
+        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
+      ),
+      hint: hotkeys.toggleReadStatus,
+      onClick: () => handleToggleStatus(entry),
+    },
+    {
+      key: "star",
+      icon: isStarred ? <IconStarFill /> : <IconStar />,
+      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
+      hint: hotkeys.toggleStarStatus,
+      starred: isStarred,
+      onClick: () => handleToggleStarred(entry),
+    },
+    {
+      key: "summarize",
+      icon: <AiSpark />,
+      label: polyglot.t("article_card.summarize_label"),
+      tooltip: polyglot.t("article_card.summarize_tooltip"),
+      disabled: aiProvider === "none" || hasAiSummary,
+      loading: summarizingEntryId === entry.id,
+      onClick: async () => {
+        setSummarizingEntryId(entry.id)
+        await handleSummarizeContent(entry)
+        setSummarizingEntryId(null)
+      },
+    },
+    {
+      key: "fetch",
+      icon: <IconCloudDownload />,
+      label: polyglot.t("article_card.fetch_original_label"),
+      tooltip: fetchOriginalTooltip,
+      hint: hotkeys.fetchOriginalArticle,
+      loading: fetchingContentIds.has(entry.id),
+      onClick: () => handleFetchContent(entry),
+    },
+    hasIntegrations
+      ? {
+          key: "save",
+          icon: <IconSave />,
+          label: polyglot.t("article_card.save_label"),
+          tooltip: polyglot.t("article_card.save_to_third_party_services_tooltip"),
+          hint: hotkeys.saveToThirdPartyServices,
+          onClick: () => handleSaveToThirdPartyServices(entry),
+        }
+      : null,
+  ].filter(Boolean)
+
+  const trailingActions = [
+    {
+      key: "open",
+      icon: <IconLaunch />,
+      label: polyglot.t("article_card.open_original_label"),
+      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
+      hint: hotkeys.openLinkExternally,
+      onClick: () => handleOpenLinkExternally(entry),
+    },
+    {
+      key: "next",
+      icon: <IconArrowDown />,
+      label: polyglot.t("article_card.next_label"),
+      tooltip: polyglot.t("article_card.next_tooltip"),
+      hint: hotkeys.navigateToNextArticle,
+      primary: true,
+      disabled: !nextContent || !onNavigateNext,
+      onClick: () => onNavigateNext?.(),
+    },
+  ]
+
+  return (
+    <ArticleActionBar
+      className="stream-story-footer"
+      leading={isolateClicks(leadingActions)}
+      trailing={isolateClicks(trailingActions)}
+    />
+  )
+}
+
+const StreamArticleCard = ({
+  activeEntry,
+  entry,
+  handleEntryClick,
+  infoFrom,
+  isSelected,
+  onNavigateNext,
+  shouldPreload,
+  showDayHeader = false,
+  timelineDate = null,
+}) => {
+  const { articleWidth, markReadOnScroll, streamRenderSelectedOnly, titleAlignment } =
+    useStore(settingsState)
+  const { polyglot } = useStore(polyglotState)
+  const { isBelowMedium } = useScreenWidth()
+
+  const { handleEntryStatusUpdate } = useEntryActions()
 
   const currentEntry = activeEntry ?? entry
   const isUnread = currentEntry.status === "unread"
-  const isStarred = currentEntry.starred
-  const hasAiSummary = currentEntry.content?.includes("ai-summary")
-
-  const [summarizingEntryId, setSummarizingEntryId] = useState(null)
-  const isFetchingOriginal = fetchingContentIds.has(currentEntry.id)
-  const isSummarizing = summarizingEntryId === currentEntry.id
+  const isTimeline = timelineDate !== null
+  const isCentered = titleAlignment === "center"
   const contentMaxWidth = isBelowMedium ? "100%" : `${articleWidth}%`
   const previewText = useMemo(() => currentEntry.previewText || "", [currentEntry.previewText])
   const titleClassName = isUnread
@@ -231,14 +316,6 @@ const StreamArticleCard = ({
     }
   }
 
-  const handleAuthorFilter = () => {
-    setFilterType("author")
-    setFilterString(currentEntry.author)
-    if (isBelowMedium) {
-      setActiveContent(null)
-    }
-  }
-
   const handleCardClick = (event) => {
     if (isSelected) {
       return
@@ -255,13 +332,17 @@ const StreamArticleCard = ({
     selectEntry()
   }
 
-  return (
+  const card = (
     <article
       ref={cardRef}
       data-entry-id={entry.id}
+      // The settle gate in StoryStream measures each list item's outermost
+      // element; in timeline mode that is the timeline row, not the card.
+      data-stream-item={isTimeline ? undefined : ""}
       tabIndex={isSelected ? -1 : 0}
       className={[
         "card-wrapper stream-story-card",
+        isCentered ? "stream-story-align-center" : "stream-story-align-left",
         isSelected && "selected",
         !isUnread && "stream-story-card-read",
       ]
@@ -279,159 +360,80 @@ const StreamArticleCard = ({
         }
       }}
     >
-      <div className="stream-story-actions-row">
-        <div className="stream-story-actions">
-          <IconButton
-            icon={isUnread ? <IconMinusCircle /> : <IconRecord />}
-            label={
-              isUnread
-                ? polyglot.t("article_card.mark_as_read_tooltip")
-                : polyglot.t("article_card.mark_as_unread_tooltip")
-            }
-            onClick={withStopPropagation(() => handleToggleStatus(currentEntry))}
-          />
-          <IconButton
-            icon={isStarred ? <IconStarFill /> : <IconStar />}
-            starred={isStarred}
-            label={
-              isStarred
-                ? polyglot.t("article_card.unstar_tooltip")
-                : polyglot.t("article_card.star_tooltip")
-            }
-            onClick={withStopPropagation(() => handleToggleStarred(currentEntry))}
-          />
-          <IconButton
-            icon={<IconCloudDownload />}
-            label={fetchOriginalTooltip}
-            loading={isFetchingOriginal}
-            onClick={withStopPropagation(() => handleFetchContent(currentEntry))}
-          />
-          <IconButton
-            disabled={aiProvider === "none" || hasAiSummary}
-            icon={<AiSpark />}
-            label={polyglot.t("article_card.summarize_tooltip")}
-            loading={isSummarizing}
-            onClick={withStopPropagation(async () => {
-              setSummarizingEntryId(currentEntry.id)
-              await handleSummarizeContent(currentEntry)
-              setSummarizingEntryId(null)
-            })}
-          />
-          {hasIntegrations ? (
-            <IconButton
-              icon={<IconSave />}
-              label={polyglot.t("article_card.save_to_third_party_services_tooltip")}
-              onClick={withStopPropagation(() => handleSaveToThirdPartyServices(currentEntry))}
-            />
-          ) : null}
-          <IconButton
-            icon={<IconLaunch />}
-            label={polyglot.t("article_card.open_link_externally_tooltip")}
-            onClick={withStopPropagation(() => handleOpenLinkExternally(currentEntry))}
-          />
-        </div>
-      </div>
-      <Typography.Title
-        className={titleClassName}
-        heading={4}
-        style={{ maxWidth: contentMaxWidth, textAlign: titleAlignment }}
-      >
-        {/* Real anchor so middle-click, Ctrl/Cmd-click and "Open in new tab" work natively;
-            a <button> here made middle-click trigger the browser's autoscroll instead. */}
-        <a
-          className="stream-story-title-link"
-          href={currentEntry.url}
-          rel="noopener noreferrer"
-          target="_blank"
-          onClick={(event) => {
-            event.stopPropagation()
+      <div className="stream-story-main">
+        <ArticleEyebrow
+          centered={isCentered}
+          entry={currentEntry}
+          hideTime={isTimeline}
+          maxWidth={contentMaxWidth}
+        />
+        <Typography.Title
+          className={titleClassName}
+          heading={4}
+          style={{ maxWidth: contentMaxWidth, textAlign: titleAlignment }}
+        >
+          {/* Real anchor so middle-click, Ctrl/Cmd-click and "Open in new tab" work natively;
+              a <button> here made middle-click trigger the browser's autoscroll instead. */}
+          <a
+            className="stream-story-title-link"
+            href={currentEntry.url}
+            rel="noopener noreferrer"
+            target="_blank"
+            onClick={(event) => {
+              event.stopPropagation()
 
-            if (hasCombinedSelection()) {
-              event.preventDefault()
-            }
-          }}
-        >
-          {showFeedIcon && <FeedIcon className="feed-icon-topline" feed={currentEntry.feed} />}
-          <span className="stream-story-title-text">{currentEntry.title}</span>
-        </a>
-      </Typography.Title>
-      <div
-        style={showFeedIcon && titleAlignment !== "center" ? { paddingLeft: 34 } : undefined}
-        className={
-          showFeedIcon && titleAlignment !== "center"
-            ? "stream-story-combined stream-story-combined-indented"
-            : "stream-story-combined"
-        }
-      >
-        {" "}
-        <div
-          className="stream-story-meta"
-          style={{
-            maxWidth: contentMaxWidth,
-            justifyContent: titleAlignment === "center" ? "center" : undefined,
-            marginInline: titleAlignment === "center" ? "auto" : 0,
-          }}
-        >
-          <div className="stream-story-source">
-            <span
-              className="stream-story-source-title"
-              onClick={(event) => {
-                event.stopPropagation()
-              }}
-            >
-              <CustomLink text={currentEntry.feed.title} url={`/feed/${currentEntry.feed.id}`} />
-            </span>
-            {currentEntry.author ? (
-              <InlineAction
-                className="stream-story-author"
-                onClick={(event) => {
-                  event.stopPropagation()
-                  handleAuthorFilter()
-                }}
-              >
-                {currentEntry.author}
-              </InlineAction>
-            ) : null}
-          </div>
-          {currentEntry.feed.category?.title ? (
-            <span className="stream-story-meta-item">
-              <Tag
-                className="stream-story-category"
-                size="small"
-                onClick={(event) => {
-                  event.stopPropagation()
-                  navigate(`/category/${currentEntry.feed.category.id}`)
-                }}
-              >
-                {currentEntry.feed.category.title}
-              </Tag>
-            </span>
-          ) : null}
-          <span className="stream-story-meta-item">
-            {generateReadableDate(currentEntry.published_at)}
-          </span>
-          <span className="stream-story-meta-item">
-            {generateRelativeTime(currentEntry.published_at, showDetailedRelativeTime)}
-          </span>
-          {showEstimatedReadingTime ? (
-            <span className="stream-story-meta-item">
-              {generateReadingTime(currentEntry.reading_time)}
-            </span>
-          ) : null}
+              if (hasCombinedSelection()) {
+                event.preventDefault()
+              }
+            }}
+          >
+            <span className="stream-story-title-text">{currentEntry.title}</span>
+          </a>
+        </Typography.Title>
+        <div className="stream-story-combined">
+          {isSelected || !streamRenderSelectedOnly ? (
+            <ArticleBodyRenderer
+              key={currentEntry.id}
+              entry={currentEntry}
+              maxWidth={contentMaxWidth}
+            />
+          ) : (
+            <p className="stream-story-preview" style={{ maxWidth: contentMaxWidth }}>
+              {previewText}
+            </p>
+          )}
         </div>
-        {isSelected || !streamRenderSelectedOnly ? (
-          <ArticleBodyRenderer
-            key={currentEntry.id}
-            entry={currentEntry}
-            maxWidth={contentMaxWidth}
-          />
-        ) : (
-          <p className="stream-story-preview" style={{ maxWidth: contentMaxWidth }}>
-            {previewText}
-          </p>
-        )}
       </div>
+      {isSelected ? (
+        <StreamCardFooter entry={currentEntry} onNavigateNext={onNavigateNext} />
+      ) : null}
     </article>
+  )
+
+  if (!isTimeline) {
+    return card
+  }
+
+  return (
+    <div className="stream-timeline-item" data-stream-item="">
+      {showDayHeader ? (
+        <h3 className="stream-timeline-day">{generateDayLabel(timelineDate)}</h3>
+      ) : null}
+      <div className="stream-timeline-row">
+        <time
+          className={isSelected ? "stream-timeline-time is-selected" : "stream-timeline-time"}
+          dateTime={timelineDate}
+          title={generateReadableDate(timelineDate)}
+        >
+          {generateClockTime(timelineDate)}
+        </time>
+        <span
+          aria-hidden="true"
+          className={isUnread ? "stream-timeline-node is-unread" : "stream-timeline-node"}
+        />
+        {card}
+      </div>
+    </div>
   )
 }
 

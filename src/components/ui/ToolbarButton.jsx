@@ -10,8 +10,9 @@ import "./controls.css"
 /**
  * Ghost toolbar button: icon, optional label and an optional caret for menu
  * triggers. The label is always the accessible name, so it survives both
- * `iconOnly` and the toolbar's compact mode hiding it. Like IconButton, the
- * ref lands on the outermost element.
+ * `iconOnly` and the toolbar's compact mode hiding it. `hint` shows a key
+ * shortcut after the label (decorative; the label stays the accessible name).
+ * Like IconButton, the ref lands on the outermost element.
  */
 const ToolbarButton = forwardRef(
   (
@@ -20,6 +21,7 @@ const ToolbarButton = forwardRef(
       label,
       tooltip,
       caret = false,
+      hint = null,
       iconOnly = false,
       active = false,
       open = false,
@@ -46,6 +48,11 @@ const ToolbarButton = forwardRef(
       >
         {icon}
         {iconOnly ? null : <span className="app-toolbar-button-label">{label}</span>}
+        {hint && !iconOnly ? (
+          <kbd aria-hidden="true" className="app-toolbar-button-hint">
+            {hint}
+          </kbd>
+        ) : null}
         {caret ? <IconDown aria-hidden="true" className="app-toolbar-button-caret" /> : null}
       </Button>
     )

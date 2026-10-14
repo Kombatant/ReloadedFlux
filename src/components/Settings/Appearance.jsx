@@ -43,10 +43,17 @@ const useEffectiveDarkMode = () => {
 }
 
 const Appearance = () => {
-  const { animationsEnabled, compactSidebarGroups, fontFamily, layoutMode, themeColor } =
-    useStore(settingsState)
+  const {
+    animationsEnabled,
+    compactSidebarGroups,
+    fontFamily,
+    layoutMode,
+    streamTimeline,
+    themeColor,
+  } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const isDark = useEffectiveDarkMode()
+  const isCombinedLayout = layoutMode === "stream"
 
   const fontFamilyOptions = [
     { label: polyglot.t("appearance.font_family_system"), value: "system-ui" },
@@ -167,6 +174,24 @@ const Appearance = () => {
             </Select.Option>
           ))}
         </Select>
+      </SettingItem>
+
+      <Divider />
+
+      <SettingItem
+        description={polyglot.t("appearance.stream_timeline_description")}
+        disabled={!isCombinedLayout}
+        disabledLabel={polyglot.t("settings.disabled_label")}
+        title={polyglot.t("appearance.stream_timeline_label")}
+        disabledReason={polyglot.t("settings.only_available_in_layout", {
+          layout: polyglot.t("appearance.layout_mode_stream"),
+        })}
+      >
+        <Switch
+          checked={streamTimeline}
+          disabled={!isCombinedLayout}
+          onChange={(value) => handleConfigChange({ streamTimeline: value })}
+        />
       </SettingItem>
 
       <Divider />

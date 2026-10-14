@@ -1,10 +1,36 @@
+/* The Stream pane meets the sidebar without a line (App.css hides the sidebar
+   edge and splitter); fill, radius and shadow still set it apart. */
+.article-container.story-stream-layout {
+  border-color: transparent;
+}
+
 .story-stream-toolbar {
+  /* Height of the fade that hangs below the toolbar over the cards. */
+  --story-stream-toolbar-fade: 17px;
   position: relative;
   z-index: 3;
-  border-bottom: 1px solid var(--color-border-2);
   padding: 8px 18px 10px;
   background:
     linear-gradient(180deg, rgba(var(--primary-6), 0.08) 0%, transparent 45%), var(--color-bg-1);
+}
+
+/* Instead of a hard border, the toolbar's bottom edge fades out over the list,
+   so cards scrolling up slide "under" it. It only paints (no layout, no
+   pointer events) and is plain alpha, no backdrop blur, to keep scrolling cheap. */
+.story-stream-toolbar::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: var(--story-stream-toolbar-fade);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-bg-1) 88%, transparent) 0%,
+    color-mix(in srgb, var(--color-bg-1) 45%, transparent) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 .story-stream-toolbar .content-toolbar {
@@ -12,6 +38,9 @@
   background: transparent;
 }
 
+/* The top padding clears the toolbar fade, so the first card and every card
+   aligned by navigation rest fully visible below it. Alignment reads
+   scroll-padding-top from here (useStreamKeyHandlers), so keep them equal. */
 .story-stream-list {
   padding: 18px;
 }

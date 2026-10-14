@@ -71,104 +71,21 @@
   line-height: 1.2;
 }
 
-.article-date {
-  color: var(--color-text-3);
-  font-size: 0.75rem;
-}
-
 .article-header {
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 28px;
+  padding-bottom: 12px;
 }
 
-.article-meta .arco-typography {
-  color: var(--color-text-3);
-  font-size: 0.75rem;
-  line-height: 2 !important;
-}
-
-.article-detail-meta {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.article-detail-source {
-  display: flex;
-  align-items: baseline;
-  flex: 0 1 auto;
-  flex-wrap: nowrap;
-  gap: 10px;
-  color: var(--color-text-3);
-  font-size: 0.85rem;
-  min-width: 0;
-}
-
-.article-detail-source-title,
-.article-detail-author {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.article-detail-source-title {
-  font-weight: 600;
-}
-
-.article-detail-source-title a,
-.article-detail-source-title .arco-link {
-  color: inherit;
-}
-
-.article-detail-author {
-  color: var(--color-text-3);
-  cursor: pointer;
-  font-size: inherit;
-  line-height: inherit;
-}
-
-.article-detail-author::before {
-  content: "by";
-  margin-right: 6px;
-  color: var(--color-text-3);
-  text-transform: lowercase;
-}
-
-.article-detail-meta-item {
-  display: inline-flex;
-  align-items: baseline;
-  white-space: nowrap;
-  color: var(--color-text-3);
-  font-size: 0.85rem;
-  line-height: 1.2;
-}
-
-.article-detail-meta-item::before {
-  content: "\2022";
-  display: inline-block;
-  margin-right: 6px;
-  color: var(--color-text-3);
-}
-
-.article-detail-category {
-  cursor: pointer;
-}
-
-.article-detail-category.arco-tag {
-  line-height: 1.2;
-  vertical-align: baseline;
-}
-
-.article-title,
-.article-meta,
-.article-date {
-  margin: 0 auto;
-}
-
-.article-title.arco-typography {
+.article-header .article-title.arco-typography {
+  margin: 10px 0 0;
   word-break: normal;
   overflow-wrap: break-word;
+}
+
+/* Arco gives typography links 4px side margins; keep the title on the eyebrow's edge. */
+.article-header .article-title a {
+  margin: 0;
 }
 
 .scroll-container {

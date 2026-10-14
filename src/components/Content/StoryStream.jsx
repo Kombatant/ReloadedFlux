@@ -19,6 +19,7 @@ import { contentState, filteredEntriesState } from "@/store/contentState"
 import { categoriesState, feedsState } from "@/store/dataState"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { streamAlignmentActiveState } from "@/store/streamAlignmentState"
+import { getDayKey } from "@/utils/date"
 import { streamDebug } from "@/utils/stream-debug"
 
 import "./StoryStream.css"
@@ -34,13 +35,14 @@ const StoryStream = ({
   handleEntryClick,
   info,
   markAllAsRead,
+  onNavigateNext,
   streamVirtualizerRef,
 }) => {
   const { activeContent, infoFrom, isArticleListReady, loadMoreVisible } = useStore(contentState)
   const filteredEntries = useStore(filteredEntriesState)
   const feeds = useStore(feedsState)
   const categories = useStore(categoriesState)
-  const { animationsEnabled, showStatus } = useStore(settingsState)
+  const { animationsEnabled, orderBy, showStatus, streamTimeline } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
   const navigate = useNavigate()
   const { loadingMore, handleLoadMore } = useLoadMore()
@@ -152,7 +154,7 @@ const StoryStream = ({
       const scRect = scroller.getBoundingClientRect()
       const items = [
         ...scroller.querySelectorAll(
-          ".stream-story-card, .story-stream-end, .story-stream-load-more",
+          "[data-stream-item], .story-stream-end, .story-stream-load-more",
         ),
       ]
       if (items.length === 0) {
@@ -232,6 +234,14 @@ const StoryStream = ({
         index >= 0 && index < filteredEntries.length && array.indexOf(index) === position,
     )
   }, [activeEntryIndex, filteredEntries.length])
+
+  // Timeline view groups by the sort field so the rail always runs in order.
+  const timelineDateField = orderBy === "published_at" ? "published_at" : "created_at"
+  const timelineDayKeys = useMemo(
+    () =>
+      streamTimeline ? filteredEntries.map((entry) => getDayKey(entry[timelineDateField])) : null,
+    [filteredEntries, streamTimeline, timelineDateField],
+  )
 
   // Name the feed/category in the end-of-feed subtitle; other views stay generic.
   const sourceTitle = useMemo(() => {
@@ -358,11 +368,17 @@ const StoryStream = ({
                   handleEntryClick={handleEntryClick}
                   infoFrom={infoFrom}
                   isSelected={activeContent?.id === entry.id}
+                  timelineDate={timelineDayKeys === null ? null : entry[timelineDateField]}
                   shouldPreload={
                     activeEntryIndex !== -1 &&
                     index > activeEntryIndex &&
                     index <= activeEntryIndex + STREAM_PRELOAD_AHEAD_COUNT
                   }
+                  showDayHeader={
+                    timelineDayKeys !== null &&
+                    (index === 0 || timelineDayKeys[index] !== timelineDayKeys[index - 1])
+                  }
+                  onNavigateNext={onNavigateNext}
                 />
               ))}
               {loadMoreVisible ? (

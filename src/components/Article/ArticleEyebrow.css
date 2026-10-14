@@ -1,0 +1,87 @@
+.article-eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  /* Separators are painted inside this column gap, outside the items' boxes. */
+  gap: 2px 18px;
+  min-height: 24px;
+  color: var(--article-card-subtle-color);
+  font-size: 0.85rem;
+}
+
+.article-eyebrow-centered {
+  justify-content: center;
+  margin-inline: auto;
+}
+
+.article-eyebrow-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.article-eyebrow-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.article-eyebrow-source {
+  overflow: hidden;
+  color: var(--article-card-meta-color);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.article-eyebrow-source a,
+.article-eyebrow-source .arco-link {
+  color: inherit;
+}
+
+.article-eyebrow-item {
+  position: relative;
+  white-space: nowrap;
+}
+
+/* Out of flow, so hiding one never changes where the line wraps. */
+.article-eyebrow-item::before {
+  content: "\00b7";
+  position: absolute;
+  top: 0;
+  right: calc(100% + 9px);
+  transform: translateX(50%);
+  color: var(--article-card-subtle-color);
+  pointer-events: none;
+}
+
+.article-eyebrow-category::before {
+  content: "/";
+}
+
+/* A wrapped line never starts with a separator (see markLineStarts). */
+.article-eyebrow-item[data-line-start]::before {
+  visibility: hidden;
+}
+
+.article-eyebrow .article-eyebrow-category,
+.article-eyebrow .article-eyebrow-author {
+  color: var(--article-card-meta-color);
+  cursor: pointer;
+}
+
+/* Truncate inside the item: the item itself must not clip its separator. */
+.article-eyebrow-truncate {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 24ch;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.article-eyebrow .article-eyebrow-category:hover,
+.article-eyebrow .article-eyebrow-author:hover {
+  color: var(--color-text-1);
+}

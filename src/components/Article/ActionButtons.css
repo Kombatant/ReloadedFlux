@@ -13,6 +13,18 @@
   gap: var(--space-1);
 }
 
+/* Desktop reading pane top bar: close, then prev/next grouped around the
+   article's position in the list. */
+.reading-pane-topbar .left-side {
+  gap: var(--space-2);
+}
+
+.reading-pane-nav-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--color-border-2);
+}
+
 /* Mobile: a bottom bar with its own surface and 40px touch targets. */
 .action-buttons.mobile {
   padding: 6px var(--space-3);

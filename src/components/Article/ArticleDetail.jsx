@@ -1,53 +1,27 @@
-import { Divider, Tag, Typography } from "@arco-design/web-react"
+import { Typography } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { forwardRef, useEffect, useRef } from "react"
-import { useNavigate } from "react-router"
 import SimpleBar from "simplebar-react"
 
-import CustomLink from "@/components/ui/CustomLink"
 import FadeTransition from "@/components/ui/FadeTransition"
-import InlineAction from "@/components/ui/InlineAction"
 import usePhotoSlider from "@/hooks/usePhotoSlider"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import {
-  contentState,
-  setActiveContent,
-  setFilterString,
-  setFilterType,
-} from "@/store/contentState"
+import { contentState } from "@/store/contentState"
 import { settingsState } from "@/store/settingsState"
-import { generateReadableDate, generateReadingTime, generateRelativeTime } from "@/utils/date"
 
 import ArticleBodyRenderer from "./ArticleBodyRenderer"
+import ArticleEyebrow from "./ArticleEyebrow"
 import "./ArticleDetail.css"
 
 const ArticleDetail = forwardRef((_, ref) => {
-  const navigate = useNavigate()
   const { isBelowMedium } = useScreenWidth()
 
   const { activeContent } = useStore(contentState)
-  const {
-    articleWidth,
-    fontFamily,
-    showDetailedRelativeTime,
-    showEstimatedReadingTime,
-    titleAlignment,
-  } = useStore(settingsState)
+  const { articleWidth, fontFamily, titleAlignment } = useStore(settingsState)
   const scrollContainerRef = useRef(null)
 
   const { isPhotoSliderVisible, setIsPhotoSliderVisible, selectedIndex, setSelectedIndex } =
     usePhotoSlider()
-
-  const handleAuthorFilter = () => {
-    setFilterType("author")
-    setFilterString(activeContent.author)
-    if (isBelowMedium) {
-      setActiveContent(null)
-    }
-  }
-
-  const { id: categoryId, title: categoryTitle } = activeContent.feed.category
-  const { id: feedId, title: feedTitle } = activeContent.feed
 
   const getResponsiveMaxWidth = () => {
     if (isBelowMedium) {
@@ -76,6 +50,7 @@ const ArticleDetail = forwardRef((_, ref) => {
             className="article-header"
             style={{ maxWidth: getResponsiveMaxWidth(), textAlign: titleAlignment }}
           >
+            <ArticleEyebrow centered={titleAlignment === "center"} entry={activeContent} />
             <Typography.Title
               className="article-title"
               heading={3}
@@ -85,44 +60,6 @@ const ArticleDetail = forwardRef((_, ref) => {
                 {activeContent.title}
               </a>
             </Typography.Title>
-            <div
-              className="article-meta article-detail-meta"
-              style={{ justifyContent: titleAlignment === "center" ? "center" : undefined }}
-            >
-              <div className="article-detail-source">
-                <span className="article-detail-source-title">
-                  <CustomLink text={feedTitle} url={`/feed/${feedId}`} />
-                </span>
-                {activeContent.author ? (
-                  <InlineAction className="article-detail-author" onClick={handleAuthorFilter}>
-                    {activeContent.author}
-                  </InlineAction>
-                ) : null}
-              </div>
-              {categoryTitle ? (
-                <span className="article-detail-meta-item">
-                  <Tag
-                    className="article-detail-category"
-                    size="small"
-                    onClick={() => navigate(`/category/${categoryId}`)}
-                  >
-                    {categoryTitle}
-                  </Tag>
-                </span>
-              ) : null}
-              <span className="article-detail-meta-item">
-                {generateReadableDate(activeContent.published_at)}
-              </span>
-              <span className="article-detail-meta-item">
-                {generateRelativeTime(activeContent.published_at, showDetailedRelativeTime)}
-              </span>
-              {showEstimatedReadingTime ? (
-                <span className="article-detail-meta-item">
-                  {generateReadingTime(activeContent.reading_time)}
-                </span>
-              ) : null}
-            </div>
-            <Divider />
           </div>
           <ArticleBodyRenderer
             entry={activeContent}

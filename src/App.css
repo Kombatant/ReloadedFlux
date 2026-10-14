@@ -34,6 +34,25 @@
   opacity: 1;
 }
 
+/* No visible frame between panes, in either layout: the sidebar edge and the
+   splitter lines disappear while idle. A splitter's line still shows on
+   hover/drag so the resize handle stays discoverable. */
+.app .sidebar {
+  border-right-color: transparent;
+}
+
+.app-splitter::after,
+.content-splitter::after {
+  opacity: 0;
+}
+
+.app-splitter:hover::after,
+.app-splitter.is-dragging::after,
+.content-splitter:hover::after,
+.content-splitter.is-dragging::after {
+  opacity: 1;
+}
+
 .simplebar-scrollbar::before {
   transition-delay: 1s;
   background-color: rgb(var(--gray-6));
