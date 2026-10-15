@@ -1,3 +1,15 @@
+/* Crossfade the whole interface, including gradients and popup surfaces. */
+::view-transition-group(root) {
+  animation-duration: 300ms;
+  animation-timing-function: var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root) {
+    animation-duration: 0s;
+  }
+}
+
 body {
   --brand-icon-foreground: #1d2129;
   --brand-icon-background: #e9ebef;

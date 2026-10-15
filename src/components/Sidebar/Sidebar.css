@@ -75,7 +75,6 @@ body[arco-theme="dark"] .item-count-feed {
   align-items: center;
   gap: 10px;
   min-width: 0;
-  overflow: hidden;
 }
 
 .menu-header-brand > :first-child {
@@ -103,6 +102,12 @@ body[arco-theme="dark"] .item-count-feed {
 
 .sidebar-pin-button.is-active {
   background-color: var(--color-primary-light-1);
+}
+
+body:not([arco-theme="dark"])
+  .sidebar-pin-button.app-icon-button.arco-btn-text.is-active:not(.arco-btn-disabled) {
+  background-color: rgba(var(--primary-6), 0.16);
+  box-shadow: inset 0 0 0 1px rgba(var(--primary-6), 0.32);
 }
 
 .sidebar-pin-button:not(.is-active) svg {

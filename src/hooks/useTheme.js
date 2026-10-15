@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 import { settingsState, updateSettings } from "@/store/settingsState"
 import { applyColor, getModeFallbackColor, isModeRestrictedColor } from "@/utils/colors"
+import { prefersReducedMotion } from "@/utils/scroll-timing"
 
 const useTheme = () => {
   const { animationsEnabled, themeColor, themeMode } = useStore(settingsState)
@@ -25,12 +26,6 @@ const useTheme = () => {
   }, [animationsEnabled])
 
   useEffect(() => {
-    const applyColorScheme = (isDarkMode) => {
-      const mode = isDarkMode ? "dark" : "light"
-      document.body.setAttribute("arco-theme", mode)
-      document.body.style.colorScheme = mode
-    }
-
     const effectiveDark = themeMode === "system" ? isSystemDark : themeMode === "dark"
 
     if (isModeRestrictedColor(themeColor, effectiveDark)) {
@@ -38,9 +33,38 @@ const useTheme = () => {
       return
     }
 
-    applyColor(themeColor)
-    applyColorScheme(effectiveDark)
-  }, [isSystemDark, themeMode, themeColor])
+    const mode = effectiveDark ? "dark" : "light"
+    const previousMode = document.body.getAttribute("arco-theme")
+    let cancelled = false
+    const applyTheme = () => {
+      if (cancelled) {
+        return
+      }
+      applyColor(themeColor)
+      document.body.setAttribute("arco-theme", mode)
+      document.body.style.colorScheme = mode
+    }
+
+    if (
+      !previousMode ||
+      previousMode === mode ||
+      animationsEnabled === false ||
+      prefersReducedMotion() ||
+      !document.startViewTransition
+    ) {
+      applyTheme()
+      return
+    }
+
+    const transition = document.startViewTransition(applyTheme)
+    // Skipping an interrupted fade rejects ready, but still runs the update callback.
+    transition.ready.catch(() => {})
+
+    return () => {
+      cancelled = true
+      transition.skipTransition()
+    }
+  }, [animationsEnabled, isSystemDark, themeMode, themeColor])
 }
 
 export default useTheme
