@@ -49,6 +49,42 @@
   transform: scale(var(--icon-backdrop-wash-scale));
 }
 
+/* Glow drifts slowly on the selected card only. Distances follow the icon size
+   (54px x 66px, ±15° at the Stream card's 256px). Keyed off the in-app
+   Animations toggle, whose first-run default already follows the OS
+   reduced-motion hint. Transform-only, so it stays on the compositor and never
+   changes the card's layout. */
+@keyframes card-icon-backdrop-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(
+        calc(var(--icon-backdrop-size) * 0.21),
+        calc(var(--icon-backdrop-size) * 0.117)
+      )
+      rotate(15deg);
+  }
+
+  66% {
+    transform: translate(
+        calc(var(--icon-backdrop-size) * 0.07),
+        calc(var(--icon-backdrop-size) * 0.258)
+      )
+      rotate(-12deg);
+  }
+}
+
+body[data-animations="on"]
+  .card-wrapper.selected
+  .card-icon-backdrop-glow
+  .card-icon-backdrop-image {
+  animation: card-icon-backdrop-drift 9s ease-in-out infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card-icon-backdrop {
     transition: none;
