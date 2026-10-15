@@ -28,6 +28,8 @@
   "sidebar": {
     "profile_menu": "Menú de ReloadedFlux",
     "open_menu": "Abrir menú",
+    "pin_sidebar": "Fijar barra lateral",
+    "unpin_sidebar": "Desfijar barra lateral",
     "all": "Todo",
     "today": "Hoy",
     "starred": "Favoritos",

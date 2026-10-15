@@ -1,6 +1,11 @@
 import { persistentAtom } from "@nanostores/persistent"
+import { atom } from "nanostores"
 
+import createSetter from "@/utils/nanostores"
 import sanitizeExpandedCategories from "@/utils/settings-transfer/sidebar-config"
+
+export const sidebarVisibleState = atom(false)
+export const setSidebarVisible = createSetter(sidebarVisibleState)
 
 export const expandedCategoriesState = persistentAtom("expandedCategories", [], {
   encode: JSON.stringify,

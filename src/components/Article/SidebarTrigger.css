@@ -3,8 +3,3 @@
   flex: 0 0 auto;
   align-items: center;
 }
-
-.sidebar-drawer .arco-drawer-content {
-  padding: 0;
-  background-color: var(--color-neutral-2);
-}

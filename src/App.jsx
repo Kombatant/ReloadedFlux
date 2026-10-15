@@ -1,6 +1,7 @@
-import { Layout } from "@arco-design/web-react"
+import { Drawer, Layout } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
+import { useLocation } from "react-router"
 
 import "./App.css"
 import ConnectionOverlay from "./components/ConnectionOverlay/ConnectionOverlay"
@@ -13,6 +14,7 @@ import useScreenWidth from "./hooks/useScreenWidth"
 import useTheme from "./hooks/useTheme"
 import useVersionCheck from "./hooks/useVersionCheck"
 import { settingsState, updateSettings } from "./store/settingsState"
+import { setSidebarVisible, sidebarVisibleState } from "./store/sidebarState"
 import hideSpinner from "./utils/loading"
 
 const clampNumber = (value, min, max) => Math.min(max, Math.max(min, value))
@@ -27,7 +29,10 @@ const App = () => {
   const { isBelowLarge } = useScreenWidth()
 
   const { polyglot } = useStore(polyglotState)
-  const { fontFamily, sidebarWidth: storedSidebarWidth } = useStore(settingsState)
+  const { fontFamily, sidebarPinned, sidebarWidth: storedSidebarWidth } = useStore(settingsState)
+  const sidebarVisible = useStore(sidebarVisibleState)
+  const currentPath = useLocation().pathname
+  const isSidebarDocked = !isBelowLarge && sidebarPinned
 
   const [sidebarWidth, setSidebarWidth] = useState(storedSidebarWidth ?? 240)
   const [isResizingSidebar, setIsResizingSidebar] = useState(false)
@@ -35,6 +40,16 @@ const App = () => {
   useEffect(() => {
     hideSpinner()
   }, [])
+
+  useEffect(() => {
+    setSidebarVisible(false)
+  }, [currentPath, isBelowLarge])
+
+  useEffect(() => {
+    if (isSidebarDocked) {
+      setSidebarVisible(false)
+    }
+  }, [isSidebarDocked])
 
   useEffect(() => {
     const root = globalThis?.document?.documentElement
@@ -91,14 +106,14 @@ const App = () => {
         <div
           className="app"
           style={
-            isBelowLarge
-              ? undefined
-              : {
+            isSidebarDocked
+              ? {
                   gridTemplateColumns: `${sidebarWidth}px var(--pane-splitter-size) 1fr`,
                 }
+              : { gridTemplateColumns: "0 0 1fr" }
           }
         >
-          {isBelowLarge ? null : (
+          {isSidebarDocked ? (
             <Layout.Sider
               breakpoint="lg"
               className="sidebar"
@@ -112,8 +127,8 @@ const App = () => {
                 remoteBuildInfo={remoteBuildInfo}
               />
             </Layout.Sider>
-          )}
-          {isBelowLarge ? null : (
+          ) : null}
+          {isSidebarDocked ? (
             <div
               aria-label="Resize sidebar"
               aria-orientation="vertical"
@@ -125,9 +140,30 @@ const App = () => {
               }
               onPointerDown={handleSidebarSplitterPointerDown}
             />
-          )}
+          ) : null}
           <Main />
         </div>
+        {!isSidebarDocked && (
+          <Drawer
+            autoFocus
+            escToExit
+            focusLock
+            className="sidebar-drawer"
+            closable={false}
+            footer={null}
+            placement="left"
+            title={null}
+            visible={sidebarVisible}
+            width={isBelowLarge ? 240 : storedSidebarWidth}
+            onCancel={() => setSidebarVisible(false)}
+          >
+            <Sidebar
+              dismissUpdate={dismissUpdate}
+              hasUpdate={hasUpdate}
+              remoteBuildInfo={remoteBuildInfo}
+            />
+          </Drawer>
+        )}
         <ConnectionOverlay />
       </AppConfigProvider>
     )

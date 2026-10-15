@@ -1,63 +1,34 @@
-import { Drawer } from "@arco-design/web-react"
 import { IconMenu } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
-import { atom } from "nanostores"
-import { useEffect } from "react"
-import { useLocation } from "react-router"
 
-import Sidebar from "@/components/Sidebar/Sidebar"
 import IconButton from "@/components/ui/IconButton"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
+import { settingsState } from "@/store/settingsState"
+import { setSidebarVisible, sidebarVisibleState } from "@/store/sidebarState"
 import "./SidebarTrigger.css"
-import createSetter from "@/utils/nanostores"
-
-const sidebarVisibleState = atom(false)
-const setSidebarVisible = createSetter(sidebarVisibleState)
 
 export default function SidebarTrigger() {
-  const currentPath = useLocation().pathname
   const { isBelowLarge } = useScreenWidth()
+  const { sidebarPinned } = useStore(settingsState)
 
   const sidebarVisible = useStore(sidebarVisibleState)
   const { polyglot } = useStore(polyglotState)
 
-  useEffect(() => {
-    if (!isBelowLarge) {
-      setSidebarVisible(false)
-    }
-  }, [isBelowLarge])
-
-  useEffect(() => {
-    if (currentPath) {
-      setSidebarVisible(false)
-    }
-  }, [currentPath])
-
-  if (!isBelowLarge) {
+  if (!isBelowLarge && sidebarPinned) {
     return null
   }
 
   return (
     <div className="sidebar-trigger">
       <IconButton
+        aria-expanded={sidebarVisible}
+        aria-haspopup="dialog"
         icon={<IconMenu />}
         label={polyglot.t("sidebar.open_menu")}
         tooltip={null}
         onClick={() => setSidebarVisible(!sidebarVisible)}
       />
-      <Drawer
-        className="sidebar-drawer"
-        closable={false}
-        footer={null}
-        placement="left"
-        title={null}
-        visible={sidebarVisible}
-        width={240}
-        onCancel={() => setSidebarVisible(false)}
-      >
-        <Sidebar />
-      </Drawer>
     </div>
   )
 }

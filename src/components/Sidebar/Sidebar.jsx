@@ -17,6 +17,7 @@ import {
   IconGithub,
   IconHistory,
   IconMinusCircle,
+  IconPushpin,
   IconRefresh,
   IconRight,
   IconStar,
@@ -49,8 +50,12 @@ import {
   setUnreadInfo,
   unreadTotalState,
 } from "@/store/dataState"
-import { settingsState } from "@/store/settingsState"
-import { expandedCategoriesState, setExpandedCategories } from "@/store/sidebarState"
+import { settingsState, updateSettings } from "@/store/settingsState"
+import {
+  expandedCategoriesState,
+  setExpandedCategories,
+  setSidebarVisible,
+} from "@/store/sidebarState"
 import reloadToLatestBuild from "@/utils/app-refresh"
 import { GITHUB_REPO_PATH } from "@/utils/constants"
 import { Notification } from "@/utils/feedback"
@@ -459,6 +464,8 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
   const { isCoreDataReady } = useStore(dataState)
   const { polyglot } = useStore(polyglotState)
   const expandedCategories = useStore(expandedCategoriesState)
+  const { sidebarPinned } = useStore(settingsState)
+  const { isBelowLarge } = useScreenWidth()
 
   const [categoryModalVisible, setCategoryModalVisible] = useState(false)
   const [feedModalVisible, setFeedModalVisible] = useState(false)
@@ -619,6 +626,19 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
               label={polyglot.t("article_list.refresh_tooltip")}
               onClick={handleRefreshCurrentView}
             />
+            {!isBelowLarge && (
+              <IconButton
+                active={sidebarPinned}
+                aria-pressed={sidebarPinned}
+                className="sidebar-pin-button"
+                icon={<IconPushpin />}
+                label={polyglot.t(sidebarPinned ? "sidebar.unpin_sidebar" : "sidebar.pin_sidebar")}
+                onClick={() => {
+                  setSidebarVisible(sidebarPinned)
+                  updateSettings({ sidebarPinned: !sidebarPinned })
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

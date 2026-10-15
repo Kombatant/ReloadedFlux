@@ -28,6 +28,8 @@
   "sidebar": {
     "profile_menu": "ReloadedFlux menu",
     "open_menu": "Open menu",
+    "pin_sidebar": "Pin sidebar",
+    "unpin_sidebar": "Unpin sidebar",
     "all": "All",
     "today": "Today",
     "starred": "Starred",

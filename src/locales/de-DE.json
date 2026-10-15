@@ -28,6 +28,8 @@
   "sidebar": {
     "profile_menu": "ReloadedFlux-Menü",
     "open_menu": "Menü öffnen",
+    "pin_sidebar": "Seitenleiste anheften",
+    "unpin_sidebar": "Seitenleiste lösen",
     "all": "Alle",
     "today": "Heute",
     "starred": "Lesezeichen",

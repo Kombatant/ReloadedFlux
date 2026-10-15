@@ -75,12 +75,19 @@ body[arco-theme="dark"] .item-count-feed {
   align-items: center;
   gap: 10px;
   min-width: 0;
+  overflow: hidden;
+}
+
+.menu-header-brand > :first-child {
+  flex-shrink: 0;
 }
 
 .sidebar-brand-title.arco-typography {
   margin: 0;
   font-weight: 300;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-brand-title-strong {
@@ -91,6 +98,15 @@ body[arco-theme="dark"] .item-count-feed {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.sidebar-pin-button.is-active {
+  background-color: var(--color-primary-light-1);
+}
+
+.sidebar-pin-button:not(.is-active) svg {
+  transform: rotate(-45deg);
 }
 
 /* Section captions ("Articles", "Feeds") share the menu section-title style. */
@@ -210,6 +226,11 @@ body[arco-theme="dark"] .item-count-feed {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.sidebar-drawer .arco-drawer-content {
+  padding: 0;
+  background-color: var(--color-neutral-2);
 }
 
 .sidebar-pinned-header {

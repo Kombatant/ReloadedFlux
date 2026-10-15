@@ -28,6 +28,8 @@
   "sidebar": {
     "profile_menu": "ReloadedFlux 菜单",
     "open_menu": "打开菜单",
+    "pin_sidebar": "固定侧边栏",
+    "unpin_sidebar": "取消固定侧边栏",
     "all": "全部",
     "today": "今天",
     "starred": "收藏",

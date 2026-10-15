@@ -28,6 +28,8 @@
   "sidebar": {
     "profile_menu": "Μενού ReloadedFlux",
     "open_menu": "Άνοιγμα μενού",
+    "pin_sidebar": "Καρφίτσωμα πλαϊνής στήλης",
+    "unpin_sidebar": "Ξεκαρφίτσωμα πλαϊνής στήλης",
     "all": "Όλα",
     "today": "Σήμερα",
     "starred": "Αγαπημένα",
