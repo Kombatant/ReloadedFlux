@@ -396,10 +396,7 @@ const StreamArticleCard = ({
             target="_blank"
             onClick={(event) => {
               event.stopPropagation()
-
-              if (hasCombinedSelection()) {
-                event.preventDefault()
-              }
+              // Native links handle selection drags; existing selections must not block opening.
             }}
           >
             <span className="stream-story-title-text">{currentEntry.title}</span>
