@@ -64,9 +64,13 @@ const ImageComponent = ({ imgNode, isIcon, isBigImage, index, metadata, togglePh
         isBigImage ? "image-overlay-target image-overlay-target-big" : "image-overlay-target"
       }
       style={
-        reservedDimensions && isBigImage
+        reservedDimensions
           ? {
-              aspectRatio: `${reservedDimensions.width} / ${reservedDimensions.height}`,
+              // Lets the Combined layout cap image height without distorting it.
+              "--image-aspect-ratio": reservedDimensions.width / reservedDimensions.height,
+              ...(isBigImage
+                ? { aspectRatio: `${reservedDimensions.width} / ${reservedDimensions.height}` }
+                : {}),
             }
           : undefined
       }

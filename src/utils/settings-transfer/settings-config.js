@@ -39,6 +39,7 @@ const ENUM_VALUES = {
   removeDuplicates: ["none", "hash", "title", "url"],
   // "starred" was retired as a list filter; stored values sanitize back to "unread".
   showStatus: ["unread", "all"],
+  streamImageLayout: ["full", "capped", "right"],
   themeColor: THEME_COLOR_NAMES,
   themeMode: ["system", "light", "dark"],
   titleAlignment: ["left", "center"],
@@ -178,6 +179,7 @@ export const createDefaultSettings = (language = "en-CA") => ({
   showFeedIcon: true,
   showHiddenFeeds: false,
   showStatus: "unread",
+  streamImageLayout: "capped",
   streamRenderSelectedOnly: false,
   streamTimeline: false,
   showUnreadFeedsOnly: false,

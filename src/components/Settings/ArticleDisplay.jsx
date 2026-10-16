@@ -15,6 +15,7 @@ const ArticleDisplay = () => {
     showDetailedRelativeTime,
     showEstimatedReadingTime,
     showFeedIcon,
+    streamImageLayout,
     titleAlignment,
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
@@ -100,6 +101,36 @@ const ArticleDisplay = () => {
           </Select.Option>
           <Select.Option value="thumbnail">
             {polyglot.t("appearance.cover_display_mode_thumbnail")}
+          </Select.Option>
+        </Select>
+      </SettingItem>
+
+      <Divider />
+
+      <SettingItem
+        description={polyglot.t("appearance.stream_image_layout_description")}
+        disabled={!isCombinedLayout}
+        disabledLabel={polyglot.t("settings.disabled_label")}
+        title={polyglot.t("appearance.stream_image_layout_label")}
+        disabledReason={polyglot.t("settings.only_available_in_layout", {
+          layout: polyglot.t("appearance.layout_mode_stream"),
+        })}
+      >
+        <Select
+          className="input-select"
+          disabled={!isCombinedLayout}
+          getPopupContainer={() => document.body}
+          value={streamImageLayout}
+          onChange={(value) => updateSettings({ streamImageLayout: value })}
+        >
+          <Select.Option value="full">
+            {polyglot.t("appearance.stream_image_layout_full")}
+          </Select.Option>
+          <Select.Option value="capped">
+            {polyglot.t("appearance.stream_image_layout_capped")}
+          </Select.Option>
+          <Select.Option value="right">
+            {polyglot.t("appearance.stream_image_layout_right")}
           </Select.Option>
         </Select>
       </SettingItem>

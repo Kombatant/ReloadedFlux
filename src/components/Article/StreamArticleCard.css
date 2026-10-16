@@ -170,6 +170,57 @@
   margin-right: 0;
 }
 
+/* ---- Article images (Article Display > Article images) ----------------- */
+
+/* Capped and right-floated layouts keep every image within a share of the
+   viewport height, so tall images stop pushing the text off-screen at any
+   resolution. Width follows from each image's aspect ratio (set inline by
+   ImageOverlayButton), so nothing is cropped or stretched. */
+.stream-story-card .article-images-capped,
+.stream-story-card .article-images-right {
+  --stream-image-max-height: 50vh;
+}
+
+.stream-story-card .article-images-capped .image-overlay-target,
+.stream-story-card .article-images-right .image-overlay-target {
+  max-width: min(100%, calc(var(--stream-image-max-height) * var(--image-aspect-ratio, 1000)));
+}
+
+/* Right layout: the article's lead image floats right and the text wraps
+   around it. Narrow screens keep it inline; there is no room to wrap. */
+@media screen and (min-width: 769px) {
+  .stream-story-card .article-images-right .article-body {
+    display: flow-root;
+  }
+
+  .stream-story-card .article-images-right .article-lead-image {
+    float: right;
+    width: 40%;
+    margin: 0.4em 0 1em 28px;
+  }
+
+  .stream-story-card .article-images-right .article-lead-image > *,
+  .stream-story-card .article-images-right .article-lead-image figure,
+  .stream-story-card .article-images-right .article-lead-image .image-overlay-target {
+    margin-block: 0;
+  }
+
+  .stream-story-card .article-images-right .article-lead-image .image-wrapper {
+    text-align: right;
+  }
+
+  /* Wide blocks would slide under the floated image; start them below it. */
+  .stream-story-card
+    .article-images-right
+    .article-body
+    :is(pre, table, iframe, video, hr, figure, .image-wrapper, .code-block-container, .plyr):not(
+      .article-lead-image,
+      .article-lead-image *
+    ) {
+    clear: right;
+  }
+}
+
 /* ---- Footer: the selected card's action bar (ArticleActionBar) --------- */
 
 .stream-story-footer {

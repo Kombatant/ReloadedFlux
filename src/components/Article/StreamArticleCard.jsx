@@ -189,6 +189,7 @@ const StreamArticleCard = ({
     articleWidth,
     cardIconBackdrop,
     markReadOnScroll,
+    streamImageLayout,
     streamRenderSelectedOnly,
     titleAlignment,
   } = useStore(settingsState)
@@ -407,6 +408,7 @@ const StreamArticleCard = ({
             <ArticleBodyRenderer
               key={currentEntry.id}
               entry={currentEntry}
+              imageLayout={streamImageLayout}
               maxWidth={contentMaxWidth}
             />
           ) : (

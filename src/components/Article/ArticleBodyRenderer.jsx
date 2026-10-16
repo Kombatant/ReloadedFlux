@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react"
-import ReactHtmlParser, { domToReact } from "html-react-parser"
+import { domToReact, htmlToDOM } from "html-react-parser"
 import { littlefoot } from "littlefoot"
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react"
 import Lightbox from "yet-another-react-lightbox"
@@ -11,6 +11,7 @@ import "yet-another-react-lightbox/plugins/counter.css"
 
 import PlyrPlayer from "@/components/ui/PlyrPlayer"
 import { settingsState } from "@/store/settingsState"
+import { MIN_THUMBNAIL_SIZE } from "@/utils/constants"
 import htmlAttributesToProps from "@/utils/html"
 import { extractImageSources } from "@/utils/images"
 import { matchSocialEmbed } from "@/utils/social-embeds"
@@ -448,54 +449,151 @@ const handleParagraph = (node, options) => {
   )
 }
 
-const getHtmlParserOptions = (imageSources, togglePhotoSlider) => {
-  const options = {
-    replace: (node) => {
-      if (node.type !== "tag") {
+// Elements searched for a lead image. Tables are left alone: wrapping a cell
+// would break them (Reddit posts lay out image | text as a table row).
+const LEAD_IMAGE_WRAPPERS = new Set(["article", "div", "header", "p", "section"])
+const LEAD_IMAGE_BLOCKERS = new Set(["iframe", "pre", "table", "video"])
+
+const hasVisibleText = (node) => {
+  if (node.type === "text") {
+    return node.data.trim() !== ""
+  }
+  return (
+    node.type === "tag" &&
+    node.name !== "figcaption" &&
+    node.children.some((child) => hasVisibleText(child))
+  )
+}
+
+const collectImages = (node, images = []) => {
+  if (node.type !== "tag") {
+    return images
+  }
+  if (node.name === "img") {
+    images.push(node)
+  }
+  for (const child of node.children) {
+    collectImages(child, images)
+  }
+  return images
+}
+
+const containsBlocker = (node) =>
+  node.type === "tag" &&
+  (LEAD_IMAGE_BLOCKERS.has(node.name) || node.children.some((child) => containsBlocker(child)))
+
+const isDeclaredSmall = (img) => {
+  const width = Number.parseInt(img.attribs.width, 10)
+  const height = Number.parseInt(img.attribs.height, 10)
+  return (
+    Number.isFinite(width) &&
+    Number.isFinite(height) &&
+    Math.max(width, height) <= MIN_THUMBNAIL_SIZE
+  )
+}
+
+const isLeadImageCandidate = (node) => {
+  if (hasVisibleText(node) || containsBlocker(node)) {
+    return false
+  }
+  const images = collectImages(node)
+  return images.length === 1 && !isDeclaredSmall(images[0])
+}
+
+// The lead image is a single picture (bare, linked or in a figure) that comes
+// before any of the article's text. Returns the node, null when the article
+// has none, or undefined when `nodes` held nothing but whitespace.
+const findLeadImage = (nodes) => {
+  for (const node of nodes) {
+    if (node.type === "text") {
+      if (node.data.trim() !== "") {
+        return null
+      }
+      continue
+    }
+    if (node.type !== "tag" || node.name === "br") {
+      continue
+    }
+    if (isLeadImageCandidate(node)) {
+      return node
+    }
+    // A text-less wrapper of several pictures is a gallery; keep it whole.
+    if (
+      !LEAD_IMAGE_WRAPPERS.has(node.name) ||
+      (!hasVisibleText(node) && collectImages(node).length > 1)
+    ) {
+      return null
+    }
+    const found = findLeadImage(node.children)
+    if (found !== undefined) {
+      return found
+    }
+  }
+}
+
+const getHtmlParserOptions = (imageSources, togglePhotoSlider, leadImage = null) => {
+  const replaceNode = (node) => {
+    if (node.type !== "tag") {
+      return node
+    }
+
+    switch (node.name) {
+      case "a": {
+        return node.children.length > 0
+          ? handleLinkWithImage(node, imageSources, togglePhotoSlider)
+          : node
+      }
+      case "img": {
+        return handleImage(node, imageSources, togglePhotoSlider)
+      }
+      case "pre": {
+        return handleCodeBlock(node)
+      }
+      case "figure": {
+        return handleFigure(node, imageSources, togglePhotoSlider, options)
+      }
+      case "video": {
+        return handleVideo(node)
+      }
+      case "iframe": {
+        return handleIframe(node)
+      }
+      case "p": {
+        return handleParagraph(node, options)
+      }
+      case "table": {
+        return handleContentTable(node)
+      }
+      case "blockquote": {
+        return handleBlockquote(node)
+      }
+      default: {
         return node
       }
+    }
+  }
 
-      switch (node.name) {
-        case "a": {
-          return node.children.length > 0
-            ? handleLinkWithImage(node, imageSources, togglePhotoSlider)
-            : node
-        }
-        case "img": {
-          return handleImage(node, imageSources, togglePhotoSlider)
-        }
-        case "pre": {
-          return handleCodeBlock(node)
-        }
-        case "figure": {
-          return handleFigure(node, imageSources, togglePhotoSlider, options)
-        }
-        case "video": {
-          return handleVideo(node)
-        }
-        case "iframe": {
-          return handleIframe(node)
-        }
-        case "p": {
-          return handleParagraph(node, options)
-        }
-        case "table": {
-          return handleContentTable(node)
-        }
-        case "blockquote": {
-          return handleBlockquote(node)
-        }
-        default: {
-          return node
-        }
-      }
-    },
+  // The lead image renders through a separate options object so wrapping it
+  // does not recurse back into this replace.
+  const leadOptions = { replace: replaceNode }
+  const options = {
+    replace: (node) =>
+      node === leadImage ? (
+        <div className="article-lead-image">{domToReact([node], leadOptions)}</div>
+      ) : (
+        replaceNode(node)
+      ),
   }
 
   return options
 }
 
-const ArticleBodyRenderer = ({ entry, lightboxState = null, maxWidth = "100%" }) => {
+const ArticleBodyRenderer = ({
+  entry,
+  imageLayout = "full",
+  lightboxState = null,
+  maxWidth = "100%",
+}) => {
   const { animationsEnabled, articleWidth, edgeToEdgeImages, fontFamily, fontSize } =
     useStore(settingsState)
 
@@ -533,13 +631,21 @@ const ArticleBodyRenderer = ({ entry, lightboxState = null, maxWidth = "100%" })
     [entry.content, entry.imageSources],
   )
   const hasImages = imageSources.length > 0
+  const contentDom = useMemo(
+    () => (entry.content ? htmlToDOM(entry.content, { lowerCaseAttributeNames: false }) : []),
+    [entry.content],
+  )
+  const leadImage = useMemo(
+    () => (imageLayout === "right" ? (findLeadImage(contentDom) ?? null) : null),
+    [contentDom, imageLayout],
+  )
   const htmlParserOptions = useMemo(
-    () => getHtmlParserOptions(imageSources, togglePhotoSlider),
-    [imageSources, togglePhotoSlider],
+    () => getHtmlParserOptions(imageSources, togglePhotoSlider, leadImage),
+    [imageSources, leadImage, togglePhotoSlider],
   )
   const parsedHtml = useMemo(
-    () => ReactHtmlParser(entry.content, htmlParserOptions),
-    [entry.content, htmlParserOptions],
+    () => domToReact(contentDom, htmlParserOptions),
+    [contentDom, htmlParserOptions],
   )
 
   const lightboxAnimationConfig = animationsEnabled ? { fade: 250 } : { fade: 250, navigation: 0 }
@@ -554,7 +660,12 @@ const ArticleBodyRenderer = ({ entry, lightboxState = null, maxWidth = "100%" })
 
   return (
     <div
-      className={["article-content", "article-body-shell", edgeToEdgeImages ? "edge-to-edge" : ""]
+      className={[
+        "article-content",
+        "article-body-shell",
+        edgeToEdgeImages ? "edge-to-edge" : "",
+        imageLayout === "full" ? "" : `article-images-${imageLayout}`,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
