@@ -13,7 +13,7 @@ import PlyrPlayer from "@/components/ui/PlyrPlayer"
 import { settingsState } from "@/store/settingsState"
 import { MIN_THUMBNAIL_SIZE } from "@/utils/constants"
 import htmlAttributesToProps from "@/utils/html"
-import { extractImageSources } from "@/utils/images"
+import { extractImageSources, getCachedImageMetadata, preloadImageMetadata } from "@/utils/images"
 import { matchSocialEmbed } from "@/utils/social-embeds"
 
 import CodeBlock from "./CodeBlock"
@@ -531,6 +531,56 @@ const findLeadImage = (nodes) => {
   }
 }
 
+const getDeclaredSize = (img) => {
+  const width = Number.parseInt(img?.attribs.width, 10)
+  const height = Number.parseInt(img?.attribs.height, 10)
+  return Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
+    ? { width, height }
+    : null
+}
+
+// Sizes the floated box to the image itself (natural width, height cap), so a
+// height-capped image leaves no empty band beside it and its link tag centres
+// under it. Prefers the markup's dimensions, as ImageOverlayButton does.
+const LeadImageFrame = ({ node, children }) => {
+  const img = collectImages(node)[0]
+  const src = img?.attribs.src
+  const [size, setSize] = useState(() => getDeclaredSize(img) ?? getCachedImageMetadata(src))
+
+  useEffect(() => {
+    if (size || !src) {
+      return
+    }
+    let isSubscribed = true
+    const loadSize = async () => {
+      const metadata = await preloadImageMetadata(src)
+      if (isSubscribed && metadata) {
+        setSize(metadata)
+      }
+    }
+    void loadSize()
+    return () => {
+      isSubscribed = false
+    }
+  }, [size, src])
+
+  return (
+    <div
+      className="article-lead-image"
+      style={
+        size
+          ? {
+              "--image-aspect-ratio": size.width / size.height,
+              "--image-natural-width": `${size.width}px`,
+            }
+          : undefined
+      }
+    >
+      {children}
+    </div>
+  )
+}
+
 const getHtmlParserOptions = (imageSources, togglePhotoSlider, leadImage = null) => {
   const replaceNode = (node) => {
     if (node.type !== "tag") {
@@ -579,7 +629,7 @@ const getHtmlParserOptions = (imageSources, togglePhotoSlider, leadImage = null)
   const options = {
     replace: (node) =>
       node === leadImage ? (
-        <div className="article-lead-image">{domToReact([node], leadOptions)}</div>
+        <LeadImageFrame node={node}>{domToReact([node], leadOptions)}</LeadImageFrame>
       ) : (
         replaceNode(node)
       ),

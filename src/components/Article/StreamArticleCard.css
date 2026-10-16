@@ -198,9 +198,15 @@
     display: flow-root;
   }
 
+  /* Width hugs the image: at most 40% of the column, its natural width, or
+     the width its capped height allows (ratio set by LeadImageFrame). */
   .stream-story-card .article-images-right .article-lead-image {
     float: right;
-    width: 40%;
+    width: min(
+      40%,
+      var(--image-natural-width, 100%),
+      calc(var(--stream-image-max-height) * var(--image-aspect-ratio, 1000))
+    );
     margin: 0.4em 0 1em 28px;
   }
 
@@ -210,8 +216,8 @@
     margin-block: 0;
   }
 
-  .stream-story-card .article-images-right .article-lead-image .image-wrapper {
-    text-align: right;
+  .stream-story-card .article-images-right .article-lead-image .link-tag {
+    margin-top: 8px;
   }
 
   /* Wide blocks would slide under the floated image; start them below it. */

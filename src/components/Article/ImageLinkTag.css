@@ -1,4 +1,9 @@
-.link-tag {
+/* Block-level so the tag always sits on its own line, centred under the
+   image, even when the image is narrower than the column. */
+.arco-tag.link-tag {
   cursor: pointer;
+  display: flex;
+  margin: 0 auto;
   max-width: calc(100% - 32px);
+  width: fit-content;
 }
