@@ -49,7 +49,80 @@
   transform: scale(var(--icon-backdrop-wash-scale));
 }
 
-/* Glow drifts slowly on the selected card only. Distances follow the icon size
+/* Glass: the icon's colours, glowing from the top-left and faintly from the
+   bottom-right, behind a frosted pane over the whole card. The pane is painted,
+   not a backdrop-filter, so it costs nothing per frame while scrolling. */
+.card-icon-backdrop-glass {
+  --icon-backdrop-size: 200px;
+  --icon-backdrop-blur: 40px;
+  --icon-backdrop-opacity: 0.15;
+  --icon-backdrop-wash-opacity: 0.07;
+  --icon-backdrop-glass-frost: rgba(255, 255, 255, 0.3);
+  --icon-backdrop-glass-frost-end: rgba(255, 255, 255, 0.08);
+  --icon-backdrop-glass-sheen: rgba(255, 255, 255, 0.35);
+  --icon-backdrop-glass-edge: rgba(255, 255, 255, 0.85);
+  --icon-backdrop-glass-shade: rgba(0, 0, 0, 0.06);
+  --icon-backdrop-glass-grain: 1;
+  border-radius: inherit;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+body[arco-theme="dark"] .card-icon-backdrop-glass {
+  --icon-backdrop-opacity: 0.1;
+  --icon-backdrop-wash-opacity: 0.045;
+  /* Smoked rather than frosted: a white frost greys a dark card out. */
+  --icon-backdrop-glass-frost: rgba(255, 255, 255, 0.015);
+  --icon-backdrop-glass-frost-end: rgba(0, 0, 0, 0.18);
+  --icon-backdrop-glass-sheen: rgba(255, 255, 255, 0.025);
+  --icon-backdrop-glass-edge: rgba(255, 255, 255, 0.12);
+  --icon-backdrop-glass-shade: rgba(0, 0, 0, 0.3);
+  --icon-backdrop-glass-grain: 0.35;
+}
+
+.card-icon-backdrop-glass .card-icon-backdrop-image,
+.card-icon-backdrop-glass .card-icon-backdrop-wash {
+  filter: blur(var(--icon-backdrop-blur)) saturate(1.2);
+}
+
+.card-icon-backdrop-glass .card-icon-backdrop-wash {
+  top: auto;
+  left: auto;
+  right: calc(var(--icon-backdrop-size) * -0.35);
+  bottom: calc(var(--icon-backdrop-size) * -0.35);
+  transform: none;
+}
+
+/* The pane, over both colour layers: a soft diagonal sheen, a frost that
+   thins towards the bottom, and a bevel of lit top and left edges with a
+   shaded bottom edge. */
+.card-icon-backdrop-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, transparent 18%, var(--icon-backdrop-glass-sheen) 28%, transparent 40%),
+    linear-gradient(160deg, var(--icon-backdrop-glass-frost), var(--icon-backdrop-glass-frost-end));
+  box-shadow:
+    inset 0 1px 0 var(--icon-backdrop-glass-edge),
+    inset 1px 0 0 color-mix(in srgb, var(--icon-backdrop-glass-edge) 50%, transparent),
+    inset 0 -1px 0 var(--icon-backdrop-glass-shade);
+}
+
+/* Fine grain over the pane, kept on its own layer so dark mode can thin it. */
+.card-icon-backdrop-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.1 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: var(--icon-backdrop-glass-grain);
+}
+
+/* Glow (and Glass's main colour, behind its still pane) drifts slowly on the
+   selected card only. Distances follow the icon size
    (54px x 66px, ±15° at the Stream card's 256px). Keyed off the in-app
    Animations toggle, whose first-run default already follows the OS
    reduced-motion hint. Transform-only, so it stays on the compositor and never
@@ -79,7 +152,7 @@
 
 body[data-animations="on"]
   .card-wrapper.selected
-  .card-icon-backdrop-glow
+  :is(.card-icon-backdrop-glow, .card-icon-backdrop-glass)
   .card-icon-backdrop-image {
   animation: card-icon-backdrop-drift 9s ease-in-out infinite;
   will-change: transform;

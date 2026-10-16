@@ -147,6 +147,11 @@
   --icon-backdrop-blur: 25px;
 }
 
+.stream-story-card .card-icon-backdrop-glass {
+  --icon-backdrop-size: 320px;
+  --icon-backdrop-blur: 56px;
+}
+
 /* ---- Main column: eyebrow, title, body ---------------------------------- */
 
 .stream-story-main {

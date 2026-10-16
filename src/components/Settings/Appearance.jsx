@@ -60,6 +60,7 @@ const Appearance = () => {
     { label: polyglot.t("appearance.card_icon_backdrop_off"), value: "off" },
     { label: polyglot.t("appearance.card_icon_backdrop_icon"), value: "icon" },
     { label: polyglot.t("appearance.card_icon_backdrop_glow"), value: "glow" },
+    { label: polyglot.t("appearance.card_icon_backdrop_glass"), value: "glass" },
   ]
 
   const fontFamilyOptions = [

@@ -27,7 +27,7 @@ export const SUPPORTED_LANGUAGES = ["en-CA", "de-DE", "es-ES", "fr-FR", "zh-CN",
 
 const ENUM_VALUES = {
   aiProvider: ["none", ...AI_PROVIDER_KEYS],
-  cardIconBackdrop: ["off", "icon", "glow"],
+  cardIconBackdrop: ["off", "icon", "glow", "glass"],
   contentFetcher: ["miniflux", "fulltextrss"],
   coverDisplayMode: ["auto", "banner", "thumbnail"],
   homePage: ["all", "today", "starred", "history"],

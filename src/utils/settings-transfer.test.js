@@ -53,6 +53,7 @@ test("sanitizeSettings migrates the old boolean feed icon backdrop", () => {
   assert.equal(sanitizeSettings({ cardIconBackdrop: true }, defaults).cardIconBackdrop, "icon")
   assert.equal(sanitizeSettings({ cardIconBackdrop: false }, defaults).cardIconBackdrop, "off")
   assert.equal(sanitizeSettings({ cardIconBackdrop: "glow" }, defaults).cardIconBackdrop, "glow")
+  assert.equal(sanitizeSettings({ cardIconBackdrop: "glass" }, defaults).cardIconBackdrop, "glass")
   assert.equal(sanitizeSettings({ cardIconBackdrop: "bogus" }, defaults).cardIconBackdrop, "off")
 })
 
