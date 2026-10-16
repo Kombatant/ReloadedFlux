@@ -42,7 +42,7 @@ const ENUM_VALUES = {
   streamImageLayout: ["full", "capped", "right"],
   themeColor: THEME_COLOR_NAMES,
   themeMode: ["system", "light", "dark"],
-  titleAlignment: ["left", "center"],
+  titleAlignment: ["left", "center", "justify"],
 }
 
 const BOOLEAN_SETTINGS_KEYS = [

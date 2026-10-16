@@ -356,6 +356,7 @@ const StreamArticleCard = ({
       className={[
         "card-wrapper stream-story-card",
         isCentered ? "stream-story-align-center" : "stream-story-align-left",
+        titleAlignment === "justify" && "article-text-justify",
         isSelected && "selected",
         !isUnread && "stream-story-card-read",
       ]
@@ -386,7 +387,7 @@ const StreamArticleCard = ({
         <Typography.Title
           className={titleClassName}
           heading={4}
-          style={{ maxWidth: contentMaxWidth, textAlign: titleAlignment }}
+          style={{ maxWidth: contentMaxWidth, textAlign: isCentered ? "center" : "left" }}
         >
           {/* Real anchor so middle-click, Ctrl/Cmd-click and "Open in new tab" work natively;
               a <button> here made middle-click trigger the browser's autoscroll instead. */}

@@ -449,7 +449,7 @@
       "stream_render_selected_only_label": "Vollständigen Inhalt für ausgewählten Artikel anzeigen",
       "stream_render_selected_only_description": "Im kombinierten Layout wird vollständiger Inhalt nur für den ausgewählten Artikel angezeigt.",
       "article_font_size_label": "Schriftgröße des Artikels",
-      "title_alignment_description": "Wählen Sie die Ausrichtung des Artikeltitels."
+      "title_alignment_description": "Wählen Sie die Ausrichtung von Artikeltitel und Text. Blocksatz richtet den Titel links aus und setzt den Text im Blocksatz."
     }
   },
   "appearance": {
@@ -499,9 +499,10 @@
     "font_family_noto_sans": "Noto Sans SC",
     "font_family_noto_serif": "Noto Serif SC",
     "font_family_lxgw_wenkai": "LXGW WenKai Screen",
-    "title_alignment_label": "Ausrichtung des Artikeltitels",
+    "title_alignment_label": "Artikelausrichtung",
     "title_alignment_left": "Links",
-    "title_alignment_center": "Zentriert"
+    "title_alignment_center": "Zentriert",
+    "title_alignment_justify": "Blocksatz"
   },
   "hotkeys": {
     "key": "Taste",

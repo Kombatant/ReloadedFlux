@@ -18,6 +18,7 @@ const ArticleDetail = forwardRef((_, ref) => {
 
   const { activeContent } = useStore(contentState)
   const { articleWidth, fontFamily, titleAlignment } = useStore(settingsState)
+  const isCentered = titleAlignment === "center"
   const scrollContainerRef = useRef(null)
 
   const { isPhotoSliderVisible, setIsPhotoSliderVisible, selectedIndex, setSelectedIndex } =
@@ -39,7 +40,13 @@ const ArticleDetail = forwardRef((_, ref) => {
   }, [activeContent.id])
 
   return (
-    <article ref={ref} className="article-content" tabIndex={-1}>
+    <article
+      ref={ref}
+      tabIndex={-1}
+      className={
+        titleAlignment === "justify" ? "article-content article-text-justify" : "article-content"
+      }
+    >
       <SimpleBar
         ref={scrollContainerRef}
         className="scroll-container"
@@ -48,9 +55,9 @@ const ArticleDetail = forwardRef((_, ref) => {
         <FadeTransition y={20}>
           <div
             className="article-header"
-            style={{ maxWidth: getResponsiveMaxWidth(), textAlign: titleAlignment }}
+            style={{ maxWidth: getResponsiveMaxWidth(), textAlign: isCentered ? "center" : "left" }}
           >
-            <ArticleEyebrow centered={titleAlignment === "center"} entry={activeContent} />
+            <ArticleEyebrow centered={isCentered} entry={activeContent} />
             <Typography.Title
               className="article-title"
               heading={3}

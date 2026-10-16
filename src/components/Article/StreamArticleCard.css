@@ -164,6 +164,11 @@
 
 /* Left alignment pins title, preview and body to the eyebrow's edge; centred
    keeps the article column centred (the body's own default). */
+.article-text-justify .stream-story-preview {
+  text-align: justify;
+  hyphens: auto;
+}
+
 .stream-story-align-left .stream-story-preview,
 .stream-story-align-left .article-body {
   margin-left: 0;

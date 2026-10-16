@@ -449,7 +449,7 @@
       "stream_render_selected_only_label": "Afficher le contenu complet pour l’article sélectionné",
       "stream_render_selected_only_description": "Dans la vue combinée, affiche le contenu complet seulement pour l’article sélectionné.",
       "article_font_size_label": "Taille de la police de l'article",
-      "title_alignment_description": "Choisissez l'alignement du titre de l'article."
+      "title_alignment_description": "Choisissez l'alignement du titre et du texte de l'article. Justifié garde le titre à gauche et justifie le texte."
     }
   },
   "appearance": {
@@ -499,9 +499,10 @@
     "font_family_noto_sans": "Noto Sans SC",
     "font_family_noto_serif": "Noto Serif SC",
     "font_family_lxgw_wenkai": "LXGW WenKai Screen",
-    "title_alignment_label": "Alignement du titre de l'article",
+    "title_alignment_label": "Alignement de l'article",
     "title_alignment_left": "Gauche",
-    "title_alignment_center": "Centré"
+    "title_alignment_center": "Centré",
+    "title_alignment_justify": "Justifié"
   },
   "hotkeys": {
     "key": "Touche",

@@ -37,7 +37,10 @@ const ArticleDisplay = () => {
             {polyglot.t("appearance.title_alignment_left") || "Left"}
           </Select.Option>
           <Select.Option value="center">
-            {polyglot.t("appearance.title_alignment_center") || "Center"}
+            {polyglot.t("appearance.title_alignment_center") || "Centre"}
+          </Select.Option>
+          <Select.Option value="justify">
+            {polyglot.t("appearance.title_alignment_justify") || "Justified"}
           </Select.Option>
         </Select>
       </SettingItem>

@@ -448,7 +448,7 @@
       "stream_render_selected_only_label": "Πλήρες περιεχόμενο μόνο για το επιλεγμένο άρθρο",
       "stream_render_selected_only_description": "Στη συνδυασμένη διάταξη εμφανίζει πλήρες περιεχόμενο μόνο για το επιλεγμένο άρθρο.",
       "article_font_size_label": "Μέγεθος γραμματοσειράς άρθρου",
-      "title_alignment_description": "Επιλέξτε την στοίχιση του τίτλου του άρθρου."
+      "title_alignment_description": "Επιλέξτε τη στοίχιση του τίτλου και του κειμένου του άρθρου. Η πλήρης στοίχιση κρατά τον τίτλο αριστερά και στοιχίζει πλήρως το κείμενο."
     }
   },
   "appearance": {
@@ -498,9 +498,10 @@
     "font_family_noto_sans": "Noto Sans SC",
     "font_family_noto_serif": "Noto Serif SC",
     "font_family_lxgw_wenkai": "LXGW WenKai Screen",
-    "title_alignment_label": "Στοίχιση τίτλου άρθρου",
+    "title_alignment_label": "Στοίχιση άρθρου",
     "title_alignment_left": "Αριστερά",
-    "title_alignment_center": "Κέντρο"
+    "title_alignment_center": "Κέντρο",
+    "title_alignment_justify": "Πλήρης στοίχιση"
   },
   "hotkeys": {
     "key": "Πλήκτρο",

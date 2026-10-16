@@ -449,9 +449,10 @@
       "stream_render_selected_only_label": "仅为选中文章显示完整内容",
       "stream_render_selected_only_description": "在组合布局中，仅为当前选中的文章显示完整内容。",
       "article_font_size_label": "文章字体大小",
-      "title_alignment_description": "选择文章标题的对齐方式。",
+      "title_alignment_description": "选择文章标题和正文的对齐方式。两端对齐时标题靠左，正文两端对齐。",
       "title_alignment_left": "左对齐",
-      "title_alignment_center": "居中"
+      "title_alignment_center": "居中",
+      "title_alignment_justify": "两端对齐"
     }
   },
   "appearance": {
@@ -501,7 +502,10 @@
     "font_family_noto_sans": "思源黑体",
     "font_family_noto_serif": "思源宋体",
     "font_family_lxgw_wenkai": "霞鹜文楷",
-    "title_alignment_label": "文章标题对齐方式"
+    "title_alignment_label": "文章对齐方式",
+    "title_alignment_left": "左对齐",
+    "title_alignment_center": "居中",
+    "title_alignment_justify": "两端对齐"
   },
   "hotkeys": {
     "key": "键",
