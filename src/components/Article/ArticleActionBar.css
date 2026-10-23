@@ -20,21 +20,3 @@
 .article-action-bar .app-toolbar-button.arco-btn-text.is-loading.arco-btn-disabled {
   color: var(--color-text-2);
 }
-
-/* The forward action (Next): tinted so it reads as the way on. */
-.article-action-bar .app-toolbar-button.arco-btn-text.is-primary:not(.arco-btn-disabled) {
-  border: 1px solid rgba(var(--primary-6), 0.45);
-  background-color: rgba(var(--primary-6), 0.1);
-  color: rgb(var(--primary-6));
-  font-weight: 600;
-}
-
-.article-action-bar .app-toolbar-button.arco-btn-text.is-primary:not(.arco-btn-disabled):hover {
-  background-color: rgba(var(--primary-6), 0.18);
-  color: rgb(var(--primary-6));
-}
-
-.article-action-bar .is-primary .app-toolbar-button-hint {
-  border-color: rgba(var(--primary-6), 0.35);
-  color: rgb(var(--primary-6));
-}

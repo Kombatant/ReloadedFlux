@@ -151,7 +151,6 @@
     "fetch_original_label": "Λήψη πρωτοτύπου",
     "save_label": "Αποθήκευση",
     "open_original_label": "Άνοιγμα πρωτοτύπου",
-    "next_label": "Επόμενο",
     "position_label": "Άρθρο %{position} από %{total}"
   },
   "article_list": {

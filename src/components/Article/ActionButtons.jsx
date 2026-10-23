@@ -1,6 +1,5 @@
 import { Dropdown, Menu } from "@arco-design/web-react"
 import {
-  IconArrowDown,
   IconArrowLeft,
   IconArrowRight,
   IconClose,
@@ -378,16 +377,6 @@ const ActionButtons = ({ placement = "top" }) => {
       tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
       hint: hotkeys.openLinkExternally,
       onClick: () => handleOpenLinkExternally(activeContent),
-    },
-    {
-      key: "next",
-      icon: <IconArrowDown />,
-      label: polyglot.t("article_card.next_label"),
-      tooltip: polyglot.t("article_card.next_tooltip"),
-      hint: hotkeys.navigateToNextArticle,
-      primary: true,
-      disabled: !nextContent,
-      onClick: navigateToNextArticle,
     },
   ].filter(Boolean)
 

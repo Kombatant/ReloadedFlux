@@ -151,7 +151,6 @@
     "fetch_original_label": "Original abrufen",
     "save_label": "Speichern",
     "open_original_label": "Original öffnen",
-    "next_label": "Weiter",
     "position_label": "Artikel %{position} von %{total}"
   },
   "article_list": {

@@ -151,7 +151,6 @@
     "fetch_original_label": "获取原文",
     "save_label": "保存",
     "open_original_label": "打开原文",
-    "next_label": "下一篇",
     "position_label": "第 %{position} 篇，共 %{total} 篇"
   },
   "article_list": {

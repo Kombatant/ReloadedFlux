@@ -151,7 +151,6 @@
     "fetch_original_label": "Fetch original",
     "save_label": "Save",
     "open_original_label": "Open original",
-    "next_label": "Next",
     "position_label": "Article %{position} of %{total}"
   },
   "article_list": {

@@ -26,19 +26,7 @@ const renderAction = (action, { iconOnly, showHint }) => {
     return <Fragment key={action.key}>{action.element}</Fragment>
   }
 
-  const {
-    key,
-    className,
-    disabled,
-    hint,
-    icon,
-    label,
-    loading,
-    onClick,
-    primary,
-    starred,
-    tooltip,
-  } = action
+  const { key, className, disabled, hint, icon, label, loading, onClick, starred, tooltip } = action
 
   if (iconOnly) {
     return (
@@ -68,7 +56,6 @@ const renderAction = (action, { iconOnly, showHint }) => {
       tooltip={tooltip}
       className={classNames(className, {
         "is-loading": loading,
-        "is-primary": primary,
         "is-starred": starred,
       })}
       onClick={onClick}
