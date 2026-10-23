@@ -46,7 +46,7 @@ const withStopPropagation = (callback) => (event) => {
   callback()
 }
 
-// The card selects itself on click; keep footer clicks from reaching it.
+// The card selects itself on click; keep toolbar clicks from reaching it.
 const isolateClicks = (actions) =>
   actions.map((action) => ({ ...action, onClick: withStopPropagation(action.onClick) }))
 
@@ -60,14 +60,10 @@ const hasCombinedSelection = () => {
 }
 
 /**
- * Action bar under every card. It is on every card, not just the selected one,
- * so selecting a card never changes any card's height: a bar that came and
- * went made the card above shrink ~49px mid-navigation and the newly selected
- * card bounce before alignment caught up. Next and the key hints act on the
- * selected entry, so only the selected card shows them; both sit on the same
- * single row, so they don't change the height either.
+ * Keep the toolbar on every card so selection never changes the card height.
+ * Only the selected card shows shortcut hints because they act on that entry.
  */
-const StreamCardFooter = ({ entry, isSelected }) => {
+const StreamCardToolbar = ({ entry, isSelected }) => {
   const { hasIntegrations } = useStore(dataState)
   const { aiProvider } = useStore(settingsState)
   const hotkeys = useStore(hotkeysState)
@@ -90,23 +86,6 @@ const StreamCardFooter = ({ entry, isSelected }) => {
 
   const leadingActions = [
     {
-      key: "status",
-      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
-      label: polyglot.t(
-        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
-      ),
-      hint: hotkeys.toggleReadStatus,
-      onClick: () => handleToggleStatus(entry),
-    },
-    {
-      key: "star",
-      icon: isStarred ? <IconStarFill /> : <IconStar />,
-      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
-      hint: hotkeys.toggleStarStatus,
-      starred: isStarred,
-      onClick: () => handleToggleStarred(entry),
-    },
-    {
       key: "summarize",
       icon: <AiSpark />,
       label: polyglot.t("article_card.summarize_label"),
@@ -125,6 +104,34 @@ const StreamCardFooter = ({ entry, isSelected }) => {
       loading: fetchingContentIds.has(entry.id),
       onClick: () => handleFetchContent(entry),
     },
+    {
+      key: "open",
+      icon: <IconLaunch />,
+      label: polyglot.t("article_card.open_original_label"),
+      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
+      hint: hotkeys.openLinkExternally,
+      onClick: () => handleOpenLinkExternally(entry),
+    },
+  ]
+
+  const trailingActions = [
+    {
+      key: "status",
+      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
+      label: polyglot.t(
+        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
+      ),
+      hint: hotkeys.toggleReadStatus,
+      onClick: () => handleToggleStatus(entry),
+    },
+    {
+      key: "star",
+      icon: isStarred ? <IconStarFill /> : <IconStar />,
+      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
+      hint: hotkeys.toggleStarStatus,
+      starred: isStarred,
+      onClick: () => handleToggleStarred(entry),
+    },
     hasIntegrations
       ? {
           key: "save",
@@ -137,20 +144,9 @@ const StreamCardFooter = ({ entry, isSelected }) => {
       : null,
   ].filter(Boolean)
 
-  const trailingActions = [
-    {
-      key: "open",
-      icon: <IconLaunch />,
-      label: polyglot.t("article_card.open_original_label"),
-      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
-      hint: hotkeys.openLinkExternally,
-      onClick: () => handleOpenLinkExternally(entry),
-    },
-  ]
-
   return (
     <ArticleActionBar
-      className="stream-story-footer"
+      className="stream-story-toolbar"
       hideHints={!isSelected}
       leading={isolateClicks(leadingActions)}
       trailing={isolateClicks(trailingActions)}
@@ -360,6 +356,7 @@ const StreamArticleCard = ({
       {cardIconBackdrop !== "off" && (
         <CardIconBackdrop feed={currentEntry.feed} variant={cardIconBackdrop} />
       )}
+      <StreamCardToolbar entry={currentEntry} isSelected={isSelected} />
       <div className="stream-story-main">
         <ArticleEyebrow
           centered={isCentered}
@@ -402,7 +399,6 @@ const StreamArticleCard = ({
           )}
         </div>
       </div>
-      <StreamCardFooter entry={currentEntry} isSelected={isSelected} />
     </article>
   )
 

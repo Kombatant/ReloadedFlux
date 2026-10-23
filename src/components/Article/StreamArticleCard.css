@@ -232,10 +232,10 @@
   }
 }
 
-/* ---- Footer: the selected card's action bar (ArticleActionBar) --------- */
+/* ---- Grouped toolbar above the article metadata ------------------------ */
 
-.stream-story-footer {
-  border-radius: 0 0 var(--card-radius) var(--card-radius);
+.stream-story-toolbar {
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
 }
 
 /* ---- Timeline view (Appearance > Timeline view) ------------------------- */

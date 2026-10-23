@@ -9,7 +9,7 @@ import formatHotkey from "@/utils/hotkey-label"
 import "./ArticleActionBar.css"
 
 // Bar widths (px) below which the bar sheds detail: first the key hints,
-// then the leading labels. Tuned for English with every action present.
+// then the button labels. Tuned for English with every action present.
 const FULL_MIN_WIDTH = 1040
 const LABELS_MIN_WIDTH = 880
 
@@ -64,16 +64,22 @@ const renderAction = (action, { iconOnly, showHint }) => {
 }
 
 /**
- * The labelled action bar under an article: the Stream card's footer and the
- * Classic reading pane's bottom bar. `leading` actions sit left, `trailing`
- * ones right. Each action is a ToolbarButton spec (`hint` takes the hotkey
+ * The grouped action bar above an article in Combined and Classic views.
+ * `leading` actions sit left, `trailing` ones right.
+ * Each action is a ToolbarButton spec (`hint` takes the hotkey
  * binding list) or `{ key, element }` for a custom control.
  *
  * The bar watches its own width: narrow bars drop the key hints, then turn the
- * leading actions icon-only (label moves to the tooltip). Trailing actions
- * keep their labels.
+ * actions icon-only (labels move to tooltips) in both groups.
+ * `reservedWidth` leaves room for custom controls such as Classic navigation.
  */
-const ArticleActionBar = ({ className, hideHints = false, leading, trailing }) => {
+const ArticleActionBar = ({
+  className,
+  hideHints = false,
+  leading,
+  reservedWidth = 0,
+  trailing,
+}) => {
   const barRef = useRef(null)
   const [density, setDensity] = useState("full")
 
@@ -84,7 +90,7 @@ const ArticleActionBar = ({ className, hideHints = false, leading, trailing }) =
       return
     }
 
-    const update = () => setDensity(getDensity(bar.clientWidth))
+    const update = () => setDensity(getDensity(bar.clientWidth - reservedWidth))
     update()
 
     if (typeof ResizeObserver !== "function") {
@@ -93,18 +99,20 @@ const ArticleActionBar = ({ className, hideHints = false, leading, trailing }) =
     const observer = new ResizeObserver(update)
     observer.observe(bar)
     return () => observer.disconnect()
-  }, [])
+  }, [reservedWidth])
 
   const showHint = density === "full" && !hideHints
-  const leadingOptions = { iconOnly: density === "compact", showHint }
-  const trailingOptions = { iconOnly: false, showHint }
+  const actionOptions = { iconOnly: density === "compact", showHint }
 
   return (
-    <footer ref={barRef} className={classNames("article-action-bar", className)}>
-      {leading.map((action) => renderAction(action, leadingOptions))}
-      <span aria-hidden="true" className="article-action-bar-spacer" />
-      {trailing.map((action) => renderAction(action, trailingOptions))}
-    </footer>
+    <div ref={barRef} className={classNames("article-action-bar", className)}>
+      <div className="article-action-bar-group">
+        {leading.map((action) => renderAction(action, actionOptions))}
+      </div>
+      <div className="article-action-bar-group article-action-bar-group-trailing">
+        {trailing.map((action) => renderAction(action, actionOptions))}
+      </div>
+    </div>
   )
 }
 

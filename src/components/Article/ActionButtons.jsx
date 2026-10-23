@@ -59,12 +59,10 @@ const MobileButtons = memo(({ commonButtons, hasHeadings }) => (
 MobileButtons.displayName = "MobileButtons"
 
 /**
- * Reading pane controls. Desktop splits them: `placement="top"` is the pane's
- * top bar (close, prev/next, table of contents) and `placement="bottom"` the
- * labelled action bar shared with the Stream card. Mobile keeps one bottom
- * bar with large touch targets.
+ * Reading pane controls. Desktop combines navigation and article actions in
+ * one grouped toolbar. Mobile keeps its dedicated controls with large touch targets.
  */
-const ActionButtons = ({ placement = "top" }) => {
+const ActionButtons = () => {
   const { activeContent } = useStore(contentState)
   const { hasIntegrations } = useStore(dataState)
   const { polyglot } = useStore(polyglotState)
@@ -296,12 +294,15 @@ const ActionButtons = ({ placement = "top" }) => {
     )
   }
 
-  if (placement === "top") {
-    const closeLabel = polyglot.t("article_card.close_tooltip")
+  const closeLabel = polyglot.t("article_card.close_tooltip")
 
-    return (
-      <div className="action-buttons reading-pane-topbar">
-        <div className="left-side">
+  const hasMoreActions = Boolean(navigator.share) || activeContent.comments_url !== ""
+
+  const leadingActions = [
+    {
+      key: "navigation",
+      element: (
+        <div className="reading-pane-navigation">
           <IconButton
             icon={<IconClose />}
             label={closeLabel}
@@ -311,30 +312,7 @@ const ActionButtons = ({ placement = "top" }) => {
           <span aria-hidden="true" className="reading-pane-nav-divider" />
           <ArticleNavGroup onNext={navigateToNextArticle} onPrevious={navigateToPreviousArticle} />
         </div>
-        <div className="right-side">{commonButtons.toc}</div>
-      </div>
-    )
-  }
-
-  const hasMoreActions = Boolean(navigator.share) || activeContent.comments_url !== ""
-
-  const leadingActions = [
-    {
-      key: "status",
-      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
-      label: polyglot.t(
-        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
       ),
-      hint: hotkeys.toggleReadStatus,
-      onClick: () => handleToggleStatus(activeContent),
-    },
-    {
-      key: "star",
-      icon: isStarred ? <IconStarFill /> : <IconStar />,
-      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
-      hint: hotkeys.toggleStarStatus,
-      starred: isStarred,
-      onClick: () => handleToggleStarred(activeContent),
     },
     {
       key: "summarize",
@@ -356,6 +334,34 @@ const ActionButtons = ({ placement = "top" }) => {
       loading: isFetchingOriginal,
       onClick: handleFetchOriginal,
     },
+    {
+      key: "open",
+      icon: <IconLaunch />,
+      label: polyglot.t("article_card.open_original_label"),
+      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
+      hint: hotkeys.openLinkExternally,
+      onClick: () => handleOpenLinkExternally(activeContent),
+    },
+  ]
+
+  const trailingActions = [
+    {
+      key: "status",
+      icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
+      label: polyglot.t(
+        isUnread ? "article_card.mark_as_read_tooltip" : "article_card.mark_as_unread_tooltip",
+      ),
+      hint: hotkeys.toggleReadStatus,
+      onClick: () => handleToggleStatus(activeContent),
+    },
+    {
+      key: "star",
+      icon: isStarred ? <IconStarFill /> : <IconStar />,
+      label: polyglot.t(isStarred ? "article_card.unstar_tooltip" : "article_card.star_tooltip"),
+      hint: hotkeys.toggleStarStatus,
+      starred: isStarred,
+      onClick: () => handleToggleStarred(activeContent),
+    },
     hasIntegrations
       ? {
           key: "save",
@@ -366,24 +372,15 @@ const ActionButtons = ({ placement = "top" }) => {
           onClick: () => handleSaveToThirdPartyServices(activeContent),
         }
       : null,
-  ].filter(Boolean)
-
-  const trailingActions = [
+    hasHeadings ? { key: "toc", element: commonButtons.toc } : null,
     hasMoreActions ? { key: "more", element: commonButtons.more } : null,
-    {
-      key: "open",
-      icon: <IconLaunch />,
-      label: polyglot.t("article_card.open_original_label"),
-      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
-      hint: hotkeys.openLinkExternally,
-      onClick: () => handleOpenLinkExternally(activeContent),
-    },
   ].filter(Boolean)
 
   return (
     <ArticleActionBar
       className="reading-pane-action-bar"
       leading={leadingActions}
+      reservedWidth={200 + (hasHeadings ? 36 : 0)}
       trailing={trailingActions}
     />
   )

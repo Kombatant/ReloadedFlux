@@ -438,7 +438,7 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
           style={isBelowMedium ? undefined : { flex: 1, minWidth: 0 }}
           {...handlers}
         >
-          {!isBelowMedium && <ActionButtons placement="top" />}
+          {!isBelowMedium && <ActionButtons />}
           {isArticleLoading ? (
             <div style={{ flex: 1 }} />
           ) : (
@@ -458,7 +458,7 @@ const ClassicContent = ({ info, getEntries, markAllAsRead }) => {
               <ArticleDetail ref={entryDetailRef} />
             </>
           )}
-          {isBelowMedium ? <ActionButtons /> : <ActionButtons placement="bottom" />}
+          {isBelowMedium && <ActionButtons />}
         </div>
       ) : (
         <div

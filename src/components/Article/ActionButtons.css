@@ -6,20 +6,16 @@
   padding: var(--space-2) 10px;
 }
 
-.action-buttons .left-side,
-.action-buttons .right-side {
+.reading-pane-navigation {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-}
-
-/* Desktop reading pane top bar: close, then prev/next grouped around the
-   article's position in the list. */
-.reading-pane-topbar .left-side {
+  flex-shrink: 0;
   gap: var(--space-2);
+  margin-inline-end: var(--space-2);
 }
 
 .reading-pane-nav-divider {
+  flex-shrink: 0;
   width: 1px;
   height: 18px;
   background-color: var(--color-border-2);
