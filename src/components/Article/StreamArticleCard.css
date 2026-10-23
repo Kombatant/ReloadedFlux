@@ -48,7 +48,7 @@
 }
 
 .stream-story-title.arco-typography {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--article-card-title-color);
 }
 
@@ -103,6 +103,7 @@
 .stream-story-preview {
   color: var(--article-card-preview-color);
   display: -webkit-box;
+  font-size: var(--stream-article-font-size);
   line-height: 1.8;
   margin: 0 auto;
   overflow: hidden;
@@ -152,7 +153,7 @@
   --icon-backdrop-blur: 56px;
 }
 
-/* ---- Main column: eyebrow, title, body ---------------------------------- */
+/* ---- Main column: title and body --------------------------------------- */
 
 .stream-story-main {
   padding: 18px 24px 22px;
@@ -232,10 +233,42 @@
   }
 }
 
-/* ---- Grouped toolbar above the article metadata ------------------------ */
+/* ---- Metadata and compact actions share the top strip ------------------ */
 
 .stream-story-toolbar {
+  --icon-md: var(--stream-article-font-size);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--color-border-2);
   border-radius: var(--card-radius) var(--card-radius) 0 0;
+  background-color: var(--color-fill-1);
+  font-size: var(--stream-article-font-size);
+}
+
+.stream-story-toolbar .article-eyebrow {
+  flex: 1 1 420px;
+  min-width: 0;
+  font-size: inherit;
+}
+
+.stream-story-toolbar .article-eyebrow-lead {
+  max-width: 100%;
+}
+
+.stream-story-toolbar .article-eyebrow-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.stream-story-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2px;
+  margin-inline-start: auto;
 }
 
 /* ---- Timeline view (Appearance > Timeline view) ------------------------- */

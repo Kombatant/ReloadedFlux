@@ -13,6 +13,7 @@ import { memo, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 
 import { updateEntriesStatus } from "@/apis"
 import AiSpark from "@/components/icons/AiSpark"
+import IconButton from "@/components/ui/IconButton"
 import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
@@ -28,10 +29,10 @@ import {
 } from "@/utils/content-freeze"
 import { generateClockTime, generateDayLabel, generateReadableDate } from "@/utils/date"
 import { Message } from "@/utils/feedback"
+import { withHotkey } from "@/utils/hotkey-label"
 import { getEntryImageSources, preloadImageMetadata } from "@/utils/images"
 import { streamDebug } from "@/utils/stream-debug"
 
-import ArticleActionBar from "./ArticleActionBar"
 import ArticleBodyRenderer from "./ArticleBodyRenderer"
 import ArticleEyebrow from "./ArticleEyebrow"
 import CardIconBackdrop from "./CardIconBackdrop"
@@ -40,15 +41,6 @@ import "./StreamArticleCard.css"
 
 const isInteractiveTarget = (target) =>
   target.closest("a, button, input, textarea, select, [role='button']")
-
-const withStopPropagation = (callback) => (event) => {
-  event.stopPropagation()
-  callback()
-}
-
-// The card selects itself on click; keep toolbar clicks from reaching it.
-const isolateClicks = (actions) =>
-  actions.map((action) => ({ ...action, onClick: withStopPropagation(action.onClick) }))
 
 const hasCombinedSelection = () => {
   if (globalThis.window === undefined) {
@@ -61,9 +53,9 @@ const hasCombinedSelection = () => {
 
 /**
  * Keep the toolbar on every card so selection never changes the card height.
- * Only the selected card shows shortcut hints because they act on that entry.
+ * Only the selected card includes shortcut hints in its action tooltips.
  */
-const StreamCardToolbar = ({ entry, isSelected }) => {
+const StreamCardToolbar = ({ entry, hideTime, isSelected }) => {
   const { hasIntegrations } = useStore(dataState)
   const { aiProvider } = useStore(settingsState)
   const hotkeys = useStore(hotkeysState)
@@ -84,37 +76,8 @@ const StreamCardToolbar = ({ entry, isSelected }) => {
   const isStarred = entry.starred
   const hasAiSummary = entry.content?.includes("ai-summary")
 
-  const leadingActions = [
-    {
-      key: "summarize",
-      icon: <AiSpark />,
-      label: polyglot.t("article_card.summarize_label"),
-      tooltip: polyglot.t("article_card.summarize_tooltip"),
-      hint: hotkeys.summarizeContent,
-      disabled: aiProvider === "none" || hasAiSummary,
-      loading: summarizingContentIds.has(entry.id),
-      onClick: () => handleSummarizeContent(entry),
-    },
-    {
-      key: "fetch",
-      icon: <IconCloudDownload />,
-      label: polyglot.t("article_card.fetch_original_label"),
-      tooltip: fetchOriginalTooltip,
-      hint: hotkeys.fetchOriginalArticle,
-      loading: fetchingContentIds.has(entry.id),
-      onClick: () => handleFetchContent(entry),
-    },
-    {
-      key: "open",
-      icon: <IconLaunch />,
-      label: polyglot.t("article_card.open_original_label"),
-      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
-      hint: hotkeys.openLinkExternally,
-      onClick: () => handleOpenLinkExternally(entry),
-    },
-  ]
-
-  const trailingActions = [
+  const isFetching = fetchingContentIds.has(entry.id)
+  const actions = [
     {
       key: "status",
       icon: isUnread ? <IconMinusCircle /> : <IconRecord />,
@@ -142,15 +105,50 @@ const StreamCardToolbar = ({ entry, isSelected }) => {
           onClick: () => handleSaveToThirdPartyServices(entry),
         }
       : null,
+    {
+      key: "summarize",
+      icon: <AiSpark />,
+      label: polyglot.t("article_card.summarize_label"),
+      tooltip: polyglot.t("article_card.summarize_tooltip"),
+      hint: hotkeys.summarizeContent,
+      disabled: aiProvider === "none" || hasAiSummary,
+      loading: summarizingContentIds.has(entry.id),
+      onClick: () => handleSummarizeContent(entry),
+    },
+    {
+      key: "fetch",
+      icon: <IconCloudDownload />,
+      label: polyglot.t("article_card.fetch_original_label"),
+      tooltip: fetchOriginalTooltip,
+      hint: hotkeys.fetchOriginalArticle,
+      loading: isFetching,
+      onClick: () => handleFetchContent(entry),
+    },
+    {
+      key: "open",
+      icon: <IconLaunch />,
+      label: polyglot.t("article_card.open_original_label"),
+      tooltip: polyglot.t("article_card.open_link_externally_tooltip"),
+      hint: hotkeys.openLinkExternally,
+      onClick: () => handleOpenLinkExternally(entry),
+    },
   ].filter(Boolean)
 
-  return (
-    <ArticleActionBar
-      className="stream-story-toolbar"
-      hideHints={!isSelected}
-      leading={isolateClicks(leadingActions)}
-      trailing={isolateClicks(trailingActions)}
+  const renderIcon = ({ key, hint, tooltip, ...action }) => (
+    <IconButton
+      key={key}
+      {...action}
+      tooltip={isSelected ? withHotkey(tooltip ?? action.label, hint) : (tooltip ?? action.label)}
     />
+  )
+
+  return (
+    <header className="stream-story-toolbar">
+      <ArticleEyebrow entry={entry} hideTime={hideTime} />
+      <div className="stream-story-actions" onClick={(event) => event.stopPropagation()}>
+        {actions.map((action) => renderIcon(action))}
+      </div>
+    </header>
   )
 }
 
@@ -167,6 +165,7 @@ const StreamArticleCard = ({
   const {
     articleWidth,
     cardIconBackdrop,
+    fontSize,
     markReadOnScroll,
     streamImageLayout,
     streamRenderSelectedOnly,
@@ -331,6 +330,7 @@ const StreamArticleCard = ({
       // The settle gate in StoryStream measures each list item's outermost
       // element; in timeline mode that is the timeline row, not the card.
       data-stream-item={isTimeline ? undefined : ""}
+      style={{ "--stream-article-font-size": `${fontSize}rem` }}
       tabIndex={isSelected ? -1 : 0}
       className={[
         "card-wrapper stream-story-card",
@@ -356,14 +356,8 @@ const StreamArticleCard = ({
       {cardIconBackdrop !== "off" && (
         <CardIconBackdrop feed={currentEntry.feed} variant={cardIconBackdrop} />
       )}
-      <StreamCardToolbar entry={currentEntry} isSelected={isSelected} />
+      <StreamCardToolbar entry={currentEntry} hideTime={isTimeline} isSelected={isSelected} />
       <div className="stream-story-main">
-        <ArticleEyebrow
-          centered={isCentered}
-          entry={currentEntry}
-          hideTime={isTimeline}
-          maxWidth={contentMaxWidth}
-        />
         <Typography.Title
           className={titleClassName}
           heading={4}
