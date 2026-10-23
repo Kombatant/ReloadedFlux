@@ -1,0 +1,13 @@
+.content-unavailable-dialog .hero-dialog-links {
+  padding-bottom: var(--space-6);
+}
+
+.content-unavailable-dialog .hero-dialog-link {
+  overflow-wrap: anywhere;
+}
+
+@media screen and (max-width: 520px) {
+  .content-unavailable-dialog .hero-dialog-links {
+    padding-bottom: 18px;
+  }
+}

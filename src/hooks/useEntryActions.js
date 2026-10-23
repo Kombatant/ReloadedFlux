@@ -7,6 +7,7 @@ import {
   toggleEntryStarred,
   updateEntriesStatus,
 } from "@/apis"
+import showContentUnavailableDialog from "@/components/ui/ContentUnavailableDialog"
 import { polyglotState } from "@/hooks/useLanguage"
 import {
   contentState,
@@ -277,6 +278,9 @@ const fetchEntryContent = async (entry) => {
   try {
     console.info(`[fetch-content] Using Miniflux built-in fetcher for entry ${entry.id}`)
     const response = await getOriginalContent(entry.id)
+    if (!hasExtractedContent(response?.content)) {
+      throw new Error("Miniflux returned no content")
+    }
     const { polyglot } = polyglotState.get()
     Message.success(polyglot.t("actions.fetched_content_success"))
     const newContent = response.content
@@ -285,7 +289,7 @@ const fetchEntryContent = async (entry) => {
   } catch (error) {
     console.error("Failed to fetch content:", error)
     const { polyglot } = polyglotState.get()
-    Message.error(polyglot.t("actions.fetched_content_error"))
+    showContentUnavailableDialog(entry, polyglot)
     return null
   }
 }
