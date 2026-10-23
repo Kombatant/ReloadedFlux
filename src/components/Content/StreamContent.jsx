@@ -1,6 +1,6 @@
 import { Button } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { useParams } from "react-router"
 
 import { getEntry } from "@/apis"
@@ -55,19 +55,9 @@ const StreamContent = ({ info, getEntries, markAllAsRead }) => {
 
   const { entryListRef, flushPendingMarkAsRead, handleEntryClick, scheduleMarkAsRead } =
     useContentContext()
-  const { navigateToNextArticle, scrollSelectedCardIntoView, showHotkeysSettings } =
-    useStreamKeyHandlers({
-      streamVirtualizerRef,
-    })
-
-  // The selected card's Next button runs through this long-lived hook instance:
-  // a handler owned by the card would be torn down (aborting its own scroll)
-  // the moment selection moves. The ref keeps the prop stable for memo'd cards.
-  const navigateToNextArticleRef = useRef(navigateToNextArticle)
-  useLayoutEffect(() => {
-    navigateToNextArticleRef.current = navigateToNextArticle
+  const { scrollSelectedCardIntoView, showHotkeysSettings } = useStreamKeyHandlers({
+    streamVirtualizerRef,
   })
-  const handleNavigateNext = useCallback(() => navigateToNextArticleRef.current(), [])
 
   const { fetchAppData, fetchFeedRelatedData } = useAppData()
   const { fetchArticleList } = useArticleList(info)
@@ -468,7 +458,6 @@ const StreamContent = ({ info, getEntries, markAllAsRead }) => {
         info={info}
         markAllAsRead={markAllAsRead}
         streamVirtualizerRef={streamVirtualizerRef}
-        onNavigateNext={handleNavigateNext}
       />
     </div>
   )

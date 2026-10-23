@@ -1,6 +1,5 @@
 import { Typography } from "@arco-design/web-react"
 import {
-  IconArrowDown,
   IconCloudDownload,
   IconLaunch,
   IconMinusCircle,
@@ -18,11 +17,7 @@ import useEntryActions from "@/hooks/useEntryActions"
 import useFetchOriginalTooltip from "@/hooks/useFetchOriginalTooltip"
 import { polyglotState } from "@/hooks/useLanguage"
 import useScreenWidth from "@/hooks/useScreenWidth"
-import {
-  fetchingContentIdsState,
-  nextContentState,
-  summarizingContentIdsState,
-} from "@/store/contentState"
+import { fetchingContentIdsState, summarizingContentIdsState } from "@/store/contentState"
 import { dataState } from "@/store/dataState"
 import { hotkeysState } from "@/store/hotkeysState"
 import { settingsState } from "@/store/settingsState"
@@ -72,11 +67,10 @@ const hasCombinedSelection = () => {
  * selected entry, so only the selected card shows them; both sit on the same
  * single row, so they don't change the height either.
  */
-const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
+const StreamCardFooter = ({ entry, isSelected }) => {
   const { hasIntegrations } = useStore(dataState)
   const { aiProvider } = useStore(settingsState)
   const hotkeys = useStore(hotkeysState)
-  const nextContent = useStore(nextContentState)
   const fetchingContentIds = useStore(fetchingContentIdsState)
   const summarizingContentIds = useStore(summarizingContentIdsState)
   const { polyglot } = useStore(polyglotState)
@@ -152,16 +146,6 @@ const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
       hint: hotkeys.openLinkExternally,
       onClick: () => handleOpenLinkExternally(entry),
     },
-    isSelected && {
-      key: "next",
-      icon: <IconArrowDown />,
-      label: polyglot.t("article_card.next_label"),
-      tooltip: polyglot.t("article_card.next_tooltip"),
-      hint: hotkeys.navigateToNextArticle,
-      primary: true,
-      disabled: !nextContent || !onNavigateNext,
-      onClick: () => onNavigateNext?.(),
-    },
   ]
 
   return (
@@ -169,7 +153,7 @@ const StreamCardFooter = ({ entry, isSelected, onNavigateNext }) => {
       className="stream-story-footer"
       hideHints={!isSelected}
       leading={isolateClicks(leadingActions)}
-      trailing={isolateClicks(trailingActions.filter(Boolean))}
+      trailing={isolateClicks(trailingActions)}
     />
   )
 }
@@ -180,7 +164,6 @@ const StreamArticleCard = ({
   handleEntryClick,
   infoFrom,
   isSelected,
-  onNavigateNext,
   shouldPreload,
   showDayHeader = false,
   timelineDate = null,
@@ -419,11 +402,7 @@ const StreamArticleCard = ({
           )}
         </div>
       </div>
-      <StreamCardFooter
-        entry={currentEntry}
-        isSelected={isSelected}
-        onNavigateNext={onNavigateNext}
-      />
+      <StreamCardFooter entry={currentEntry} isSelected={isSelected} />
     </article>
   )
 

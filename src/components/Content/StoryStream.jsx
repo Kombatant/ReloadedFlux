@@ -35,7 +35,6 @@ const StoryStream = ({
   handleEntryClick,
   info,
   markAllAsRead,
-  onNavigateNext,
   streamVirtualizerRef,
 }) => {
   const { activeContent, infoFrom, isArticleListReady, loadMoreVisible } = useStore(contentState)
@@ -378,7 +377,6 @@ const StoryStream = ({
                     timelineDayKeys !== null &&
                     (index === 0 || timelineDayKeys[index] !== timelineDayKeys[index - 1])
                   }
-                  onNavigateNext={onNavigateNext}
                 />
               ))}
               {loadMoreVisible ? (
