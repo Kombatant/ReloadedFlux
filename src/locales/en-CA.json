@@ -46,6 +46,7 @@
     },
     "refresh_category_success": "Category refreshed successfully",
     "refresh_category_error": "Category refresh failed",
+    "feed_error_tooltip": "Last refresh failed (%{smart_count} error) |||| Last refresh failed (%{smart_count} consecutive errors)",
     "delete_category_confirm_title": "Confirm Delete Category",
     "delete_category_confirm_content": "Are you sure you want to delete category '%{title}'? This action cannot be undone.",
     "feeds": "Feeds",

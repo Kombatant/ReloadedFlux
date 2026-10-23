@@ -46,6 +46,7 @@
     },
     "refresh_category_success": "分类刷新成功",
     "refresh_category_error": "分类刷新失败",
+    "feed_error_tooltip": "上次刷新失败（连续 %{smart_count} 次错误）",
     "delete_category_confirm_title": "确认删除分类",
     "delete_category_confirm_content": "确定要删除分类「%{title}」吗？此操作无法撤销。",
     "feeds": "订阅源",

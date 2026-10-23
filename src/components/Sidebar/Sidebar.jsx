@@ -31,7 +31,9 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
+import WarningTriangle from "@/components/icons/WarningTriangle"
 import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
+import CustomTooltip from "@/components/ui/CustomTooltip"
 import EditCategoryModal from "@/components/ui/EditCategoryModal"
 import EditFeedModal from "@/components/ui/EditFeedModal"
 import FeedIcon from "@/components/ui/FeedIcon"
@@ -270,6 +272,9 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
   const location = useLocation()
   const isSelected =
     location.pathname === `/feed/${feed.id}` || location.pathname.startsWith(`/feed/${feed.id}/`)
+  const hasError = feed.parsing_error_count > 0
+  const errorLabel =
+    hasError && polyglot.t("sidebar.feed_error_tooltip", { smart_count: feed.parsing_error_count })
 
   return (
     <Dropdown
@@ -326,15 +331,40 @@ const FeedMenuItem = ({ feed, onEditFeed, onRefreshFeed, onMarkAllAsRead, onDele
           }}
         >
           <div className="custom-menu-item">
-            <Typography.Ellipsis
-              className="feed-title-label"
-              expandable={false}
-              showTooltip={!isBelowMedium}
-              style={{ width: feed.unreadCount ? "80%" : "100%" }}
-            >
-              {showFeedIcon && <FeedIcon className="feed-icon-sidebar" feed={feed} />}
-              {feed.title}
-            </Typography.Ellipsis>
+            <div className="feed-title" style={{ width: feed.unreadCount ? "80%" : "100%" }}>
+              <Typography.Ellipsis
+                expandable={false}
+                showTooltip={!isBelowMedium}
+                className={classNames("feed-title-label", {
+                  "feed-title-label-error": hasError,
+                })}
+              >
+                {showFeedIcon && <FeedIcon className="feed-icon-sidebar" feed={feed} />}
+                {feed.title}
+              </Typography.Ellipsis>
+              {hasError && (
+                <CustomTooltip
+                  mini
+                  content={
+                    <div className="feed-error-tooltip">
+                      <div>{errorLabel}</div>
+                      {feed.parsing_error_message && (
+                        <div className="feed-error-tooltip-message">
+                          {feed.parsing_error_message}
+                        </div>
+                      )}
+                    </div>
+                  }
+                >
+                  <WarningTriangle
+                    aria-hidden={false}
+                    aria-label={errorLabel}
+                    className="feed-error-icon"
+                    role="img"
+                  />
+                </CustomTooltip>
+              )}
+            </div>
             {feed.unreadCount !== 0 && (
               <Typography.Ellipsis className="item-count item-count-feed" expandable={false}>
                 {feed.unreadCount}

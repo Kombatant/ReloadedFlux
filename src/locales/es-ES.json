@@ -46,6 +46,7 @@
     },
     "refresh_category_success": "Categoría actualizada exitosamente",
     "refresh_category_error": "Error al actualizar categoría",
+    "feed_error_tooltip": "La última actualización falló (%{smart_count} error) |||| La última actualización falló (%{smart_count} errores consecutivos)",
     "delete_category_confirm_title": "Confirmar Eliminación de Categoría",
     "delete_category_confirm_content": "¿Está seguro de que desea eliminar la categoría '%{title}'? Esta acción no se puede deshacer.",
     "update_content_on_fetch_label": "Guardar automáticamente el contenido obtenido",

@@ -46,6 +46,7 @@
     },
     "refresh_category_success": "Catégorie actualisée avec succès",
     "refresh_category_error": "Échec de l'actualisation de la catégorie",
+    "feed_error_tooltip": "La dernière actualisation a échoué (%{smart_count} erreur) |||| La dernière actualisation a échoué (%{smart_count} erreurs consécutives)",
     "delete_category_confirm_title": "Confirmer la Suppression de la Catégorie",
     "delete_category_confirm_content": "Êtes-vous sûr de vouloir supprimer la catégorie '%{title}' ? Cette action est irréversible.",
     "feeds": "Flux",
