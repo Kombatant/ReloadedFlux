@@ -294,14 +294,16 @@ const SearchControl = () => {
       droplist={
         <div className="toolbar-search-dropdown">
           <div className="toolbar-search-dropdown-header">{polyglot.t("search.search")}</div>
-          <SearchForm value={inputValue} onChange={setInputValue} onConfirm={confirmSearch} />
-          <div className="toolbar-search-dropdown-actions">
-            <Button size="small" onClick={() => setVisible(false)}>
-              {polyglot.t("search.cancel")}
-            </Button>
-            <Button size="small" type="primary" onClick={() => confirmSearch(inputValue)}>
-              {polyglot.t("search.confirm")}
-            </Button>
+          <div className="toolbar-search-dropdown-body">
+            <SearchForm value={inputValue} onChange={setInputValue} onConfirm={confirmSearch} />
+            <div className="toolbar-search-dropdown-actions">
+              <Button size="small" onClick={() => setVisible(false)}>
+                {polyglot.t("search.cancel")}
+              </Button>
+              <Button size="small" type="primary" onClick={() => confirmSearch(inputValue)}>
+                {polyglot.t("search.confirm")}
+              </Button>
+            </div>
           </div>
         </div>
       }

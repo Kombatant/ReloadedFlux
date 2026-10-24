@@ -50,7 +50,9 @@ const ArticleCardImage = ({ entry, isWideImage }) => {
   )
 }
 
-const ArticleCard = ({ entry, handleEntryClick, children }) => {
+// `preview` renders a static copy (Settings > Appearance): no context menu and
+// no mark-read-on-scroll for an entry that isn't in any list.
+const ArticleCard = ({ entry, handleEntryClick, children, preview = false }) => {
   const {
     cardIconBackdrop,
     coverDisplayMode,
@@ -87,6 +89,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
 
     // If the article is read or scroll marking is not enabled, no observation needed
     if (
+      preview ||
       !isUnread ||
       !markReadOnScroll ||
       infoFrom === "history" ||
@@ -155,6 +158,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
     infoFrom,
     markReadOnScroll,
     polyglot,
+    preview,
   ])
 
   useEffect(() => {
@@ -218,7 +222,7 @@ const ArticleCard = ({ entry, handleEntryClick, children }) => {
 
   return (
     <Dropdown
-      disabled={!enableContextMenu}
+      disabled={!enableContextMenu || preview}
       position="bl"
       trigger="contextMenu"
       droplist={

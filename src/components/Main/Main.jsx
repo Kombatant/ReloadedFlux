@@ -5,7 +5,7 @@ import { Outlet, useLocation, useNavigate } from "react-router"
 
 import { addFeed } from "@/apis"
 import { ContextProvider } from "@/components/Content/ContentContext"
-import SettingsTabs from "@/components/Settings/SettingsTabs"
+import SettingsTabs, { DEFAULT_SETTINGS_SECTION } from "@/components/Settings/SettingsTabs"
 import useAppData from "@/hooks/useAppData"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
@@ -56,7 +56,7 @@ const SettingsModal = () => {
       visible={settingsModalVisible}
       onCancel={() => {
         setSettingsModalVisible(false)
-        setSettingsTabsActiveTab("1")
+        setSettingsTabsActiveTab(DEFAULT_SETTINGS_SECTION)
       }}
     >
       <SettingsTabs activeTab={settingsTabsActiveTab} onTabChange={setSettingsTabsActiveTab} />

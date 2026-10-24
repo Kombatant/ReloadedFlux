@@ -28,6 +28,45 @@
   max-height: 100%;
 }
 
+/* Every dialog (Modal, Modal.confirm/info, hero dialogs, Settings) shares
+   the hero dialogs' surfaces: bg-1 at the top elevation, with the accent
+   band where the heading sits. Scoped to the wrapper so these outrank Arco's
+   own rules regardless of stylesheet order. Hero dialogs and Settings draw
+   their own band. */
+.arco-modal-wrapper .arco-modal {
+  background-color: var(--color-bg-1);
+  box-shadow: var(--elev-3);
+}
+
+/* Form dialogs: the title bar is the band. */
+.arco-modal-wrapper .arco-modal:not(.hero-dialog, .arco-modal-simple) .arco-modal-header {
+  border-bottom-color: var(--color-border-2);
+  border-radius: var(--border-radius-medium) var(--border-radius-medium) 0 0;
+  background: var(--surface-band);
+}
+
+.arco-modal-wrapper .arco-modal:not(.hero-dialog) .arco-modal-footer {
+  border-top-color: var(--color-border-2);
+}
+
+/* Confirmations have no title bar, so the band washes the whole dialog. */
+.arco-modal-wrapper .arco-modal-simple:not(.hero-dialog) {
+  background: var(--surface-band);
+}
+
+/* Popconfirm is the same confirmation in a bubble: same surface. The band
+   ends on bg-1, which is where the arrow meets it. */
+.arco-trigger.arco-popconfirm .arco-popconfirm-content {
+  border-color: var(--color-border-2);
+  background: var(--surface-band);
+  box-shadow: var(--elev-3);
+}
+
+.arco-trigger.arco-popconfirm .arco-popconfirm-arrow {
+  border-color: var(--color-border-2);
+  background-color: var(--color-bg-1);
+}
+
 /* Modal.confirm / Modal.info: left-aligned title, right-aligned actions. */
 .arco-modal-simple .arco-modal-title {
   text-align: left;

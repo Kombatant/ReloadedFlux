@@ -158,6 +158,8 @@ const StreamArticleCard = ({
   handleEntryClick,
   infoFrom,
   isSelected,
+  // Static copy for Settings > Appearance: never marks itself read on scroll.
+  preview = false,
   shouldPreload,
   showDayHeader = false,
   timelineDate = null,
@@ -193,6 +195,7 @@ const StreamArticleCard = ({
     wasVisible.current = false
 
     if (
+      preview ||
       !markReadOnScroll ||
       infoFrom === "history" ||
       currentEntry.status !== "unread" ||
@@ -256,7 +259,15 @@ const StreamArticleCard = ({
       wasVisible.current = false
       observer.disconnect()
     }
-  }, [currentEntry, handleEntryStatusUpdate, infoFrom, isSelected, markReadOnScroll, polyglot])
+  }, [
+    currentEntry,
+    handleEntryStatusUpdate,
+    infoFrom,
+    isSelected,
+    markReadOnScroll,
+    polyglot,
+    preview,
+  ])
 
   useEffect(() => {
     if (!shouldPreload || isSelected) {

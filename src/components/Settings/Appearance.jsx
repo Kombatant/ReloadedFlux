@@ -1,10 +1,12 @@
-import { Divider, Select, Switch } from "@arco-design/web-react"
+import { InputNumber, Select, Switch } from "@arco-design/web-react"
+import { IconDesktop, IconMoonFill, IconSunFill } from "@arco-design/web-react/icon"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
-import { LayoutColumnIcon, LayoutCombinedIcon } from "@/components/icons/LayoutModeIcons"
 import CustomTooltip from "@/components/ui/CustomTooltip"
+import SegmentedControl from "@/components/ui/SegmentedControl"
 import { polyglotState } from "@/hooks/useLanguage"
+import useScreenWidth from "@/hooks/useScreenWidth"
 import { settingsState, updateSettings } from "@/store/settingsState"
 import {
   applyColor,
@@ -15,7 +17,9 @@ import {
   isModeRestrictedColor,
 } from "@/utils/colors"
 
+import { ArticleCardPreview, ArticleTextPreview } from "./AppearancePreview"
 import SettingItem from "./SettingItem"
+import SettingsSection from "./SettingsSection"
 
 import "./Appearance.css"
 
@@ -45,16 +49,21 @@ const useEffectiveDarkMode = () => {
 const Appearance = () => {
   const {
     animationsEnabled,
+    articleWidth,
     cardIconBackdrop,
-    compactSidebarGroups,
+    edgeToEdgeImages,
     fontFamily,
-    layoutMode,
-    streamTimeline,
+    fontSize,
+    showDetailedRelativeTime,
+    showEstimatedReadingTime,
+    showFeedIcon,
     themeColor,
+    themeMode,
+    titleAlignment,
   } = useStore(settingsState)
   const { polyglot } = useStore(polyglotState)
+  const { isBelowMedium } = useScreenWidth()
   const isDark = useEffectiveDarkMode()
-  const isCombinedLayout = layoutMode === "stream"
 
   const cardIconBackdropOptions = [
     { label: polyglot.t("appearance.card_icon_backdrop_off"), value: "off" },
@@ -87,168 +96,219 @@ const Appearance = () => {
     },
   ]
 
-  const layoutOptions = [
-    {
-      icon: <LayoutColumnIcon />,
-      label: polyglot.t("appearance.layout_mode_classic"),
-      value: "classic",
-    },
-    {
-      icon: <LayoutCombinedIcon />,
-      label: polyglot.t("appearance.layout_mode_stream"),
-      value: "stream",
-    },
+  const themeModeOptions = [
+    { value: "system", icon: <IconDesktop />, label: polyglot.t("sidebar.theme_system") },
+    { value: "light", icon: <IconSunFill />, label: polyglot.t("sidebar.theme_light") },
+    { value: "dark", icon: <IconMoonFill />, label: polyglot.t("sidebar.theme_dark") },
   ]
 
   return (
     <>
-      <SettingItem
-        description={polyglot.t("appearance.theme_color_description")}
-        title={polyglot.t("appearance.theme_color_label")}
-      >
-        <div
-          aria-label={polyglot.t("appearance.theme_color_label")}
-          className="color-swatches"
-          role="radiogroup"
+      <SettingsSection title={polyglot.t("settings.group.theme")}>
+        <SettingItem
+          description={polyglot.t("settings.theme_mode_description")}
+          title={polyglot.t("sidebar.theme_label")}
         >
-          {Object.keys(colors)
-            .filter((colorName) => !isModeRestrictedColor(colorName, isDark))
-            .map((colorName) => {
-              const hex = colors[colorName]?.light || getDisplayColorValue(colorName)
-              let tooltip = `${colorName} — ${hex}`
-              if (isDarkOnlyColor(colorName)) {
-                tooltip = polyglot.t("appearance.theme_color_oled_description")
-              } else if (isLightOnlyColor(colorName)) {
-                tooltip = polyglot.t("appearance.theme_color_gray_description")
-              }
-              const isSelected = colorName === themeColor
-              return (
-                <CustomTooltip key={colorName} mini content={tooltip}>
-                  <button
-                    aria-checked={isSelected}
-                    className={isSelected ? "color-swatch is-selected" : "color-swatch"}
-                    role="radio"
-                    style={{ "--swatch-color": getDisplayColorValue(colorName) }}
-                    type="button"
-                    aria-label={polyglot.t("appearance.theme_color_aria_label", {
-                      color: colorName,
-                    })}
-                    onClick={() => handleConfigChange({ themeColor: colorName })}
-                  />
-                </CustomTooltip>
-              )
-            })}
-        </div>
-      </SettingItem>
+          <SegmentedControl
+            ariaLabel={polyglot.t("sidebar.theme_label")}
+            options={themeModeOptions}
+            value={themeMode}
+            onChange={(value) => updateSettings({ themeMode: value })}
+          />
+        </SettingItem>
 
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("appearance.font_family_description")}
-        title={polyglot.t("appearance.font_family_label")}
-      >
-        <Select
-          className="input-select"
-          getPopupContainer={() => document.body}
-          value={fontFamily}
-          onChange={(value) => handleConfigChange({ fontFamily: value })}
+        <SettingItem
+          description={polyglot.t("appearance.theme_color_description")}
+          title={polyglot.t("appearance.theme_color_label")}
         >
-          {fontFamilyOptions.map(({ label, value }) => (
-            <Select.Option key={value} value={value}>
-              {label}
-            </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
+          <div
+            aria-label={polyglot.t("appearance.theme_color_label")}
+            className="color-swatches"
+            role="radiogroup"
+          >
+            {Object.keys(colors)
+              .filter((colorName) => !isModeRestrictedColor(colorName, isDark))
+              .map((colorName) => {
+                const hex = colors[colorName]?.light || getDisplayColorValue(colorName)
+                let tooltip = `${colorName} — ${hex}`
+                if (isDarkOnlyColor(colorName)) {
+                  tooltip = polyglot.t("appearance.theme_color_oled_description")
+                } else if (isLightOnlyColor(colorName)) {
+                  tooltip = polyglot.t("appearance.theme_color_gray_description")
+                }
+                const isSelected = colorName === themeColor
+                return (
+                  <CustomTooltip key={colorName} mini content={tooltip}>
+                    <button
+                      aria-checked={isSelected}
+                      className={isSelected ? "color-swatch is-selected" : "color-swatch"}
+                      role="radio"
+                      style={{ "--swatch-color": getDisplayColorValue(colorName) }}
+                      type="button"
+                      aria-label={polyglot.t("appearance.theme_color_aria_label", {
+                        color: colorName,
+                      })}
+                      onClick={() => handleConfigChange({ themeColor: colorName })}
+                    />
+                  </CustomTooltip>
+                )
+              })}
+          </div>
+        </SettingItem>
 
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("appearance.layout_mode_description")}
-        title={polyglot.t("appearance.layout_mode_label")}
-      >
-        <Select
-          className="input-select"
-          getPopupContainer={() => document.body}
-          value={layoutMode}
-          onChange={(value) => handleConfigChange({ layoutMode: value })}
+        <SettingItem
+          description={polyglot.t("appearance.font_family_description")}
+          title={polyglot.t("appearance.font_family_label")}
         >
-          {layoutOptions.map((option) => (
-            <Select.Option key={option.value} value={option.value}>
-              <span className="layout-mode-option">
-                {option.icon}
-                <span>{option.label}</span>
-              </span>
-            </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
+          <Select
+            className="input-select"
+            getPopupContainer={() => document.body}
+            value={fontFamily}
+            onChange={(value) => handleConfigChange({ fontFamily: value })}
+          >
+            {fontFamilyOptions.map(({ label, value }) => (
+              <Select.Option key={value} value={value}>
+                {label}
+              </Select.Option>
+            ))}
+          </Select>
+        </SettingItem>
+      </SettingsSection>
 
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("appearance.stream_timeline_description")}
-        disabled={!isCombinedLayout}
-        disabledLabel={polyglot.t("settings.disabled_label")}
-        title={polyglot.t("appearance.stream_timeline_label")}
-        disabledReason={polyglot.t("settings.only_available_in_layout", {
-          layout: polyglot.t("appearance.layout_mode_stream"),
-        })}
-      >
-        <Switch
-          checked={streamTimeline}
-          disabled={!isCombinedLayout}
-          onChange={(value) => handleConfigChange({ streamTimeline: value })}
-        />
-      </SettingItem>
-
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("appearance.card_icon_backdrop_description")}
-        title={polyglot.t("appearance.card_icon_backdrop_label")}
-      >
-        <Select
-          className="input-select"
-          getPopupContainer={() => document.body}
-          value={cardIconBackdrop}
-          onChange={(value) => handleConfigChange({ cardIconBackdrop: value })}
-        >
-          {cardIconBackdropOptions.map(({ label, value }) => (
-            <Select.Option key={value} value={value}>
-              {label}
-            </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
-
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("appearance.lightbox_animation_description")}
-        title={polyglot.t("appearance.lightbox_animation_label")}
-      >
-        <Switch
-          checked={animationsEnabled}
-          onChange={(checked) =>
-            handleConfigChange({
-              animationsEnabled: checked,
-            })
+      <SettingsSection title={polyglot.t("settings.group.article_text")}>
+        <SettingItem
+          title={
+            polyglot.t("settings.content.article_font_size_label") ||
+            polyglot.t("appearance.font_size_label")
           }
-        />
-      </SettingItem>
+        >
+          <InputNumber
+            className="input-select"
+            max={1.25}
+            min={0.75}
+            step={0.05}
+            suffix="rem"
+            value={fontSize}
+            onChange={(value) => updateSettings({ fontSize: value })}
+          />
+        </SettingItem>
 
-      <Divider />
+        <SettingItem title={polyglot.t("appearance.article_width_label")}>
+          <InputNumber
+            className="input-select"
+            max={100}
+            min={50}
+            step={2}
+            suffix="%"
+            value={articleWidth}
+            onChange={(value) => updateSettings({ articleWidth: value })}
+          />
+        </SettingItem>
 
-      <SettingItem
-        description={polyglot.t("settings.compact_sidebar_groups_description")}
-        title={polyglot.t("settings.compact_sidebar_groups_label")}
+        <SettingItem
+          description={polyglot.t("settings.content.title_alignment_description")}
+          title={polyglot.t("appearance.title_alignment_label")}
+        >
+          <Select
+            className="input-select"
+            getPopupContainer={() => document.body}
+            value={titleAlignment}
+            onChange={(value) => updateSettings({ titleAlignment: value })}
+          >
+            <Select.Option value="left">
+              {polyglot.t("appearance.title_alignment_left") || "Left"}
+            </Select.Option>
+            <Select.Option value="center">
+              {polyglot.t("appearance.title_alignment_center") || "Centre"}
+            </Select.Option>
+            <Select.Option value="justify">
+              {polyglot.t("appearance.title_alignment_justify") || "Justified"}
+            </Select.Option>
+          </Select>
+        </SettingItem>
+
+        {/* The full-bleed image styles only exist below the medium breakpoint. */}
+        {isBelowMedium && (
+          <SettingItem
+            description={polyglot.t("appearance.edge_to_edge_images_description")}
+            title={polyglot.t("appearance.edge_to_edge_images_label")}
+          >
+            <Switch
+              checked={edgeToEdgeImages}
+              onChange={(value) => updateSettings({ edgeToEdgeImages: value })}
+            />
+          </SettingItem>
+        )}
+
+        <ArticleTextPreview />
+      </SettingsSection>
+
+      <SettingsSection
+        note={polyglot.t("settings.group.article_cards_note")}
+        title={polyglot.t("settings.group.article_cards")}
       >
-        <Switch
-          checked={compactSidebarGroups}
-          onChange={(value) => handleConfigChange({ compactSidebarGroups: value })}
-        />
-      </SettingItem>
+        <SettingItem
+          description={polyglot.t("appearance.card_icon_backdrop_description")}
+          title={polyglot.t("appearance.card_icon_backdrop_label")}
+        >
+          <Select
+            className="input-select"
+            getPopupContainer={() => document.body}
+            value={cardIconBackdrop}
+            onChange={(value) => updateSettings({ cardIconBackdrop: value })}
+          >
+            {cardIconBackdropOptions.map(({ label, value }) => (
+              <Select.Option key={value} value={value}>
+                {label}
+              </Select.Option>
+            ))}
+          </Select>
+        </SettingItem>
+
+        <SettingItem
+          description={polyglot.t("appearance.show_feed_icon_description")}
+          title={polyglot.t("appearance.show_feed_icon_label")}
+        >
+          <Switch
+            checked={showFeedIcon}
+            onChange={(value) => updateSettings({ showFeedIcon: value })}
+          />
+        </SettingItem>
+
+        <SettingItem
+          description={polyglot.t("appearance.show_detailed_relative_time_description")}
+          title={polyglot.t("appearance.show_detailed_relative_time_label")}
+        >
+          <Switch
+            checked={showDetailedRelativeTime}
+            onChange={(value) => updateSettings({ showDetailedRelativeTime: value })}
+          />
+        </SettingItem>
+
+        <SettingItem
+          description={polyglot.t("appearance.show_estimated_reading_time_description")}
+          title={polyglot.t("appearance.show_estimated_reading_time_label")}
+        >
+          <Switch
+            checked={showEstimatedReadingTime}
+            onChange={(value) => updateSettings({ showEstimatedReadingTime: value })}
+          />
+        </SettingItem>
+
+        <ArticleCardPreview />
+      </SettingsSection>
+
+      <SettingsSection title={polyglot.t("settings.group.motion")}>
+        <SettingItem
+          description={polyglot.t("appearance.lightbox_animation_description")}
+          title={polyglot.t("appearance.lightbox_animation_label")}
+        >
+          <Switch
+            checked={animationsEnabled}
+            onChange={(checked) => handleConfigChange({ animationsEnabled: checked })}
+          />
+        </SettingItem>
+      </SettingsSection>
     </>
   )
 }

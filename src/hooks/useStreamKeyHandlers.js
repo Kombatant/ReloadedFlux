@@ -818,7 +818,7 @@ const useStreamKeyHandlers = ({ streamVirtualizerRef }) => {
   })
 
   const showHotkeysSettings = () => {
-    setSettingsTabsActiveTab("8")
+    setSettingsTabsActiveTab("hotkeys")
     setSettingsModalVisible(true)
   }
 

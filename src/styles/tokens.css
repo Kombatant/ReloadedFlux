@@ -65,6 +65,11 @@ body {
      the sidebar surface lifted a little toward the next step. */
   --surface-popup: color-mix(in srgb, var(--color-neutral-2) 70%, var(--color-neutral-3));
   --surface-popup-border: var(--color-border-2);
+  /* Dialog band: the accent-tinted wash behind a dialog's heading (hero
+     header, form dialog title bar, Settings rail). */
+  --surface-band:
+    linear-gradient(135deg, rgba(var(--primary-6), 0.12), transparent 56%),
+    linear-gradient(180deg, var(--color-bg-2), var(--color-bg-1));
 
   /* Article cards (Classic list and Stream story share these surfaces). */
   --card-radius: var(--radius-lg);

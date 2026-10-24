@@ -1,4 +1,5 @@
 import { Typography } from "@arco-design/web-react"
+import classNames from "classnames"
 
 import "./SettingItem.css"
 
@@ -8,11 +9,15 @@ const SettingItem = ({
   disabled = false,
   disabledLabel,
   disabledReason,
+  nested = false,
   title,
 }) => (
   <section
     aria-disabled={disabled}
-    className={disabled ? "setting-row setting-row-disabled" : "setting-row"}
+    className={classNames("setting-row", {
+      "setting-row-disabled": disabled,
+      "setting-row-nested": nested,
+    })}
   >
     <header>
       <div className="setting-row-title">

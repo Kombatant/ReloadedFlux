@@ -6,7 +6,7 @@ import createSetter from "@/utils/nanostores"
 const state = map({
   addFeedModalVisible: false,
   settingsModalVisible: false,
-  settingsTabsActiveTab: "1",
+  settingsTabsActiveTab: "general",
 })
 
 const setAddFeedModalVisible = createSetter(state, "addFeedModalVisible")

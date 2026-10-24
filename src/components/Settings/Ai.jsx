@@ -1,4 +1,4 @@
-import { Divider, Input, Select } from "@arco-design/web-react"
+import { Input, Select } from "@arco-design/web-react"
 import { useStore } from "@nanostores/react"
 import { useEffect, useState } from "react"
 
@@ -7,6 +7,7 @@ import { settingsState, updateSettings } from "@/store/settingsState"
 import { AI_PROVIDERS, AI_SUMMARY_LANGUAGE_AUTO, fetchProviderModels } from "@/utils/ai"
 
 import SettingItem from "./SettingItem"
+import SettingsSection from "./SettingsSection"
 
 const summaryLanguageOptions = [
   { label: "English", value: "en-CA" },
@@ -151,151 +152,147 @@ const Ai = () => {
 
   return (
     <>
-      <SettingItem
-        description={polyglot.t("settings.content.ai_provider_description")}
-        title={polyglot.t("settings.content.ai_provider_label")}
-      >
-        <Select
-          className="input-wide"
-          getPopupContainer={() => document.body}
-          value={settings.aiProvider}
-          onChange={handleAiProviderChange}
+      <SettingsSection title={polyglot.t("settings.group.ai_provider")}>
+        <SettingItem
+          description={polyglot.t("settings.content.ai_provider_description")}
+          title={polyglot.t("settings.content.ai_provider_label")}
         >
-          <Select.Option value={AI_PROVIDERS.NONE}>
-            {polyglot.t("settings.content.ai_provider_none")}
-          </Select.Option>
-          <Select.Option value={AI_PROVIDERS.ANTHROPIC}>
-            {polyglot.t("settings.content.ai_provider_anthropic")}
-          </Select.Option>
-          <Select.Option value={AI_PROVIDERS.GEMINI}>
-            {polyglot.t("settings.content.ai_provider_gemini")}
-          </Select.Option>
-          <Select.Option value={AI_PROVIDERS.OLLAMA}>
-            {polyglot.t("settings.content.ai_provider_ollama")}
-          </Select.Option>
-          <Select.Option value={AI_PROVIDERS.LM_STUDIO}>
-            {polyglot.t("settings.content.ai_provider_lmstudio")}
-          </Select.Option>
-          <Select.Option value={AI_PROVIDERS.PERPLEXITY}>
-            {polyglot.t("settings.content.ai_provider_perplexity")}
-          </Select.Option>
-        </Select>
-      </SettingItem>
+          <Select
+            className="input-wide"
+            getPopupContainer={() => document.body}
+            value={settings.aiProvider}
+            onChange={handleAiProviderChange}
+          >
+            <Select.Option value={AI_PROVIDERS.NONE}>
+              {polyglot.t("settings.content.ai_provider_none")}
+            </Select.Option>
+            <Select.Option value={AI_PROVIDERS.ANTHROPIC}>
+              {polyglot.t("settings.content.ai_provider_anthropic")}
+            </Select.Option>
+            <Select.Option value={AI_PROVIDERS.GEMINI}>
+              {polyglot.t("settings.content.ai_provider_gemini")}
+            </Select.Option>
+            <Select.Option value={AI_PROVIDERS.OLLAMA}>
+              {polyglot.t("settings.content.ai_provider_ollama")}
+            </Select.Option>
+            <Select.Option value={AI_PROVIDERS.LM_STUDIO}>
+              {polyglot.t("settings.content.ai_provider_lmstudio")}
+            </Select.Option>
+            <Select.Option value={AI_PROVIDERS.PERPLEXITY}>
+              {polyglot.t("settings.content.ai_provider_perplexity")}
+            </Select.Option>
+          </Select>
+        </SettingItem>
 
-      <Divider />
-
-      <SettingItem
-        description={apiCredentialDescription}
-        disabled={isProviderNone}
-        disabledLabel={polyglot.t("settings.disabled_label")}
-        disabledReason={polyglot.t("settings.ai_provider_required_reason")}
-        title={apiCredentialLabel}
-      >
-        <ApiCredentialInput
-          allowClear
-          className="input-wide"
+        <SettingItem
+          description={apiCredentialDescription}
           disabled={isProviderNone}
-          placeholder={apiCredentialPlaceholder}
-          value={currentApiKey}
-          onChange={(value) =>
-            updateSettings({
-              aiApiKeys: {
-                ...settings.aiApiKeys,
-                [settings.aiProvider]: value,
-              },
-            })
-          }
-        />
-      </SettingItem>
-
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("settings.content.ai_model_description")}
-        disabled={isProviderNone}
-        disabledLabel={polyglot.t("settings.disabled_label")}
-        disabledReason={polyglot.t("settings.ai_provider_required_reason")}
-        title={polyglot.t("settings.content.ai_model_label")}
-      >
-        <Select
-          className="input-wide"
-          disabled={isProviderNone || modelIds.length === 0}
-          getPopupContainer={() => document.body}
-          loading={modelsLoading}
-          placeholder={polyglot.t("settings.content.ai_models_empty")}
-          value={currentModel || undefined}
-          onChange={(value) =>
-            updateSettings({
-              aiModel: value || "",
-              aiModels: {
-                ...settings.aiModels,
-                [settings.aiProvider]: value || "",
-              },
-            })
-          }
+          disabledLabel={polyglot.t("settings.disabled_label")}
+          disabledReason={polyglot.t("settings.ai_provider_required_reason")}
+          title={apiCredentialLabel}
         >
-          {normalizedModelOptions.map((model) => (
-            <Select.Option key={model.id} value={model.id}>
-              {model.label}
-            </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
+          <ApiCredentialInput
+            allowClear
+            className="input-wide"
+            disabled={isProviderNone}
+            placeholder={apiCredentialPlaceholder}
+            value={currentApiKey}
+            onChange={(value) =>
+              updateSettings({
+                aiApiKeys: {
+                  ...settings.aiApiKeys,
+                  [settings.aiProvider]: value,
+                },
+              })
+            }
+          />
+        </SettingItem>
 
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("settings.content.ai_summary_language_description")}
-        title={polyglot.t("settings.content.ai_summary_language_label")}
-      >
-        <Select
-          className="input-wide"
-          getPopupContainer={() => document.body}
-          value={settings.aiSummaryLanguage}
-          onChange={(value) =>
-            updateSettings(
-              value === AI_SUMMARY_LANGUAGE_AUTO
-                ? { aiSummaryLanguage: value, aiSummaryExcludedLanguage: "" }
-                : { aiSummaryLanguage: value },
-            )
-          }
+        <SettingItem
+          description={polyglot.t("settings.content.ai_model_description")}
+          disabled={isProviderNone}
+          disabledLabel={polyglot.t("settings.disabled_label")}
+          disabledReason={polyglot.t("settings.ai_provider_required_reason")}
+          title={polyglot.t("settings.content.ai_model_label")}
         >
-          <Select.Option value={AI_SUMMARY_LANGUAGE_AUTO}>
-            {polyglot.t("settings.content.ai_summary_language_auto")}
-          </Select.Option>
-          {summaryLanguageOptions.map((option) => (
-            <Select.Option key={option.value} value={option.value}>
-              {option.label}
+          <Select
+            className="input-wide"
+            disabled={isProviderNone || modelIds.length === 0}
+            getPopupContainer={() => document.body}
+            loading={modelsLoading}
+            placeholder={polyglot.t("settings.content.ai_models_empty")}
+            value={currentModel || undefined}
+            onChange={(value) =>
+              updateSettings({
+                aiModel: value || "",
+                aiModels: {
+                  ...settings.aiModels,
+                  [settings.aiProvider]: value || "",
+                },
+              })
+            }
+          >
+            {normalizedModelOptions.map((model) => (
+              <Select.Option key={model.id} value={model.id}>
+                {model.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </SettingItem>
+      </SettingsSection>
+
+      <SettingsSection title={polyglot.t("settings.group.ai_summaries")}>
+        <SettingItem
+          description={polyglot.t("settings.content.ai_summary_language_description")}
+          title={polyglot.t("settings.content.ai_summary_language_label")}
+        >
+          <Select
+            className="input-wide"
+            getPopupContainer={() => document.body}
+            value={settings.aiSummaryLanguage}
+            onChange={(value) =>
+              updateSettings(
+                value === AI_SUMMARY_LANGUAGE_AUTO
+                  ? { aiSummaryLanguage: value, aiSummaryExcludedLanguage: "" }
+                  : { aiSummaryLanguage: value },
+              )
+            }
+          >
+            <Select.Option value={AI_SUMMARY_LANGUAGE_AUTO}>
+              {polyglot.t("settings.content.ai_summary_language_auto")}
             </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
+            {summaryLanguageOptions.map((option) => (
+              <Select.Option key={option.value} value={option.value}>
+                {option.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </SettingItem>
 
-      <Divider />
-
-      <SettingItem
-        description={polyglot.t("settings.content.ai_summary_excluded_language_description")}
-        disabled={isAutoSummaryLanguage}
-        disabledLabel={polyglot.t("settings.disabled_label")}
-        disabledReason={polyglot.t("settings.ai_summary_excluded_language_disabled_reason")}
-        title={polyglot.t("settings.content.ai_summary_excluded_language_label")}
-      >
-        <Select
-          allowClear
-          className="input-wide"
+        <SettingItem
+          description={polyglot.t("settings.content.ai_summary_excluded_language_description")}
           disabled={isAutoSummaryLanguage}
-          getPopupContainer={() => document.body}
-          placeholder={polyglot.t("settings.content.ai_summary_excluded_language_none")}
-          value={(isAutoSummaryLanguage ? "" : settings.aiSummaryExcludedLanguage) || undefined}
-          onChange={(value) => updateSettings({ aiSummaryExcludedLanguage: value || "" })}
+          disabledLabel={polyglot.t("settings.disabled_label")}
+          disabledReason={polyglot.t("settings.ai_summary_excluded_language_disabled_reason")}
+          title={polyglot.t("settings.content.ai_summary_excluded_language_label")}
         >
-          {summaryLanguageOptions.map((option) => (
-            <Select.Option key={option.value} value={option.value}>
-              {option.label}
-            </Select.Option>
-          ))}
-        </Select>
-      </SettingItem>
+          <Select
+            allowClear
+            className="input-wide"
+            disabled={isAutoSummaryLanguage}
+            getPopupContainer={() => document.body}
+            placeholder={polyglot.t("settings.content.ai_summary_excluded_language_none")}
+            value={(isAutoSummaryLanguage ? "" : settings.aiSummaryExcludedLanguage) || undefined}
+            onChange={(value) => updateSettings({ aiSummaryExcludedLanguage: value || "" })}
+          >
+            {summaryLanguageOptions.map((option) => (
+              <Select.Option key={option.value} value={option.value}>
+                {option.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </SettingItem>
+      </SettingsSection>
     </>
   )
 }

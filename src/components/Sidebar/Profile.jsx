@@ -11,7 +11,6 @@ import {
   IconLink,
   IconMoonFill,
   IconPoweroff,
-  IconRefresh,
   IconSettings,
   IconSunFill,
 } from "@arco-design/web-react/icon"
@@ -22,6 +21,7 @@ import { useNavigate } from "react-router"
 import ReloadedFluxIcon from "@/components/icons/ReloadedFluxIcon"
 import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
 import { HeroDialogDetails, HeroDialogHeader, HeroDialogLinks } from "@/components/ui/HeroDialog"
+import LayoutPicker from "@/components/ui/LayoutPicker"
 import SegmentedControl from "@/components/ui/SegmentedControl"
 import { polyglotState } from "@/hooks/useLanguage"
 import useModalToggle from "@/hooks/useModalToggle"
@@ -30,43 +30,12 @@ import { authState, resetAuth } from "@/store/authState"
 import { resetContent } from "@/store/contentState"
 import { resetData } from "@/store/dataState"
 import { resetFeedIcons } from "@/store/feedIconsState"
-import { resetSettings, settingsState, updateSettings } from "@/store/settingsState"
+import { settingsState, updateSettings } from "@/store/settingsState"
 import confirmAction from "@/utils/confirm"
 import { GITHUB_REPO_PATH } from "@/utils/constants"
 import { Notification } from "@/utils/feedback"
 import buildInfo from "@/version-info.json"
 import "./Profile.css"
-
-/** Layout picker: two preview cards that act as a radio group. */
-const LayoutPicker = ({ label, value, options, onChange }) => (
-  <fieldset className="profile-menu-preference">
-    <legend>{label}</legend>
-    <div className="profile-menu-layout-options">
-      {options.map((option) => (
-        <label key={option.value} className="profile-menu-layout-option">
-          <input
-            checked={value === option.value}
-            name="profile-layout"
-            type="radio"
-            value={option.value}
-            onChange={() => onChange(option.value)}
-          />
-          <span className="profile-menu-layout-card">
-            <span
-              aria-hidden="true"
-              className={`profile-menu-layout-preview profile-menu-layout-preview-${option.value}`}
-            >
-              <span />
-              <span />
-              <span />
-            </span>
-            <span>{option.label}</span>
-          </span>
-        </label>
-      ))}
-    </div>
-  </fieldset>
-)
 
 export default function Profile() {
   const navigate = useNavigate()
@@ -83,15 +52,6 @@ export default function Profile() {
   const buildChannel = buildInfo.channel ?? "local"
   const buildCommit = buildInfo.gitHash ?? "unknown"
   const buildDate = buildInfo.gitCommitDate ?? buildInfo.gitDate ?? buildInfo.buildDate ?? "unknown"
-
-  const handleResetSettings = () => {
-    confirmAction({
-      danger: true,
-      title: polyglot.t("sidebar.settings_reset_confirm"),
-      content: polyglot.t("sidebar.settings_reset_description"),
-      onOk: () => resetSettings(),
-    })
-  }
 
   const handleLogout = () => {
     confirmAction({
@@ -205,21 +165,24 @@ export default function Profile() {
             </fieldset>
             {/* Combined view is desktop-only; Content uses columns on smaller screens. */}
             {isBelowMedium ? null : (
-              <LayoutPicker
-                label={polyglot.t("sidebar.layout_label")}
-                value={layoutMode}
-                options={[
-                  {
-                    value: "classic",
-                    label: polyglot.t("appearance.layout_mode_classic"),
-                  },
-                  {
-                    value: "stream",
-                    label: polyglot.t("appearance.layout_mode_stream"),
-                  },
-                ]}
-                onChange={(value) => updateSettings({ layoutMode: value })}
-              />
+              <fieldset className="profile-menu-preference">
+                <legend>{polyglot.t("sidebar.layout_label")}</legend>
+                <LayoutPicker
+                  ariaLabel={polyglot.t("sidebar.layout_label")}
+                  value={layoutMode}
+                  options={[
+                    {
+                      value: "classic",
+                      label: polyglot.t("appearance.layout_mode_classic"),
+                    },
+                    {
+                      value: "stream",
+                      label: polyglot.t("appearance.layout_mode_stream"),
+                    },
+                  ]}
+                  onChange={(value) => updateSettings({ layoutMode: value })}
+                />
+              </fieldset>
             )}
           </div>
           <AppMenuDivider />
@@ -245,11 +208,6 @@ export default function Profile() {
           <Menu.Item key="logout" onClick={handleLogout}>
             <AppMenuItemContent icon={<IconPoweroff />}>
               {polyglot.t("sidebar.logout")}
-            </AppMenuItemContent>
-          </Menu.Item>
-          <Menu.Item key="reset-settings" onClick={handleResetSettings}>
-            <AppMenuItemContent danger icon={<IconRefresh />}>
-              {polyglot.t("sidebar.reset_settings")}
             </AppMenuItemContent>
           </Menu.Item>
         </AppMenu>

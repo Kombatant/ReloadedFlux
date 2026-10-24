@@ -1,0 +1,45 @@
+/* Live previews under Appearance > Article text / Article cards. The frame
+   is the app's content surface; the real components render inside it. */
+.settings-preview {
+  padding: var(--space-3);
+  background-color: var(--color-fill-1);
+}
+
+.settings-preview-label {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.settings-preview-frame {
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-1);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Long enough to show the title, a paragraph and the image; the rest fades. */
+.settings-preview-text .settings-preview-frame {
+  max-height: 380px;
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+
+.settings-preview-text .article-content {
+  padding-top: var(--space-4);
+}
+
+.settings-preview-cards .settings-preview-frame {
+  padding: var(--space-2);
+}
+
+/* Phone text runs longer; keep the image (and edge-to-edge) in view. */
+@media screen and (max-width: 768px) {
+  .settings-preview-text .settings-preview-frame {
+    max-height: 640px;
+  }
+}

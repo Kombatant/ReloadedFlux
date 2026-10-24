@@ -34,6 +34,17 @@
   width: 90%;
 }
 
+/* Fixed layout keeps the table inside the pane; long categories truncate
+   inside their tag instead of pushing the column wider. */
+.feed-table .arco-tag {
+  max-width: 100%;
+}
+
+.feed-table .arco-tag-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .feed-table-row-actions {
   display: flex;
   gap: 2px;
