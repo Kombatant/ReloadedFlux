@@ -1,7 +1,7 @@
 {
-  "buildVersion": "20261024.02",
-  "buildDate": "2026-10-24",
-  "buildSequence": 2,
+  "buildVersion": "20261030.00",
+  "buildDate": "2026-10-30",
+  "buildSequence": 0,
   "channel": "main",
   "gitBranch": "main",
   "gitHash": "06d1bd58",
