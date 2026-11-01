@@ -17,7 +17,6 @@ import {
   IconGithub,
   IconHistory,
   IconMinusCircle,
-  IconPushpin,
   IconRefresh,
   IconRight,
   IconStar,
@@ -31,6 +30,7 @@ import SimpleBar from "simplebar-react"
 import { Virtualizer } from "virtua"
 
 import { markCategoryAsRead, refreshCategoryFeed } from "@/apis/categories"
+import Pin from "@/components/icons/Pin"
 import WarningTriangle from "@/components/icons/WarningTriangle"
 import { AppMenu, AppMenuDivider, AppMenuItemContent } from "@/components/ui/AppMenu"
 import CustomTooltip from "@/components/ui/CustomTooltip"
@@ -661,7 +661,7 @@ const Sidebar = ({ dismissUpdate, hasUpdate, remoteBuildInfo }) => {
                 active={sidebarPinned}
                 aria-pressed={sidebarPinned}
                 className="sidebar-pin-button"
-                icon={<IconPushpin />}
+                icon={<Pin filled={sidebarPinned} />}
                 label={polyglot.t(sidebarPinned ? "sidebar.unpin_sidebar" : "sidebar.pin_sidebar")}
                 onClick={() => {
                   setSidebarVisible(sidebarPinned)
